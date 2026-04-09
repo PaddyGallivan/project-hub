@@ -464,6 +464,196 @@
             color: var(--text);
         }
 
+        /* Focus Section */
+        .focus-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+
+        .focus-card {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.25rem;
+        }
+
+        .focus-card-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--muted);
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .focus-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0.5rem 0;
+            border-bottom: 1px solid var(--border);
+            gap: 0.5rem;
+        }
+
+        .focus-item:last-child {
+            border-bottom: none;
+            padding-bottom: 0;
+        }
+
+        .focus-item-name {
+            font-size: 0.9rem;
+            color: var(--accent);
+            text-decoration: none;
+            font-weight: 500;
+            flex: 1;
+        }
+
+        .focus-item-name:hover {
+            text-decoration: underline;
+        }
+
+        .focus-item-meta {
+            font-size: 0.8rem;
+            color: var(--success);
+            white-space: nowrap;
+            font-weight: 600;
+        }
+
+        .focus-empty {
+            font-size: 0.85rem;
+            color: var(--muted);
+            font-style: italic;
+        }
+
+        /* Floating Idea Button */
+        .idea-fab {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            border-radius: 50%;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            font-size: 1.8rem;
+            cursor: pointer;
+            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.5);
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .idea-fab:hover {
+            transform: scale(1.1);
+            box-shadow: 0 6px 24px rgba(59, 130, 246, 0.7);
+        }
+
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background-color: rgba(0,0,0,0.7);
+            z-index: 200;
+            align-items: center;
+            justify-content: center;
+            padding: 1rem;
+        }
+
+        .modal-overlay.open {
+            display: flex;
+        }
+
+        .modal {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 480px;
+        }
+
+        .modal h3 {
+            font-size: 1.3rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .modal-input {
+            width: 100%;
+            padding: 0.75rem;
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            color: var(--text);
+            border-radius: 6px;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .modal-input:focus {
+            outline: none;
+            border-color: var(--accent);
+        }
+
+        .modal-input::placeholder {
+            color: var(--muted);
+        }
+
+        textarea.modal-input {
+            resize: vertical;
+            min-height: 80px;
+            font-family: inherit;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 0.5rem;
+        }
+
+        .btn-primary {
+            padding: 0.6rem 1.5rem;
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: opacity 0.2s;
+        }
+
+        .btn-primary:hover { opacity: 0.85; }
+        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        .btn-cancel {
+            padding: 0.6rem 1.5rem;
+            background-color: transparent;
+            color: var(--muted);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+        }
+
+        .modal-success {
+            text-align: center;
+            padding: 1rem 0;
+            color: var(--success);
+            font-size: 1.1rem;
+        }
+
+        /* Idea status badge */
+        .status-badge.idea { background-color: #6e4bc4; color: #fff; }
+
         /* Footer */
         .footer {
             text-align: center;
@@ -556,6 +746,27 @@
             <div style="text-align: center; color: var(--muted);">Loading revenue data...</div>
         </div>
 
+        <!-- What to Focus On Section -->
+        <h2 class="section-title">What to Focus On</h2>
+        <div class="focus-section" id="focusSection">
+            <div class="focus-card">
+                <div class="focus-card-title">ð Ready to Launch</div>
+                <div id="focusReady"><span class="focus-empty">Loading...</span></div>
+            </div>
+            <div class="focus-card">
+                <div class="focus-card-title">ð° Quickest Income</div>
+                <div id="focusIncome"><span class="focus-empty">Loading...</span></div>
+            </div>
+            <div class="focus-card">
+                <div class="focus-card-title">ð¥ Top Priority</div>
+                <div id="focusPriority"><span class="focus-empty">Loading...</span></div>
+            </div>
+            <div class="focus-card">
+                <div class="focus-card-title">â ï¸ Needs Attention</div>
+                <div id="focusAttention"><span class="focus-empty">Loading...</span></div>
+            </div>
+        </div>
+
         <!-- Filter & Search -->
         <div class="controls">
             <input
@@ -569,6 +780,7 @@
                 <button class="filter-btn" data-filter="live">Live</button>
                 <button class="filter-btn" data-filter="ready">Ready</button>
                 <button class="filter-btn" data-filter="dev">In Dev</button>
+                <button class="filter-btn" data-filter="idea">Ideas</button>
             </div>
         </div>
 
@@ -579,7 +791,42 @@
 
         <!-- Footer -->
         <div class="footer">
-            <p>Claude dashboard • Last updated: <span id="lastUpdated">--</span> • Built with Supabase</p>
+            <p>Claude dashboard â¢ Last updated: <span id="lastUpdated">--</span> â¢ Built with Supabase</p>
+        </div>
+    </div>
+
+    <!-- Floating Idea Button -->
+    <button class="idea-fab" id="ideaFab" title="Capture a new idea">+</button>
+
+    <!-- Idea Capture Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal">
+            <h3>ð¡ Capture an Idea</h3>
+            <div id="modalForm">
+                <input type="text" class="modal-input" id="ideaName" placeholder="Idea name *" maxlength="100">
+                <textarea class="modal-input" id="ideaDesc" placeholder="What is it? One or two lines..." maxlength="500"></textarea>
+                <select class="modal-input" id="ideaCategory">
+                    <option value="web app">Web App</option>
+                    <option value="mobile app">Mobile App</option>
+                    <option value="community">Community</option>
+                    <option value="events">Events</option>
+                    <option value="education">Education</option>
+                    <option value="health">Health</option>
+                    <option value="SSV Ecosystem">SSV Ecosystem</option>
+                    <option value="other">Other</option>
+                </select>
+                <div class="modal-actions">
+                    <button class="btn-cancel" id="modalCancel">Cancel</button>
+                    <button class="btn-primary" id="modalSubmit">Save Idea</button>
+                </div>
+            </div>
+            <div class="modal-success" id="modalSuccess" style="display:none">
+                â Idea saved! Refresh to see it.
+                <div class="modal-actions" style="justify-content:center; margin-top:1rem">
+                    <button class="btn-primary" onclick="closeModal(); location.reload();">Refresh Now</button>
+                    <button class="btn-cancel" onclick="closeModal()">Close</button>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -737,7 +984,9 @@
         function renderProjects() {
             let filtered = allProjects;
 
-            if (currentFilter !== 'all') {
+            if (currentFilter === 'idea') {
+                filtered = filtered.filter(p => p.status === 'idea');
+            } else if (currentFilter !== 'all') {
                 filtered = filtered.filter(p => p.status === currentFilter);
             }
 
@@ -767,7 +1016,7 @@
                     <div class="project-card">
                         <div class="card-header">
                             <a href="project.html?id=${project.id}" class="card-title">${project.project_name}</a>
-                            <a href="${project.live_url || '#'}" target="_blank" class="card-link" title="Open live site">↗</a>
+                            <a href="${project.live_url || '#'}" target="_blank" class="card-link" title="Open live site">â</a>
                         </div>
                         <div>
                             <span class="${getStatusBadgeClass(project.status)}">${project.status || 'N/A'}</span>
@@ -793,10 +1042,56 @@
             document.getElementById('projectGrid').innerHTML = html;
         }
 
+        function renderFocusSection() {
+            // Ready to Launch
+            const ready = allProjects.filter(p => p.status === 'ready').slice(0, 4);
+            document.getElementById('focusReady').innerHTML = ready.length
+                ? ready.map(p => `<div class="focus-item">
+                    <a href="project.html?id=${p.id}" class="focus-item-name">${p.project_name}</a>
+                  </div>`).join('')
+                : '<span class="focus-empty">None ready right now</span>';
+
+            // Quickest Income (non-live, highest Y1 revenue)
+            const income = allProjects
+                .filter(p => p.status !== 'live' && p.status !== 'idea' && (p.revenue_y1 || 0) > 0)
+                .sort((a, b) => (b.revenue_y1 || 0) - (a.revenue_y1 || 0))
+                .slice(0, 4);
+            document.getElementById('focusIncome').innerHTML = income.length
+                ? income.map(p => `<div class="focus-item">
+                    <a href="project.html?id=${p.id}" class="focus-item-name">${p.project_name}</a>
+                    <span class="focus-item-meta">$${(p.revenue_y1 || 0).toLocaleString()}/yr</span>
+                  </div>`).join('')
+                : '<span class="focus-empty">No revenue data</span>';
+
+            // Top Priority (by income_priority rank)
+            const priority = allProjects
+                .filter(p => p.income_priority && p.income_priority > 0)
+                .sort((a, b) => a.income_priority - b.income_priority)
+                .slice(0, 4);
+            document.getElementById('focusPriority').innerHTML = priority.length
+                ? priority.map((p, i) => `<div class="focus-item">
+                    <a href="project.html?id=${p.id}" class="focus-item-name">${p.project_name}</a>
+                    <span class="focus-item-meta">#${i + 1}</span>
+                  </div>`).join('')
+                : '<span class="focus-empty">No priorities set</span>';
+
+            // Needs Attention (has next_action, not live or idea)
+            const attention = allProjects
+                .filter(p => p.next_action && p.status !== 'live' && p.status !== 'idea')
+                .slice(0, 4);
+            document.getElementById('focusAttention').innerHTML = attention.length
+                ? attention.map(p => `<div class="focus-item">
+                    <a href="project.html?id=${p.id}" class="focus-item-name">${p.project_name}</a>
+                    <span class="focus-item-meta" style="color:var(--warning)">${p.status}</span>
+                  </div>`).join('')
+                : '<span class="focus-empty">Nothing flagged</span>';
+        }
+
         function render() {
             renderStats();
             renderPriorities();
             renderRevenueTracker();
+            renderFocusSection();
             renderProjects();
             document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
         }
@@ -815,6 +1110,73 @@
 
         // Load data
         fetchProjects();
+
+        // --- Idea Capture Modal ---
+        function openModal() {
+            document.getElementById('modalOverlay').classList.add('open');
+            document.getElementById('ideaName').focus();
+            document.getElementById('modalSuccess').style.display = 'none';
+            document.getElementById('modalForm').style.display = 'block';
+            document.getElementById('ideaName').value = '';
+            document.getElementById('ideaDesc').value = '';
+        }
+
+        function closeModal() {
+            document.getElementById('modalOverlay').classList.remove('open');
+        }
+
+        document.getElementById('ideaFab').addEventListener('click', openModal);
+        document.getElementById('modalCancel').addEventListener('click', closeModal);
+        document.getElementById('modalOverlay').addEventListener('click', (e) => {
+            if (e.target === document.getElementById('modalOverlay')) closeModal();
+        });
+
+        document.getElementById('modalSubmit').addEventListener('click', async () => {
+            const name = document.getElementById('ideaName').value.trim();
+            const desc = document.getElementById('ideaDesc').value.trim();
+            const category = document.getElementById('ideaCategory').value;
+
+            if (!name) {
+                document.getElementById('ideaName').style.borderColor = 'var(--danger)';
+                return;
+            }
+
+            const submitBtn = document.getElementById('modalSubmit');
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Saving...';
+
+            try {
+                const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}`, {
+                    method: 'POST',
+                    headers: {
+                        'apikey': SUPABASE_KEY,
+                        'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        'Content-Type': 'application/json',
+                        'Prefer': 'return=minimal'
+                    },
+                    body: JSON.stringify({
+                        project_name: name,
+                        description: desc || null,
+                        category: category,
+                        status: 'idea',
+                        progress_pct: 0,
+                        last_updated: new Date().toISOString().split('T')[0]
+                    })
+                });
+
+                if (res.ok || res.status === 201) {
+                    document.getElementById('modalForm').style.display = 'none';
+                    document.getElementById('modalSuccess').style.display = 'block';
+                } else {
+                    alert('Error saving idea. Please try again.');
+                }
+            } catch (err) {
+                alert('Network error. Please check connection.');
+            }
+
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Save Idea';
+        });
     </script>
 </body>
 </html>
