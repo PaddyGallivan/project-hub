@@ -432,6 +432,40 @@
             font-size: 0.8rem;
         }
 
+        
+        .connector-tag {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background-color: rgba(59, 130, 246, 0.15);
+            color: var(--accent);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        .plugin-tag {
+            display: inline-block;
+            padding: 0.25rem 0.5rem;
+            background-color: rgba(63, 185, 80, 0.15);
+            color: var(--success);
+            border-radius: 4px;
+            font-size: 0.75rem;
+            border: 1px solid rgba(63, 185, 80, 0.3);
+        }
+        .card-integrations {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.35rem;
+            margin-bottom: 0.75rem;
+        }
+        .card-integrations-label {
+            font-size: 0.7rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            width: 100%;
+            margin-bottom: 0.1rem;
+        }
+
         .card-meta {
             font-size: 0.85rem;
             color: var(--muted);
@@ -1138,7 +1172,19 @@
                             ${project.category ? `<span class="tag">${project.category}</span>` : ''}
                             ${project.tech_stack ? project.tech_stack.split(',').map(t => `<span class="tag">${t.trim()}</span>`).join('') : ''}
                         </div>
-                        ${domainLinks ? `<div class="domain-links">${domainLinks}</div>` : ''}
+                        ${project.connectors && project.connectors !== 'None' ? `
+                    <div class="card-integrations">
+                        <div class="card-integrations-label">Connectors</div>
+                        ${project.connectors.split(',').map(c => `<span class="connector-tag">${c.trim()}</span>`).join('')}
+                    </div>
+                ` : ''}
+                ${project.plugins && project.plugins !== 'None' ? `
+                    <div class="card-integrations">
+                        <div class="card-integrations-label">Plugins</div>
+                        ${project.plugins.split(',').map(p => `<span class="plugin-tag">${p.trim()}</span>`).join('')}
+                    </div>
+                ` : ''}
+                ${domainLinks ? `<div class="domain-links">${domainLinks}</div>` : ''}
                         ${project.next_action ? `<div class="next-action"><strong>Next:</strong> ${project.next_action}</div>` : ''}
                         <div class="card-meta">Updated: ${project.last_updated ? new Date(project.last_updated).toLocaleDateString() : 'N/A'}</div>
                     </div>
