@@ -530,6 +530,82 @@
             font-style: italic;
         }
 
+        /* Budget Section */
+        .budget-summary {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .budget-stat {
+            background: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            text-align: center;
+        }
+
+        .budget-stat-value {
+            font-size: 1.6rem;
+            font-weight: 700;
+            color: var(--warning);
+        }
+
+        .budget-stat-label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-top: 0.25rem;
+        }
+
+        .budget-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.875rem;
+        }
+
+        .budget-table th {
+            text-align: left;
+            padding: 0.5rem 0.75rem;
+            border-bottom: 2px solid var(--border);
+            color: var(--muted);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .budget-table td {
+            padding: 0.5rem 0.75rem;
+            border-bottom: 1px solid var(--border);
+            vertical-align: top;
+        }
+
+        .budget-table tr:hover td {
+            background: rgba(255,255,255,0.02);
+        }
+
+        .budget-alert {
+            margin-top: 1rem;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            line-height: 1.5;
+        }
+
+        .budget-alert.warn {
+            background: rgba(210,153,34,0.12);
+            border-left: 3px solid var(--warning);
+            color: #e6c96a;
+        }
+
+        .budget-alert.tip {
+            background: rgba(63,185,80,0.1);
+            border-left: 3px solid var(--success);
+            color: #7ee787;
+        }
+
         /* Floating Idea Button */
         .idea-fab {
             position: fixed;
@@ -765,6 +841,12 @@
                 <div class="focus-card-title">&#x26A0; Needs Attention</div>
                 <div id="focusAttention"><span class="focus-empty">Loading...</span></div>
             </div>
+        </div>
+
+        <!-- Monthly Budget Section -->
+        <h2 class="section-title">&#x1F4B3; Monthly Costs</h2>
+        <div id="budgetSection">
+            <div style="text-align:center; color: var(--muted); padding: 1rem;">Loading costs...</div>
         </div>
 
         <!-- Filter & Search -->
@@ -1087,11 +1169,100 @@
                 : '<span class="focus-empty">Nothing flagged</span>';
         }
 
+        function renderBudget() {
+            // Account-level costs (USD → AUD approx)
+            const SUPABASE_PROJECTS = 6;
+            const SUPABASE_FREE_INCLUDED = 2;
+            const SUPABASE_BASE_USD = 25;
+            const SUPABASE_EXTRA_USD = (SUPABASE_PROJECTS - SUPABASE_FREE_INCLUDED) * 10;
+            const SUPABASE_TOTAL_USD = SUPABASE_BASE_USD + SUPABASE_EXTRA_USD;
+            const AUD_RATE = 1.58;
+            const SUPABASE_AUD = Math.round(SUPABASE_TOTAL_USD * AUD_RATE);
+
+            // Per-project domain costs from DB
+            const projectCosts = allProjects
+                .filter(p => parseFloat(p.cost_monthly || 0) > 0)
+                .sort((a, b) => parseFloat(b.cost_monthly) - parseFloat(a.cost_monthly));
+
+            const domainTotal = projectCosts.reduce((sum, p) => sum + parseFloat(p.cost_monthly || 0), 0);
+            const grandTotal = domainTotal + SUPABASE_AUD;
+
+            // Savings opportunities
+            const ideaDomainCost = allProjects
+                .filter(p => p.status === 'idea' && parseFloat(p.cost_monthly || 0) > 0)
+                .reduce((sum, p) => sum + parseFloat(p.cost_monthly || 0), 0);
+
+            document.getElementById('budgetSection').innerHTML = `
+                <div class="budget-summary">
+                    <div class="budget-stat">
+                        <div class="budget-stat-value">A$${grandTotal.toFixed(0)}</div>
+                        <div class="budget-stat-label">Total / Month</div>
+                    </div>
+                    <div class="budget-stat">
+                        <div class="budget-stat-value">A$${(grandTotal * 12).toFixed(0)}</div>
+                        <div class="budget-stat-label">Total / Year</div>
+                    </div>
+                    <div class="budget-stat">
+                        <div class="budget-stat-value" style="color:var(--danger)">A$${SUPABASE_AUD}</div>
+                        <div class="budget-stat-label">Supabase / Month</div>
+                    </div>
+                    <div class="budget-stat">
+                        <div class="budget-stat-value">A$${domainTotal.toFixed(2)}</div>
+                        <div class="budget-stat-label">Domains / Month</div>
+                    </div>
+                </div>
+                <table class="budget-table">
+                    <thead>
+                        <tr>
+                            <th>Item</th>
+                            <th>Type</th>
+                            <th>Monthly (AUD)</th>
+                            <th>Notes</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Supabase Pro</strong></td>
+                            <td><span class="status-badge" style="background:#6e4bc4;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75rem">Account</span></td>
+                            <td style="color:var(--danger);font-weight:700">~A$${SUPABASE_AUD}</td>
+                            <td style="color:var(--muted);font-size:0.8rem">US$${SUPABASE_TOTAL_USD}/mo — ${SUPABASE_PROJECTS} active projects (base $${SUPABASE_BASE_USD} + ${SUPABASE_PROJECTS - SUPABASE_FREE_INCLUDED}×$10 extra). Pause unused to save ~A$${Math.round(10 * AUD_RATE)}/project.</td>
+                        </tr>
+                        ${projectCosts.map(p => `
+                        <tr>
+                            <td><a href="project.html?id=${p.id}" style="color:var(--accent);text-decoration:none;font-weight:500">${p.project_name}</a></td>
+                            <td><span style="font-size:0.8rem;color:var(--muted)">Domain</span></td>
+                            <td>A$${parseFloat(p.cost_monthly).toFixed(2)}</td>
+                            <td style="color:var(--muted);font-size:0.8rem">${p.cost_notes || ''}</td>
+                        </tr>`).join('')}
+                        <tr style="border-top:2px solid var(--border)">
+                            <td colspan="2"><strong>TOTAL</strong></td>
+                            <td><strong>A$${grandTotal.toFixed(2)}</strong></td>
+                            <td style="color:var(--muted);font-size:0.8rem">A$${(grandTotal * 12).toFixed(0)}/year</td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="budget-alert warn">
+                    &#x26A0; <strong>Supabase is costing ~A$${SUPABASE_AUD}/mo (A$${SUPABASE_AUD * 12}/yr).</strong>
+                    You have ${SUPABASE_PROJECTS} active projects — Pro includes ${SUPABASE_FREE_INCLUDED} free, each extra is US$10/mo.
+                    Pausing just 2 unused projects would save ~A$${Math.round(2 * 10 * AUD_RATE)}/mo.
+                </div>
+                <div class="budget-alert tip">
+                    &#x1F4A1; <strong>Quick savings:</strong>
+                    (1) Pause Supabase projects not actively in dev = save A$${Math.round(10 * AUD_RATE)}/project/mo.
+                    (2) Drop idea-only domains you're not committed to = save A$1.58/domain/mo.
+                    (3) Carousel has 4 domains for an idea = A$6.30/mo — drop 2-3?
+                    (4) Move WPS Staff Hub from Render to Vercel = free &amp; more reliable.
+                    (5) Move domains from Squarespace to Cloudflare Registrar ≈ A$8-10/yr vs A$18.90/yr.
+                </div>
+            `;
+        }
+
         function render() {
             renderStats();
             renderPriorities();
             renderRevenueTracker();
             renderFocusSection();
+            renderBudget();
             renderProjects();
             document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
         }
