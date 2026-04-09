@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Details</title>
+    <style>
+        :root {
+            --bg: #0f1117;
+            --card: #1a1d27;
+            --accent: #3b82f6;
+            --text: #e6edf3;
+            --muted: #7d8590;
+            --border: #30363d;
+            --success: #3fb950;
+            --warning: #d29922;
+            --danger: #f85149;
+            --info: #58a6ff;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+            background-color: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        /* Back Link */
+        .back-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            color: var(--accent);
+            text-decoration: none;
+            margin-bottom: 2rem;
+            transition: opacity 0.2s;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        /* Project Header */
+        .project-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        .project-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            white-space: nowrap;
+            margin-bottom: 0.5rem;
+        }
+
+        .status-badge.live { background-color: #1f6feb; color: #c9d1d9; }
+        .status-badge.ready { background-color: #3fb950; color: #0d1117; }
+        .status-badge.dev { background-color: #d29922; color: #0d1117; }
+        .status-badge.paused { background-color: #6e7681; color: #c9d1d9; }
+
+        .project-link {
+            padding: 0.5rem 1rem;
+            background-color: var(--accent);
+            color: white;
+            text-decoration: none;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            transition: opacity 0.2s;
+            display: inline-block;
+        }
+
+        .project-link:hover {
+            opacity: 0.8;
+        }
+
+        /* Section */
+        .section {
+            background-color: var(--card);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+        }
+
+        /* Key Features */
+        .features-list {
+            list-style: none;
+        }
+
+        .features-list li {
+            padding: 0.75rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .features-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+        }
+
+        /* Status Grid */
+        .status-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .status-item {
+            padding: 1rem;
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+        }
+
+        .status-label {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .status-value {
+            font-size: 1.1rem;
+            color: var(--text);
+        }
+
+        /* Progress Bar */
+        .progress-section {
+            margin-bottom: 1rem;
+        }
+
+        .progress-bar {
+            height: 8px;
+            background-color: var(--border);
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--accent);
+            transition: width 0.3s;
+        }
+
+        .progress-label {
+            font-size: 0.9rem;
+            color: var(--muted);
+        }
+
+        /* Description */
+        .description {
+            font-size: 1rem;
+            line-height: 1.6;
+            color: var(--text);
+            margin-bottom: 1rem;
+        }
+
+        /* Tech Stack */
+        .tech-stack {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+        }
+
+        .tech-tag {
+            display: inline-block;
+            padding: 0.4rem 0.8rem;
+            background-color: var(--bg);
+            color: var(--text);
+            border: 1px solid var(--border);
+            border-radius: 4px;
+            font-size: 0.85rem;
+            font-weight: 500;
+        }
+
+        /* Revenue Section */
+        .revenue-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .revenue-item {
+            text-align: center;
+            padding: 1rem;
+            background-color: var(--bg);
+            border-radius: 6px;
+            border: 1px solid var(--border);
+        }
+
+        .revenue-label {
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .revenue-value {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: var(--success);
+        }
+
+        .category-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+
+        .category-badge.ssv-ecosystem { background-color: #1f6feb; color: #c9d1d9; }
+        .category-badge.education { background-color: #1f6feb; color: #c9d1d9; }
+        .category-badge.events { background-color: #da3633; color: #fff; }
+        .category-badge.community { background-color: #a371f7; color: #fff; }
+        .category-badge.health { background-color: #79c0ff; color: #0d1117; }
+
+        .scale-notes {
+            padding: 1rem;
+            background-color: var(--bg);
+            border-left: 3px solid var(--accent);
+            border-radius: 4px;
+            font-size: 0.95rem;
+            line-height: 1.6;
+            color: var(--text);
+            margin-top: 1rem;
+        }
+
+        /* Domains */
+        .domains-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.75rem;
+        }
+
+        .domain-item {
+            padding: 0.5rem 1rem;
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.9rem;
+        }
+
+        .domain-link {
+            color: var(--accent);
+            text-decoration: none;
+            transition: opacity 0.2s;
+        }
+
+        .domain-link:hover {
+            opacity: 0.8;
+            text-decoration: underline;
+        }
+
+        /* Next Steps */
+        .next-steps-box {
+            padding: 1rem;
+            background-color: rgba(58, 166, 215, 0.1);
+            border-left: 3px solid var(--info);
+            border-radius: 4px;
+            margin-bottom: 1rem;
+        }
+
+        .next-steps-title {
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: var(--info);
+        }
+
+        .next-steps-text {
+            font-size: 0.95rem;
+            color: var(--text);
+            line-height: 1.5;
+        }
+
+        /* Notes */
+        .notes-box {
+            padding: 1rem;
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            color: var(--text);
+            line-height: 1.6;
+            white-space: pre-wrap;
+            word-break: break-word;
+        }
+
+        /* Metadata */
+        .metadata {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 2rem;
+            font-size: 0.9rem;
+            color: var(--muted);
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .metadata-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .metadata-label {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 3rem;
+            color: var(--muted);
+        }
+
+        .error {
+            background-color: rgba(248, 81, 73, 0.1);
+            border-left: 3px solid var(--danger);
+            padding: 1rem;
+            border-radius: 4px;
+            color: var(--danger);
+            margin-bottom: 1rem;
+        }
+
+        @media (max-width: 768px) {
+            .project-header {
+                flex-direction: column;
+            }
+
+            .status-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .revenue-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .metadata {
+                gap: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <a href="index.html" class="back-link">← Back to Hub</a>
+
+        <div id="content" class="loading">Loading project...</div>
+    </div>
+
+    <script>
+        const SUPABASE_URL = 'https://bymtqxkcsxvslcdfedpa.supabase.co';
+        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5bXRxeGtjc3h2c2xjZGZlZHBhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyMzYxNjcsImV4cCI6MjA5MDgxMjE2N30.63NWyv7NIHdjFuHVsaYgZiA1m5U_Dc5VhLMA0qTj_As';
+        const TABLE_NAME = 'project_hub';
+
+        function getProjectId() {
+            const params = new URLSearchParams(window.location.search);
+            return params.get('id');
+        }
+
+        function formatCurrency(value) {
+            if (!value) return '$0';
+            return `$${value.toLocaleString()}`;
+        }
+
+        function getCategoryBadgeClass(category) {
+            if (!category) return '';
+            const normalized = category.toLowerCase().replace(/\s+/g, '-');
+            return `category-badge ${normalized}`;
+        }
+
+        function getStatusBadgeClass(status) {
+            if (!status) return 'status-badge';
+            const normalized = status.toLowerCase();
+            return `status-badge ${normalized}`;
+        }
+
+        async function loadProject() {
+            const projectId = getProjectId();
+
+            if (!projectId) {
+                document.getElementById('content').innerHTML = '<div class="error">No project ID provided.</div>';
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?id=eq.${projectId}`,
+                    {
+                        headers: {
+                            'apikey': SUPABASE_KEY,
+                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                        }
+                    }
+                );
+                const data = await response.json();
+
+                if (!data || data.length === 0) {
+                    document.getElementById('content').innerHTML = '<div class="error">Project not found.</div>';
+                    return;
+                }
+
+                const project = data[0];
+                document.title = `${project.project_name} - Paddy's Project Hub`;
+                renderProject(project);
+            } catch (error) {
+                console.error('Error loading project:', error);
+                document.getElementById('content').innerHTML = '<div class="error">Error loading project. Please try again.</div>';
+            }
+        }
+
+        function renderProject(project) {
+            let html = `
+                <div class="project-header">
+                    <div>
+                        <h1 class="project-title">${project.project_name}</h1>
+                        <div>
+                            <span class="${getStatusBadgeClass(project.status)}">${project.status || 'N/A'}</span>
+                        </div>
+                    </div>
+                    ${project.live_url ? `<a href="${project.live_url}" target="_blank" class="project-link">Visit Live Site ↗</a>` : ''}
+                </div>
+            `;
+
+            // Key Features Section
+            if (project.key_features) {
+                const features = typeof project.key_features === 'string'
+                    ? project.key_features.split('\n').filter(f => f.trim())
+                    : project.key_features;
+
+                html += `
+                    <div class="section">
+                        <h2 class="section-title">Key Features</h2>
+                        <ul class="features-list">
+                            ${features.map(f => `<li>${f.trim()}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            // Current Status Section
+            html += `
+                <div class="section">
+                    <h2 class="section-title">Current Status</h2>
+            `;
+
+            if (project.progress_pct !== null && project.progress_pct !== undefined) {
+                html += `
+                    <div class="progress-section">
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: ${project.progress_pct}%"></div>
+                        </div>
+                        <div class="progress-label">Progress: ${project.progress_pct}%</div>
+                    </div>
+                `;
+            }
+
+            html += `
+                <div class="status-grid">
+                    <div class="status-item">
+                        <div class="status-label">Category</div>
+                        <div class="status-value">${project.category || 'N/A'}</div>
+                    </div>
+                    <div class="status-item">
+                        <div class="status-label">Status</div>
+                        <div class="status-value">${project.status || 'N/A'}</div>
+                    </div>
+                </div>
+            `;
+
+            if (project.description) {
+                html += `<div class="description">${project.description}</div>`;
+            }
+
+            if (project.tech_stack) {
+                const techs = project.tech_stack.split(',').map(t => t.trim());
+                html += `
+                    <div style="margin-top: 1rem;">
+                        <div class="status-label" style="margin-bottom: 0.75rem;">Tech Stack</div>
+                        <div class="tech-stack">
+                            ${techs.map(t => `<span class="tech-tag">${t}</span>`).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            html += `</div>`;
+
+            // Revenue Section
+            if ((project.revenue_y1 && project.revenue_y1 > 0) ||
+                (project.revenue_y2 && project.revenue_y2 > 0) ||
+                (project.revenue_y3 && project.revenue_y3 > 0)) {
+
+                const y1 = project.revenue_y1 || 0;
+                const y2 = project.revenue_y2 || 0;
+                const y3 = project.revenue_y3 || 0;
+
+                html += `
+                    <div class="section">
+                        <h2 class="section-title">Revenue Projection</h2>
+                        ${project.revenue_category ? `<div class="${getCategoryBadgeClass(project.revenue_category)}">${project.revenue_category}</div>` : ''}
+                        <div class="revenue-grid">
+                            <div class="revenue-item">
+                                <div class="revenue-label">Year 1</div>
+                                <div class="revenue-value">${formatCurrency(y1)}</div>
+                            </div>
+                            <div class="revenue-item">
+                                <div class="revenue-label">Year 2</div>
+                                <div class="revenue-value">${formatCurrency(y2)}</div>
+                            </div>
+                            <div class="revenue-item">
+                                <div class="revenue-label">Year 3</div>
+                                <div class="revenue-value">${formatCurrency(y3)}</div>
+                            </div>
+                        </div>
+                `;
+
+                if (project.scale_notes) {
+                    html += `
+                        <div class="scale-notes">
+                            <strong>Scale-up Notes:</strong><br>
+                            ${project.scale_notes}
+                        </div>
+                    `;
+                }
+
+                html += `</div>`;
+            }
+
+            // Domains Section
+            if (project.domains && project.domains.length > 0) {
+                const domains = Array.isArray(project.domains) ? project.domains : [project.domains];
+                const domainLinks = domains
+                    .filter(d => d)
+                    .map(d => `<div class="domain-item"><a href="https://${d}" target="_blank" class="domain-link">${d}</a></div>`)
+                    .join('');
+
+                if (domainLinks) {
+                    html += `
+                        <div class="section">
+                            <h2 class="section-title">Domains</h2>
+                            <div class="domains-list">
+                                ${domainLinks}
+                            </div>
+                        </div>
+                    `;
+                }
+            }
+
+            // Next Steps Section
+            html += `<div class="section">`;
+
+            if (project.next_action) {
+                html += `
+                    <div class="next-steps-box">
+                        <div class="next-steps-title">Next Action</div>
+                        <div class="next-steps-text">${project.next_action}</div>
+                    </div>
+                `;
+            }
+
+            if (project.notes) {
+                html += `
+                    <h2 class="section-title">Notes</h2>
+                    <div class="notes-box">${project.notes}</div>
+                `;
+            } else if (!project.next_action) {
+                html += `<p style="color: var(--muted); font-size: 0.9rem;">No next actions or notes available.</p>`;
+            }
+
+            html += `</div>`;
+
+            // Metadata
+            html += `
+                <div class="metadata">
+                    <div class="metadata-item">
+                        <div class="metadata-label">Last Updated</div>
+                        <div>${project.last_updated ? new Date(project.last_updated).toLocaleDateString() : 'N/A'}</div>
+                    </div>
+                    <div class="metadata-item">
+                        <div class="metadata-label">Income Priority</div>
+                        <div>${project.income_priority || '—'}</div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('content').innerHTML = html;
+        }
+
+        // Load project on page load
+        loadProject();
+    </script>
+</body>
+</html>
