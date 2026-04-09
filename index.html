@@ -913,9 +913,7 @@
     </div>
 
     <script>
-        const SUPABASE_URL = 'https://bymtqxkcsxvslcdfedpa.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImJ5bXRxeGtjc3h2c2xjZGZlZHBhIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzUyMzYxNjcsImV4cCI6MjA5MDgxMjE2N30.63NWyv7NIHdjFuHVsaYgZiA1m5U_Dc5VhLMA0qTj_As';
-        const TABLE_NAME = 'project_hub';
+        const API_URL = 'https://project-hub-api.pgallivan.workers.dev';
 
         let allProjects = [];
         let currentFilter = 'all';
@@ -923,11 +921,10 @@
         async function fetchProjects() {
             try {
                 const response = await fetch(
-                    `${SUPABASE_URL}/rest/v1/${TABLE_NAME}?order=sort_order.asc`,
+                    `${API_URL}/projects`,
                     {
                         headers: {
-                            'apikey': SUPABASE_KEY,
-                            'Authorization': `Bearer ${SUPABASE_KEY}`,
+                            'Content-Type': 'application/json',
                         }
                     }
                 );
@@ -1170,14 +1167,7 @@
         }
 
         function renderBudget() {
-            // Account-level costs (USD → AUD approx)
-            const SUPABASE_PROJECTS = 6;
-            const SUPABASE_FREE_INCLUDED = 2;
-            const SUPABASE_BASE_USD = 25;
-            const SUPABASE_EXTRA_USD = (SUPABASE_PROJECTS - SUPABASE_FREE_INCLUDED) * 10;
-            const SUPABASE_TOTAL_USD = SUPABASE_BASE_USD + SUPABASE_EXTRA_USD;
             const AUD_RATE = 1.58;
-            const SUPABASE_AUD = Math.round(SUPABASE_TOTAL_USD * AUD_RATE);
 
             // Per-project domain costs from DB
             const projectCosts = allProjects
@@ -1185,7 +1175,7 @@
                 .sort((a, b) => parseFloat(b.cost_monthly) - parseFloat(a.cost_monthly));
 
             const domainTotal = projectCosts.reduce((sum, p) => sum + parseFloat(p.cost_monthly || 0), 0);
-            const grandTotal = domainTotal + SUPABASE_AUD;
+            const grandTotal = domainTotal; // Cloudflare D1 + Workers = free
 
             // Savings opportunities
             const ideaDomainCost = allProjects
@@ -1203,8 +1193,8 @@
                         <div class="budget-stat-label">Total / Year</div>
                     </div>
                     <div class="budget-stat">
-                        <div class="budget-stat-value" style="color:var(--danger)">A$${SUPABASE_AUD}</div>
-                        <div class="budget-stat-label">Supabase / Month</div>
+                        <div class="budget-stat-value" style="color:var(--success)">A$0</div>
+                        <div class="budget-stat-label">Hosting / Month</div>
                     </div>
                     <div class="budget-stat">
                         <div class="budget-stat-value">A$${domainTotal.toFixed(2)}</div>
@@ -1222,10 +1212,10 @@
                     </thead>
                     <tbody>
                         <tr>
-                            <td><strong>Supabase Pro</strong></td>
-                            <td><span class="status-badge" style="background:#6e4bc4;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75rem">Account</span></td>
-                            <td style="color:var(--danger);font-weight:700">~A$${SUPABASE_AUD}</td>
-                            <td style="color:var(--muted);font-size:0.8rem">US$${SUPABASE_TOTAL_USD}/mo — ${SUPABASE_PROJECTS} active projects (base $${SUPABASE_BASE_USD} + ${SUPABASE_PROJECTS - SUPABASE_FREE_INCLUDED}×$10 extra). Pause unused to save ~A$${Math.round(10 * AUD_RATE)}/project.</td>
+                            <td><strong>Cloudflare Workers + D1</strong></td>
+                            <td><span class="status-badge" style="background:#f6821f;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75rem">Hosting</span></td>
+                            <td style="color:var(--success);font-weight:700">FREE</td>
+                            <td style="color:var(--muted);font-size:0.8rem">100K requests/day free. D1 5GB free. Migrated from Supabase Pro (~A$103/mo saved).</td>
                         </tr>
                         ${projectCosts.map(p => `
                         <tr>
@@ -1237,22 +1227,19 @@
                         <tr style="border-top:2px solid var(--border)">
                             <td colspan="2"><strong>TOTAL</strong></td>
                             <td><strong>A$${grandTotal.toFixed(2)}</strong></td>
-                            <td style="color:var(--muted);font-size:0.8rem">A$${(grandTotal * 12).toFixed(0)}/year</td>
+                            <td style="color:var(--muted);font-size:0.8rem">A${(grandTotal * 12).toFixed(0)}/year (domains only)</td>
                         </tr>
                     </tbody>
                 </table>
-                <div class="budget-alert warn">
-                    &#x26A0; <strong>Supabase is costing ~A$${SUPABASE_AUD}/mo (A$${SUPABASE_AUD * 12}/yr).</strong>
-                    You have ${SUPABASE_PROJECTS} active projects — Pro includes ${SUPABASE_FREE_INCLUDED} free, each extra is US$10/mo.
-                    Pausing just 2 unused projects would save ~A$${Math.round(2 * 10 * AUD_RATE)}/mo.
+                <div class="budget-alert tip">
+                    &#x2705; <strong>Migrated to Cloudflare — saving ~A$103/mo vs Supabase Pro.</strong>
+                    Project Hub now runs on Cloudflare Workers + D1 (free tier). Database: project-hub-db.
                 </div>
                 <div class="budget-alert tip">
-                    &#x1F4A1; <strong>Quick savings:</strong>
-                    (1) Pause Supabase projects not actively in dev = save A$${Math.round(10 * AUD_RATE)}/project/mo.
-                    (2) Drop idea-only domains you're not committed to = save A$1.58/domain/mo.
-                    (3) Carousel has 4 domains for an idea = A$6.30/mo — drop 2-3?
-                    (4) Move WPS Staff Hub from Render to Vercel = free &amp; more reliable.
-                    (5) Move domains from Squarespace to Cloudflare Registrar ≈ A$8-10/yr vs A$18.90/yr.
+                    &#x1F4A1; <strong>More savings available:</strong>
+                    (1) Drop idea-only domains you're not committed to = save A$1.58/domain/mo.
+                    (2) Carousel has 4 domains for an idea = A$6.30/mo — drop 2-3?
+                    (3) Move domains from Squarespace to Cloudflare Registrar ≈ A$8-10/yr vs A$18.90/yr.
                 </div>
             `;
         }
@@ -1317,13 +1304,10 @@
             submitBtn.textContent = 'Saving...';
 
             try {
-                const res = await fetch(`${SUPABASE_URL}/rest/v1/${TABLE_NAME}`, {
+                const res = await fetch(`${API_URL}/projects`, {
                     method: 'POST',
                     headers: {
-                        'apikey': SUPABASE_KEY,
-                        'Authorization': `Bearer ${SUPABASE_KEY}`,
                         'Content-Type': 'application/json',
-                        'Prefer': 'return=minimal'
                     },
                     body: JSON.stringify({
                         project_name: name,
