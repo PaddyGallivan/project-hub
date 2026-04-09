@@ -750,19 +750,19 @@
         <h2 class="section-title">What to Focus On</h2>
         <div class="focus-section" id="focusSection">
             <div class="focus-card">
-                <div class="focus-card-title">ð Ready to Launch</div>
+                <div class="focus-card-title">&#x1F680; Ready to Launch</div>
                 <div id="focusReady"><span class="focus-empty">Loading...</span></div>
             </div>
             <div class="focus-card">
-                <div class="focus-card-title">ð° Quickest Income</div>
+                <div class="focus-card-title">&#x1F4B0; Quickest Income</div>
                 <div id="focusIncome"><span class="focus-empty">Loading...</span></div>
             </div>
             <div class="focus-card">
-                <div class="focus-card-title">ð¥ Top Priority</div>
+                <div class="focus-card-title">&#x1F525; Top Priority</div>
                 <div id="focusPriority"><span class="focus-empty">Loading...</span></div>
             </div>
             <div class="focus-card">
-                <div class="focus-card-title">â ï¸ Needs Attention</div>
+                <div class="focus-card-title">&#x26A0; Needs Attention</div>
                 <div id="focusAttention"><span class="focus-empty">Loading...</span></div>
             </div>
         </div>
@@ -791,7 +791,7 @@
 
         <!-- Footer -->
         <div class="footer">
-            <p>Claude dashboard â¢ Last updated: <span id="lastUpdated">--</span> â¢ Built with Supabase</p>
+            <p>Claude dashboard • Last updated: <span id="lastUpdated">--</span> • Built with Supabase</p>
         </div>
     </div>
 
@@ -801,7 +801,7 @@
     <!-- Idea Capture Modal -->
     <div class="modal-overlay" id="modalOverlay">
         <div class="modal">
-            <h3>ð¡ Capture an Idea</h3>
+            <h3>&#x1F4A1; Capture an Idea</h3>
             <div id="modalForm">
                 <input type="text" class="modal-input" id="ideaName" placeholder="Idea name *" maxlength="100">
                 <textarea class="modal-input" id="ideaDesc" placeholder="What is it? One or two lines..." maxlength="500"></textarea>
@@ -821,7 +821,7 @@
                 </div>
             </div>
             <div class="modal-success" id="modalSuccess" style="display:none">
-                â Idea saved! Refresh to see it.
+                ✅ Idea saved! Refresh to see it.
                 <div class="modal-actions" style="justify-content:center; margin-top:1rem">
                     <button class="btn-primary" onclick="closeModal(); location.reload();">Refresh Now</button>
                     <button class="btn-cancel" onclick="closeModal()">Close</button>
@@ -1016,7 +1016,7 @@
                     <div class="project-card">
                         <div class="card-header">
                             <a href="project.html?id=${project.id}" class="card-title">${project.project_name}</a>
-                            <a href="${project.live_url || '#'}" target="_blank" class="card-link" title="Open live site">â</a>
+                            <a href="${project.live_url || '#'}" target="_blank" class="card-link" title="Open live site">↗</a>
                         </div>
                         <div>
                             <span class="${getStatusBadgeClass(project.status)}">${project.status || 'N/A'}</span>
