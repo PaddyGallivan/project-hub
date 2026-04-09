@@ -139,9 +139,23 @@
   .status .step.active { opacity: 1; color: #47B5D0; }
   .status .step.done { opacity: 1; color: #4ade80; }
   .status .step.done::before { content: '✓ '; }
-  .status .step.active::before { content: '→ '; }
+  .status .step.active::before { content: ''; }
   .status .step.error { opacity: 1; color: #f87171; }
   .status .step.error::before { content: '✗ '; }
+
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .spinner {
+    display: inline-block;
+    width: 14px; height: 14px;
+    border: 2px solid rgba(71, 181, 208, 0.3);
+    border-top-color: #47B5D0;
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    vertical-align: middle;
+    margin-right: 6px;
+  }
+  .status .step.active .spinner { display: inline-block; }
+  .step-timer { font-size: 0.85em; opacity: 0.6; margin-left: 8px; }
 
   .results {
     display: none;
@@ -266,12 +280,12 @@
   <div class="loading-bar" id="loadingBar"><div class="fill" id="loadingFill"></div></div>
 
   <div class="status" id="status">
-    <div class="step" id="step1">Loading AI model...</div>
-    <div class="step" id="step2">Removing background...</div>
-    <div class="step" id="step3">Detecting face...</div>
-    <div class="step" id="step4">Creating BrainB (answer)...</div>
-    <div class="step" id="step5">Creating BrainA (hair only)...</div>
-    <div class="step" id="step6">Applying outline + shadow...</div>
+    <div class="step" id="step1"><span class="spinner" style="display:none"></span>Loading AI model...</div>
+    <div class="step" id="step2"><span class="spinner" style="display:none"></span>Removing background (first time ~1-2 min)...</div>
+    <div class="step" id="step3"><span class="spinner" style="display:none"></span>Detecting face...</div>
+    <div class="step" id="step4"><span class="spinner" style="display:none"></span>Creating BrainB (answer)...</div>
+    <div class="step" id="step5"><span class="spinner" style="display:none"></span>Creating BrainA (hair only)...</div>
+    <div class="step" id="step6"><span class="spinner" style="display:none"></span>Applying outline + shadow...</div>
   </div>
 
   <div class="results" id="results">
@@ -360,12 +374,36 @@ function loadFaceModels() {
 loadFaceModels().catch(e => console.warn('Face model load:', e));
 
 // ── Steps UI ──
+let stepTimers = {};
 function setStep(n, state) {
   const el = document.getElementById('step' + n);
   el.className = 'step ' + state;
+  const spinner = el.querySelector('.spinner');
+  if (spinner) spinner.style.display = state === 'active' ? 'inline-block' : 'none';
+  // Start/stop timer
+  if (state === 'active') {
+    const start = Date.now();
+    stepTimers[n] = setInterval(() => {
+      let existing = el.querySelector('.step-timer');
+      if (!existing) { existing = document.createElement('span'); existing.className = 'step-timer'; el.appendChild(existing); }
+      const sec = Math.round((Date.now() - start) / 1000);
+      existing.textContent = sec < 60 ? `${sec}s` : `${Math.floor(sec/60)}m ${sec%60}s`;
+    }, 1000);
+  } else if (stepTimers[n]) {
+    clearInterval(stepTimers[n]);
+    delete stepTimers[n];
+  }
 }
 function setProgress(pct) {
   loadingFill.style.width = pct + '%';
+}
+
+// ── Timeout helper ──
+function withTimeout(promise, ms, msg) {
+  return Promise.race([
+    promise,
+    new Promise((_, reject) => setTimeout(() => reject(new Error(msg)), ms))
+  ]);
 }
 
 // ── Main Pipeline ──
@@ -406,12 +444,14 @@ generateBtn.addEventListener('click', async () => {
 
     let blob;
     try {
-      blob = await removeBackground(uploadedFile, {
-        output: { format: 'image/png' }
-      });
+      blob = await withTimeout(
+        removeBackground(uploadedFile, { output: { format: 'image/png' } }),
+        180000,
+        'Background removal timed out after 3 minutes — try a smaller image or check your connection'
+      );
     } catch (bgErr) {
       if (window.location.protocol === 'file:') {
-        throw new Error('Background removal blocked — open via "Start Brain Tool.command" or a local server instead of double-clicking the HTML file');
+        throw new Error('Background removal blocked — open via a web server instead of double-clicking the HTML file');
       }
       throw bgErr;
     }
@@ -434,7 +474,7 @@ generateBtn.addEventListener('click', async () => {
     // Step 3: Face detection
     setStep(3, 'active');
 
-    if (!modelLoaded) await loadFaceModels(); // reuses same promise — no double-load
+    if (!modelLoaded) await withTimeout(loadFaceModels(), 60000, 'Face model download timed out — check your connection');
 
     const detection = await faceapi.detectSingleFace(img).withFaceLandmarks();
     if (!detection) throw new Error('No face detected — try a clearer photo');
