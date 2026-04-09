@@ -403,7 +403,8 @@ function renderProjects() {
     p.project_name.toLowerCase().includes(search) ||
     (p.description||'').toLowerCase().includes(search) ||
     (p.tech_stack||'').toLowerCase().includes(search) ||
-    (p.status||'').toLowerCase().includes(search)
+    (p.status||'').toLowerCase().includes(search) ||
+      (p.domains||'').toLowerCase().includes(search)
   );
 
   if (!filtered.length) {
@@ -415,6 +416,11 @@ function renderProjects() {
     const techTags = p.tech_stack ? p.tech_stack.split(',').slice(0,4).map(t =>
       '<span class="tech-tag">' + t.trim() + '</span>'
     ).join('') : '';
+
+    const domainLinks = p.domains ? p.domains.split(',').map(function(d) {
+      d = d.trim();
+      return '<a class="domain-link" href="https://' + d + '" target="_blank">' + d + '</a>';
+    }).join('') : '';
 
     return '<div class="card">' +
       '<div class="card-top">' +
@@ -428,6 +434,7 @@ function renderProjects() {
         '<span>' + p.category + '</span>' +
       '</div>' +
       (techTags ? '<div style="margin-top:8px">' + techTags + '</div>' : '') +
+      (domainLinks ? '<div style="margin-top:6px">' + domainLinks + '</div>' : '') +
       (p.next_action ? '<div class="next-action">→ ' + p.next_action + '</div>' : '') +
       '<div class="updated">Updated ' + timeAgo(p.last_updated) + '</div>' +
     '</div>';
