@@ -484,6 +484,149 @@
             background-color: rgba(59, 130, 246, 0.1);
         }
 
+        /* Markdown Content */
+        .md-content {
+            font-size: 0.95rem;
+            line-height: 1.8;
+            color: var(--text);
+        }
+
+        .md-content h1 {
+            font-size: 1.6rem;
+            font-weight: 700;
+            margin: 1.5rem 0 0.75rem 0;
+            padding-bottom: 0.5rem;
+            border-bottom: 1px solid var(--border);
+            color: var(--text);
+        }
+
+        .md-content h2 {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin: 1.5rem 0 0.5rem 0;
+            color: var(--accent);
+        }
+
+        .md-content h3 {
+            font-size: 1.1rem;
+            font-weight: 600;
+            margin: 1.25rem 0 0.5rem 0;
+            color: var(--info);
+        }
+
+        .md-content p {
+            margin-bottom: 0.75rem;
+        }
+
+        .md-content ul, .md-content ol {
+            margin: 0.5rem 0 1rem 1.5rem;
+        }
+
+        .md-content li {
+            margin-bottom: 0.35rem;
+        }
+
+        .md-content code {
+            background-color: rgba(110, 118, 129, 0.2);
+            padding: 0.15rem 0.4rem;
+            border-radius: 3px;
+            font-size: 0.88rem;
+            font-family: 'SF Mono', SFMono-Regular, Consolas, monospace;
+        }
+
+        .md-content pre {
+            background-color: var(--bg);
+            border: 1px solid var(--border);
+            border-radius: 6px;
+            padding: 1rem;
+            overflow-x: auto;
+            margin: 0.75rem 0;
+        }
+
+        .md-content pre code {
+            background: none;
+            padding: 0;
+        }
+
+        .md-content blockquote {
+            border-left: 3px solid var(--accent);
+            padding: 0.5rem 1rem;
+            margin: 0.75rem 0;
+            background-color: rgba(59, 130, 246, 0.05);
+            color: var(--muted);
+        }
+
+        .md-content hr {
+            border: none;
+            border-top: 1px solid var(--border);
+            margin: 1.5rem 0;
+        }
+
+        .md-content a {
+            color: var(--accent);
+            text-decoration: none;
+        }
+
+        .md-content a:hover {
+            text-decoration: underline;
+        }
+
+        .md-content table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 0.75rem 0;
+        }
+
+        .md-content th, .md-content td {
+            border: 1px solid var(--border);
+            padding: 0.5rem 0.75rem;
+            text-align: left;
+        }
+
+        .md-content th {
+            background-color: var(--bg);
+            font-weight: 600;
+        }
+
+        .md-content strong {
+            color: #fff;
+        }
+
+        .brief-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        .brief-toggle .chevron {
+            transition: transform 0.2s;
+            font-size: 1.2rem;
+        }
+
+        .brief-toggle .chevron.open {
+            transform: rotate(90deg);
+        }
+
+        .brief-body {
+            margin-top: 1rem;
+        }
+
+        .brief-body.collapsed {
+            display: none;
+        }
+
+        .last-updated-badge {
+            display: inline-block;
+            font-size: 0.75rem;
+            color: var(--muted);
+            background-color: var(--bg);
+            padding: 0.2rem 0.6rem;
+            border-radius: 4px;
+            margin-left: 0.5rem;
+        }
+
         /* Footer */
         .footer {
             text-align: center;
@@ -580,6 +723,93 @@
         function getStatusClass(status) {
             if (!status) return '';
             return status.toLowerCase().replace(/\s+/g, '-');
+        }
+
+        // Lightweight markdown to HTML converter
+        function renderMarkdown(md) {
+            if (!md || !md.trim()) return '';
+            let html = md;
+
+            // Escape HTML entities first
+            html = html.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+
+            // Code blocks (``` ... ```)
+            html = html.replace(/```(\w*)\n([\s\S]*?)```/g, (m, lang, code) => {
+                return `<pre><code>${code.trim()}</code></pre>`;
+            });
+
+            // Inline code
+            html = html.replace(/`([^`]+)`/g, '<code>$1</code>');
+
+            // Headers
+            html = html.replace(/^### (.+)$/gm, '<h3>$1</h3>');
+            html = html.replace(/^## (.+)$/gm, '<h2>$1</h2>');
+            html = html.replace(/^# (.+)$/gm, '<h1>$1</h1>');
+
+            // Bold and italic
+            html = html.replace(/\*\*\*(.+?)\*\*\*/g, '<strong><em>$1</em></strong>');
+            html = html.replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>');
+            html = html.replace(/\*(.+?)\*/g, '<em>$1</em>');
+
+            // Horizontal rules
+            html = html.replace(/^---$/gm, '<hr>');
+
+            // Blockquotes
+            html = html.replace(/^&gt; (.+)$/gm, '<blockquote>$1</blockquote>');
+
+            // Links
+            html = html.replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank">$1</a>');
+
+            // Tables
+            html = html.replace(/^\|(.+)\|\s*\n\|[-| :]+\|\s*\n((?:\|.+\|\s*\n?)*)/gm, (match, header, body) => {
+                const headers = header.split('|').map(h => h.trim()).filter(h => h);
+                const rows = body.trim().split('\n').map(row =>
+                    row.split('|').map(c => c.trim()).filter(c => c)
+                );
+                let table = '<table><thead><tr>';
+                headers.forEach(h => table += `<th>${h}</th>`);
+                table += '</tr></thead><tbody>';
+                rows.forEach(row => {
+                    table += '<tr>';
+                    row.forEach(c => table += `<td>${c}</td>`);
+                    table += '</tr>';
+                });
+                table += '</tbody></table>';
+                return table;
+            });
+
+            // Unordered lists
+            html = html.replace(/^(\s*)[-*] (.+)$/gm, (m, indent, text) => {
+                return `<li>${text}</li>`;
+            });
+            html = html.replace(/((?:<li>.*<\/li>\s*)+)/g, '<ul>$1</ul>');
+
+            // Paragraphs â wrap remaining loose lines
+            const lines = html.split('\n');
+            let result = '';
+            let inBlock = false;
+
+            for (let i = 0; i < lines.length; i++) {
+                const line = lines[i].trim();
+                if (!line) {
+                    if (!inBlock) result += '\n';
+                    continue;
+                }
+                if (line.startsWith('<h') || line.startsWith('<pre') || line.startsWith('<ul') ||
+                    line.startsWith('<ol') || line.startsWith('<table') || line.startsWith('<blockquote') ||
+                    line.startsWith('<hr') || line.startsWith('</')) {
+                    result += line + '\n';
+                    inBlock = line.startsWith('<pre');
+                    if (line.includes('</pre>')) inBlock = false;
+                } else if (inBlock) {
+                    result += line + '\n';
+                    if (line.includes('</pre>')) inBlock = false;
+                } else {
+                    result += `<p>${line}</p>\n`;
+                }
+            }
+
+            return result;
         }
 
         function getProgressColor(pct) {
@@ -734,6 +964,22 @@
                     <div class="section">
                         <h2 class="section-title">About</h2>
                         <div class="description">${project.description}</div>
+                    </div>
+                `;
+            }
+
+            // === FULL PROJECT BRIEF (Markdown) ===
+            if (project.detail_md && project.detail_md.trim()) {
+                const renderedMd = renderMarkdown(project.detail_md);
+                html += `
+                    <div class="section">
+                        <h2 class="section-title brief-toggle" onclick="toggleBrief()">
+                            <span>Full Project Brief</span>
+                            <span class="chevron open" id="briefChevron">&#9654;</span>
+                        </h2>
+                        <div class="brief-body" id="briefBody">
+                            <div class="md-content">${renderedMd}</div>
+                        </div>
                     </div>
                 `;
             }
@@ -905,6 +1151,15 @@
 
             document.getElementById('content').innerHTML = html;
             document.getElementById('content').classList.remove('loading');
+        }
+
+        function toggleBrief() {
+            const body = document.getElementById('briefBody');
+            const chevron = document.getElementById('briefChevron');
+            if (body && chevron) {
+                body.classList.toggle('collapsed');
+                chevron.classList.toggle('open');
+            }
         }
 
         loadProject();
