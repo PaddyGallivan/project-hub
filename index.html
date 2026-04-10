@@ -907,7 +907,7 @@
 
         <!-- Footer -->
         <div class="footer">
-            <p>Claude dashboard â¢ Last updated: <span id="lastUpdated">--</span> â¢ Powered by Cloudflare D1</p>
+            <p>Claude dashboard &bull; Last updated: <span id="lastUpdated">--</span> &bull; Powered by Cloudflare D1</p>
         </div>
     </div>
 
@@ -937,7 +937,7 @@
                 </div>
             </div>
             <div class="modal-success" id="modalSuccess" style="display:none">
-                â Idea saved! Refresh to see it.
+                &#x2705; Idea saved! Refresh to see it.
                 <div class="modal-actions" style="justify-content:center; margin-top:1rem">
                     <button class="btn-primary" onclick="closeModal(); location.reload();">Refresh Now</button>
                     <button class="btn-cancel" onclick="closeModal()">Close</button>
@@ -1145,8 +1145,8 @@
 
                 const appLinksHtml = appLinks.length > 0
                     ? `<div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.75rem">
-                        ${project.live_url ? `<a href="${project.live_url}" target="_blank" style="font-size:0.8rem;padding:0.2rem 0.6rem;background:var(--accent);color:#fff;border-radius:4px;text-decoration:none;font-weight:600">Main â</a>` : ''}
-                        ${appLinks.map(l => `<a href="${l.url}" target="_blank" style="font-size:0.8rem;padding:0.2rem 0.6rem;border:1px solid var(--accent);color:var(--accent);border-radius:4px;text-decoration:none;font-weight:500">${l.label} â</a>`).join('')}
+                        ${project.live_url ? `<a href="${project.live_url}" target="_blank" style="font-size:0.8rem;padding:0.2rem 0.6rem;background:var(--accent);color:#fff;border-radius:4px;text-decoration:none;font-weight:600">Main &#x2197;</a>` : ''}
+                        ${appLinks.map(l => `<a href="${l.url}" target="_blank" style="font-size:0.8rem;padding:0.2rem 0.6rem;border:1px solid var(--accent);color:var(--accent);border-radius:4px;text-decoration:none;font-weight:500">${l.label} &#x2197;</a>`).join('')}
                        </div>`
                     : '';
 
@@ -1154,7 +1154,7 @@
                     <div class="project-card">
                         <div class="card-header">
                             <a href="project.html?id=${project.id}" class="card-title">${project.project_name}</a>
-                            ${project.live_url && appLinks.length === 0 ? `<a href="${project.live_url}" target="_blank" class="card-link" title="Open live site">â</a>` : ''}
+                            ${project.live_url && appLinks.length === 0 ? `<a href="${project.live_url}" target="_blank" class="card-link" title="Open live site">&#x2197;</a>` : ''}
                         </div>
                         <div style="margin-bottom:0.75rem">
                             <span class="${getStatusBadgeClass(project.status)}">${project.status || 'N/A'}</span>
@@ -1305,14 +1305,14 @@
                     </tbody>
                 </table>
                 <div class="budget-alert tip">
-                    &#x2705; <strong>Migrated to Cloudflare â saving ~A$103/mo vs Supabase Pro.</strong>
+                    &#x2705; <strong>Migrated to Cloudflare &mdash; saving ~A$103/mo vs Supabase Pro.</strong>
                     Project Hub now runs on Cloudflare Workers + D1 (free tier). Database: project-hub-db.
                 </div>
                 <div class="budget-alert tip">
                     &#x1F4A1; <strong>More savings available:</strong>
                     (1) Drop idea-only domains you're not committed to = save A$1.58/domain/mo.
-                    (2) Carousel has 4 domains for an idea = A$6.30/mo â drop 2-3?
-                    (3) Move domains from Squarespace to Cloudflare Registrar â A$8-10/yr vs A$18.90/yr.
+                    (2) Carousel has 4 domains for an idea = A$6.30/mo &mdash; drop 2-3?
+                    (3) Move domains from Squarespace to Cloudflare Registrar &asymp; A$8-10/yr vs A$18.90/yr.
                 </div>
             `;
         }
