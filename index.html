@@ -799,24 +799,26 @@
         .claude-end-btn { background-color: #3fb950; color: #0d1117; }
         .toast {
             position: fixed;
-            bottom: 5rem;
+            top: 50%;
             left: 50%;
-            transform: translateX(-50%) translateY(20px);
+            transform: translate(-50%, -50%) scale(0.9);
             background-color: #1a1d27;
-            border: 1px solid #3b82f6;
+            border: 2px solid #3b82f6;
             color: #e6edf3;
-            padding: 0.75rem 1.5rem;
-            border-radius: 8px;
-            font-size: 0.9rem;
-            font-weight: 500;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
-            z-index: 999;
+            padding: 1.25rem 2rem;
+            border-radius: 12px;
+            font-size: 1.1rem;
+            font-weight: 600;
+            box-shadow: 0 8px 40px rgba(0,0,0,0.8);
+            z-index: 99999;
             opacity: 0;
-            transition: opacity 0.2s, transform 0.2s;
+            transition: opacity 0.15s, transform 0.15s;
             pointer-events: none;
-            white-space: nowrap;
+            text-align: center;
+            max-width: 420px;
+            line-height: 1.5;
         }
-        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
+        .toast.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
         .empty-state {
             text-align: center;
             padding: 3rem;
@@ -1393,19 +1395,36 @@
             const t = document.getElementById('toast');
             t.textContent = msg;
             t.classList.add('show');
-            setTimeout(() => t.classList.remove('show'), 2800);
+            clearTimeout(window._toastTimer);
+            window._toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
+        }
+        function fallbackCopy(text, successMsg) {
+            const ta = document.createElement('textarea');
+            ta.value = text;
+            ta.style.cssText = 'position:fixed;top:-999px;left:-999px;opacity:0';
+            document.body.appendChild(ta);
+            ta.focus(); ta.select();
+            try { document.execCommand('copy'); showToast(successMsg); }
+            catch(e) { showToast('📋 Copy manually: ' + text); }
+            document.body.removeChild(ta);
         }
         function copyResume(name, url) {
-            const urlPart = url ? ' (' + url + ')' : '';
-            const prompt = "I'm working on " + name + urlPart + ". Check my Project Hub at paddygallivan.github.io/project-hub/ for full context, then let's ";
-            navigator.clipboard.writeText(prompt).then(() => {
-                showToast('✅ Copied! Open Cowork, paste, and finish the sentence.');
-            }).catch(() => { window.prompt('Copy this:', prompt); });
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText(name).then(() => {
+                    showToast('✅ "' + name + '" copied!\nOpen Cowork — Claude will ask which project.');
+                }).catch(() => fallbackCopy(name, '✅ "' + name + '" copied!'));
+            } else {
+                fallbackCopy(name, '✅ "' + name + '" copied!');
+            }
         }
         function copyWrapUp(name) {
-            navigator.clipboard.writeText('wrap up').then(() => {
-                showToast('✅ "wrap up" copied — paste into Claude to save everything.');
-            }).catch(() => { window.prompt('Copy this:', 'wrap up'); });
+            if (navigator.clipboard && window.isSecureContext) {
+                navigator.clipboard.writeText('wrap up').then(() => {
+                    showToast('✅ "wrap up" copied!\nPaste into Claude to save and close the session.');
+                }).catch(() => fallbackCopy('wrap up', '✅ "wrap up" copied! Paste into Claude.'));
+            } else {
+                fallbackCopy('wrap up', '✅ "wrap up" copied! Paste into Claude.');
+            }
         }
 
         // Load data
