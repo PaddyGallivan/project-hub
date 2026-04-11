@@ -774,6 +774,49 @@
             margin-top: 3rem;
         }
 
+
+        /* Claude Action Buttons */
+        .claude-btns {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            padding-top: 0.75rem;
+            border-top: 1px solid var(--border);
+        }
+        .claude-resume-btn, .claude-end-btn {
+            flex: 1;
+            padding: 0.4rem 0.6rem;
+            border-radius: 6px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            cursor: pointer;
+            border: none;
+            transition: opacity 0.2s, transform 0.1s;
+        }
+        .claude-resume-btn:hover, .claude-end-btn:hover { opacity: 0.85; transform: translateY(-1px); }
+        .claude-resume-btn:active, .claude-end-btn:active { transform: translateY(0); }
+        .claude-resume-btn { background-color: #3b82f6; color: #fff; }
+        .claude-end-btn { background-color: #3fb950; color: #0d1117; }
+        .toast {
+            position: fixed;
+            bottom: 5rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(20px);
+            background-color: #1a1d27;
+            border: 1px solid #3b82f6;
+            color: #e6edf3;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            z-index: 999;
+            opacity: 0;
+            transition: opacity 0.2s, transform 0.2s;
+            pointer-events: none;
+            white-space: nowrap;
+        }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
         .empty-state {
             text-align: center;
             padding: 3rem;
@@ -910,6 +953,8 @@
             <p>Claude dashboard &bull; Last updated: <span id="lastUpdated">--</span> &bull; Powered by Cloudflare D1</p>
         </div>
     </div>
+
+    <div class="toast" id="toast"></div>
 
     <!-- Floating Idea Button -->
     <button class="idea-fab" id="ideaFab" title="Capture a new idea">+</button>
@@ -1187,6 +1232,10 @@
                 ${domainLinks ? `<div class="domain-links">${domainLinks}</div>` : ''}
                         ${project.next_action ? `<div class="next-action"><strong>Next:</strong> ${project.next_action}</div>` : ''}
                         <div class="card-meta">Updated: ${project.last_updated ? new Date(project.last_updated).toLocaleDateString() : 'N/A'}</div>
+                        <div class="claude-btns">
+                            <button class="claude-resume-btn" onclick="copyResume(${JSON.stringify(project.project_name)}, ${JSON.stringify(project.live_url || '')})">▶ Resume in Claude</button>
+                            <button class="claude-end-btn" onclick="copyWrapUp(${JSON.stringify(project.project_name)})">✓ End Session</button>
+                        </div>
                     </div>
                 `;
             }).join('');
@@ -1338,6 +1387,26 @@
                 renderProjects();
             });
         });
+
+        // --- Claude Buttons ---
+        function showToast(msg) {
+            const t = document.getElementById('toast');
+            t.textContent = msg;
+            t.classList.add('show');
+            setTimeout(() => t.classList.remove('show'), 2800);
+        }
+        function copyResume(name, url) {
+            const urlPart = url ? ' (' + url + ')' : '';
+            const prompt = "I'm working on " + name + urlPart + ". Check my Project Hub at paddygallivan.github.io/project-hub/ for full context, then let's ";
+            navigator.clipboard.writeText(prompt).then(() => {
+                showToast('✅ Copied! Open Cowork, paste, and finish the sentence.');
+            }).catch(() => { window.prompt('Copy this:', prompt); });
+        }
+        function copyWrapUp(name) {
+            navigator.clipboard.writeText('wrap up').then(() => {
+                showToast('✅ "wrap up" copied — paste into Claude to save everything.');
+            }).catch(() => { window.prompt('Copy this:', 'wrap up'); });
+        }
 
         // Load data
         fetchProjects();
