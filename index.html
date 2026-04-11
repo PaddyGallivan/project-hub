@@ -799,25 +799,24 @@
         .claude-end-btn { background-color: #3fb950; color: #0d1117; }
         .toast {
             position: fixed;
-            top: 50%;
+            bottom: 5rem;
             left: 50%;
-            transform: translate(-50%, -50%) scale(0.9);
+            transform: translateX(-50%) translateY(20px);
             background-color: #1a1d27;
-            border: 2px solid #3b82f6;
+            border: 1px solid #3b82f6;
             color: #e6edf3;
-            padding: 1.25rem 2rem;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.8);
-            z-index: 99999;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            font-weight: 500;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+            z-index: 999;
             opacity: 0;
-            transition: opacity 0.15s, transform 0.15s;
+            transition: opacity 0.2s, transform 0.2s;
             pointer-events: none;
-            text-align: center;
-            max-width: 400px;
+            white-space: nowrap;
         }
-        .toast.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+        .toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
         .empty-state {
             text-align: center;
             padding: 3rem;
@@ -1234,7 +1233,7 @@
                         ${project.next_action ? `<div class="next-action"><strong>Next:</strong> ${project.next_action}</div>` : ''}
                         <div class="card-meta">Updated: ${project.last_updated ? new Date(project.last_updated).toLocaleDateString() : 'N/A'}</div>
                         <div class="claude-btns">
-                            <button class="claude-resume-btn" onclick="copyResume(${JSON.stringify(project.project_name)}, ${JSON.stringify(project.live_url || '')})">▶ Resume in Claude</button>
+                            <button class="claude-resume-btn" onclick="copyResume(${JSON.stringify(project.project_name)}, ${JSON.stringify(project.live_url || '')})">▶ Open in Claude</button>
                             <button class="claude-end-btn" onclick="copyWrapUp(${JSON.stringify(project.project_name)})">✓ End Session</button>
                         </div>
                     </div>
@@ -1394,40 +1393,19 @@
             const t = document.getElementById('toast');
             t.textContent = msg;
             t.classList.add('show');
-            clearTimeout(window._toastTimer);
-            window._toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
-        }
-        function copyToClipboard(text, successMsg) {
-            try {
-                if (navigator.clipboard && window.isSecureContext) {
-                    navigator.clipboard.writeText(text).then(() => showToast(successMsg)).catch(() => fallbackCopy(text, successMsg));
-                } else {
-                    fallbackCopy(text, successMsg);
-                }
-            } catch(e) { fallbackCopy(text, successMsg); }
-        }
-        function fallbackCopy(text, successMsg) {
-            const ta = document.createElement('textarea');
-            ta.value = text;
-            ta.style.cssText = 'position:fixed;top:-999px;left:-999px;opacity:0';
-            document.body.appendChild(ta);
-            ta.focus();
-            ta.select();
-            try {
-                document.execCommand('copy');
-                showToast(successMsg);
-            } catch(e) {
-                showToast('📋 ' + text);
-            }
-            document.body.removeChild(ta);
+            setTimeout(() => t.classList.remove('show'), 2800);
         }
         function copyResume(name, url) {
             const urlPart = url ? ' (' + url + ')' : '';
-            const prompt = "I\'m working on " + name + urlPart + ". Check my Project Hub at paddygallivan.github.io/project-hub/ for full context, then let\'s ";
-            copyToClipboard(prompt, '✅ Prompt copied to clipboard!\nOpen Cowork, paste, and finish the sentence.');
+            const prompt = "I'm working on " + name + urlPart + ". Check my Project Hub at paddygallivan.github.io/project-hub/ for full context, then let's ";
+            navigator.clipboard.writeText(prompt).then(() => {
+                showToast('✅ Copied! Open Cowork, paste, and finish the sentence.');
+            }).catch(() => { window.prompt('Copy this:', prompt); });
         }
         function copyWrapUp(name) {
-            copyToClipboard('wrap up', '✅ "wrap up" copied!\nPaste into Claude to save everything.');
+            navigator.clipboard.writeText('wrap up').then(() => {
+                showToast('✅ "wrap up" copied — paste into Claude to save everything.');
+            }).catch(() => { window.prompt('Copy this:', 'wrap up'); });
         }
 
         // Load data
