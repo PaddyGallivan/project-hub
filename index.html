@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Paddy's Project Hub</title>
+    <title>Project Hub</title>
     <style>
         :root {
             --bg: #0f1117;
@@ -17,1482 +17,1418 @@
             --danger: #f85149;
             --info: #58a6ff;
         }
+        * { margin:0; padding:0; box-sizing:border-box; }
+        body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; background-color:var(--bg); color:var(--text); line-height:1.6; }
 
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* ── AUTH GATE ── */
+        #authGate {
+            position:fixed; inset:0; background:var(--bg); z-index:9999;
+            display:flex; align-items:center; justify-content:center;
         }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-            background-color: var(--bg);
-            color: var(--text);
-            line-height: 1.6;
+        .auth-box {
+            background:var(--card); border:1px solid var(--border); border-radius:16px;
+            padding:3rem 2.5rem; max-width:400px; width:90%; text-align:center;
         }
-
-        .container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 2rem;
+        .auth-logo { font-size:2.5rem; margin-bottom:0.5rem; }
+        .auth-title { font-size:1.6rem; font-weight:700; margin-bottom:0.25rem; }
+        .auth-subtitle { color:var(--muted); font-size:0.95rem; margin-bottom:2rem; }
+        .pin-dots { display:flex; justify-content:center; gap:0.75rem; margin-bottom:1.5rem; }
+        .pin-dot {
+            width:14px; height:14px; border-radius:50%;
+            border:2px solid var(--border); background:transparent; transition:all 0.15s;
         }
+        .pin-dot.filled { background:var(--accent); border-color:var(--accent); }
+        .pin-dot.error { background:var(--danger); border-color:var(--danger); }
+        .pin-numpad { display:grid; grid-template-columns:repeat(3,1fr); gap:0.6rem; max-width:240px; margin:0 auto 1rem; }
+        .pin-key {
+            padding:1rem; background:var(--bg); border:1px solid var(--border);
+            border-radius:10px; font-size:1.3rem; font-weight:600; cursor:pointer;
+            transition:all 0.15s; color:var(--text);
+        }
+        .pin-key:hover { background:var(--accent); border-color:var(--accent); }
+        .pin-key:active { transform:scale(0.95); }
+        .pin-key.wide { grid-column:span 2; }
+        .auth-msg { font-size:0.85rem; color:var(--muted); min-height:20px; margin-top:0.5rem; }
+        .auth-msg.error { color:var(--danger); }
+        .auth-msg.success { color:var(--success); }
+        .auth-switch { margin-top:1rem; font-size:0.85rem; color:var(--muted); cursor:pointer; }
+        .auth-switch span { color:var(--accent); text-decoration:underline; cursor:pointer; }
 
-        /* Header */
+        /* ── ONBOARDING ── */
+        .onboard-overlay {
+            display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85);
+            z-index:8000; align-items:center; justify-content:center;
+        }
+        .onboard-overlay.open { display:flex; }
+        .onboard-box {
+            background:var(--card); border:1px solid var(--border); border-radius:16px;
+            padding:2.5rem; max-width:520px; width:90%;
+        }
+        .onboard-step { display:none; }
+        .onboard-step.active { display:block; }
+        .onboard-step-header { font-size:1.4rem; font-weight:700; margin-bottom:0.5rem; }
+        .onboard-step-sub { color:var(--muted); margin-bottom:2rem; font-size:0.95rem; }
+        .onboard-progress { display:flex; gap:0.5rem; margin-bottom:2rem; }
+        .onboard-dot {
+            flex:1; height:4px; border-radius:2px; background:var(--border); transition:background 0.3s;
+        }
+        .onboard-dot.done { background:var(--accent); }
+        .onboard-input {
+            width:100%; padding:0.8rem 1rem; background:var(--bg); border:1px solid var(--border);
+            color:var(--text); border-radius:8px; font-size:1rem; margin-bottom:1rem;
+        }
+        .onboard-input:focus { outline:none; border-color:var(--accent); }
+        .onboard-nav { display:flex; gap:1rem; justify-content:flex-end; margin-top:1rem; }
+
+        /* ── LAYOUT ── */
+        .container { max-width:1200px; margin:0 auto; padding:2rem; }
+
+        /* ── HEADER ── */
         .header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 2rem;
-            padding-bottom: 1.5rem;
-            border-bottom: 1px solid var(--border);
+            display:flex; justify-content:space-between; align-items:center;
+            margin-bottom:2rem; padding-bottom:1.5rem; border-bottom:1px solid var(--border);
+            flex-wrap:wrap; gap:1rem;
         }
-
-        .header h1 {
-            font-size: 2rem;
-            font-weight: 600;
-        }
-
-        .header-right {
-            display: flex;
-            align-items: center;
-            gap: 1rem;
-        }
-
-        .status-indicator {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.9rem;
-            color: var(--muted);
-        }
-
-        .status-dot {
-            width: 8px;
-            height: 8px;
-            border-radius: 50%;
-            background-color: var(--success);
-            animation: pulse 2s infinite;
-        }
-
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.5; }
-        }
-
+        .header h1 { font-size:1.8rem; font-weight:700; }
+        .header-right { display:flex; align-items:center; gap:0.75rem; flex-wrap:wrap; }
+        .status-indicator { display:flex; align-items:center; gap:0.5rem; font-size:0.85rem; color:var(--muted); }
+        .status-dot { width:8px; height:8px; border-radius:50%; background-color:var(--success); animation:pulse 2s infinite; }
+        @keyframes pulse { 0%,100%{opacity:1} 50%{opacity:0.5} }
         .btn {
-            padding: 0.5rem 1rem;
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            color: var(--text);
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s;
+            padding:0.45rem 0.9rem; background-color:var(--card); border:1px solid var(--border);
+            color:var(--text); border-radius:6px; cursor:pointer; font-size:0.85rem; transition:all 0.2s;
+            white-space:nowrap;
         }
+        .btn:hover { background-color:var(--accent); border-color:var(--accent); }
+        .btn.accent { background-color:var(--accent); border-color:var(--accent); color:#fff; }
+        .btn.warning { background-color:rgba(210,153,34,0.2); border-color:var(--warning); color:var(--warning); }
 
-        .btn:hover {
-            background-color: var(--accent);
-            border-color: var(--accent);
+        /* ── TODAY'S PICK ── */
+        .pick-hero {
+            background:linear-gradient(135deg, rgba(59,130,246,0.15) 0%, rgba(63,185,80,0.08) 100%);
+            border:1px solid rgba(59,130,246,0.4); border-radius:12px;
+            padding:1.75rem; margin-bottom:2rem; position:relative; overflow:hidden;
         }
-
-        /* Stats Row */
-        .stats {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
+        .pick-hero::before {
+            content:''; position:absolute; top:0; left:0; right:0; height:3px;
+            background:linear-gradient(90deg, var(--accent), var(--success));
         }
-
-        .stat-card {
-            background-color: var(--card);
-            padding: 1rem;
-            border-radius: 8px;
-            border: 1px solid var(--border);
+        .pick-label {
+            font-size:0.75rem; font-weight:700; text-transform:uppercase;
+            letter-spacing:0.1em; color:var(--accent); margin-bottom:0.5rem;
+            display:flex; align-items:center; gap:0.5rem;
         }
-
-        .stat-label {
-            font-size: 0.85rem;
-            color: var(--muted);
-            margin-bottom: 0.5rem;
+        .pick-title { font-size:1.5rem; font-weight:700; margin-bottom:0.5rem; }
+        .pick-why { font-size:0.9rem; color:var(--muted); margin-bottom:1rem; }
+        .pick-scores {
+            display:flex; gap:0.75rem; flex-wrap:wrap; margin-bottom:1.25rem;
         }
-
-        .stat-value {
-            font-size: 1.8rem;
-            font-weight: 700;
-            color: var(--accent);
+        .pick-score-pill {
+            padding:0.2rem 0.6rem; border-radius:20px; font-size:0.78rem; font-weight:600;
+            background:rgba(255,255,255,0.07);
         }
+        .pick-actions { display:flex; gap:0.75rem; flex-wrap:wrap; }
+        .pick-secondary {
+            display:flex; gap:1.5rem; margin-top:1rem; padding-top:1rem;
+            border-top:1px solid var(--border); flex-wrap:wrap;
+        }
+        .pick-secondary-item { font-size:0.85rem; }
+        .pick-secondary-item strong { color:var(--accent); }
 
-        /* Priorities Section */
+        /* ── STATS ── */
+        .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:1rem; margin-bottom:2rem; }
+        .stat-card { background:var(--card); padding:1rem; border-radius:8px; border:1px solid var(--border); }
+        .stat-label { font-size:0.8rem; color:var(--muted); margin-bottom:0.25rem; }
+        .stat-value { font-size:1.8rem; font-weight:700; color:var(--accent); }
+
+        /* ── SECTION TITLE ── */
         .section-title {
-            font-size: 1.3rem;
-            font-weight: 600;
-            margin: 2rem 0 1rem 0;
-            padding-bottom: 0.5rem;
-            border-bottom: 2px solid var(--accent);
+            font-size:1.2rem; font-weight:600; margin:2rem 0 1rem;
+            padding-bottom:0.5rem; border-bottom:2px solid var(--accent);
+            display:flex; align-items:center; gap:0.5rem;
         }
 
-        .priorities-list {
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            overflow: hidden;
-            margin-bottom: 2rem;
-        }
-
+        /* ── PRIORITIES ── */
+        .priorities-list { background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-bottom:2rem; }
         .priority-item {
-            display: grid;
-            grid-template-columns: 40px 1fr auto auto auto;
-            gap: 1rem;
-            padding: 1rem;
-            border-bottom: 1px solid var(--border);
-            align-items: center;
-        }
-
-        .priority-item:last-child {
-            border-bottom: none;
-        }
-
-        .priority-rank {
-            font-weight: 700;
-            font-size: 1.3rem;
-            color: var(--accent);
-            text-align: center;
-        }
-
-        .priority-name {
-            font-weight: 600;
-            color: var(--accent);
-            cursor: pointer;
-            text-decoration: none;
-            transition: opacity 0.2s;
-        }
-
-        .priority-name:hover {
-            opacity: 0.8;
-            text-decoration: underline;
-        }
-
-        .category-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .category-badge.ssv-ecosystem { background-color: #1f6feb; color: #c9d1d9; }
-        .category-badge.education { background-color: #1f6feb; color: #c9d1d9; }
-        .category-badge.events { background-color: #da3633; color: #fff; }
-        .category-badge.community { background-color: #a371f7; color: #fff; }
-        .category-badge.health { background-color: #79c0ff; color: #0d1117; }
-
-        .revenue-item {
-            text-align: right;
-            min-width: 120px;
-        }
-
-        .revenue-label {
-            font-size: 0.8rem;
-            color: var(--muted);
-            display: block;
-        }
-
-        .revenue-value {
-            font-size: 1rem;
-            font-weight: 600;
-            color: var(--success);
-        }
-
-        /* Revenue Tracker */
-        .revenue-tracker {
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .revenue-grid {
-            display: grid;
-            grid-template-columns: repeat(3, 1fr);
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .revenue-year {
-            text-align: center;
-            padding: 1rem;
-            background-color: rgba(59, 130, 246, 0.1);
-            border-radius: 6px;
-        }
-
-        .revenue-year-label {
-            font-size: 0.85rem;
-            color: var(--muted);
-            margin-bottom: 0.5rem;
-        }
-
-        .revenue-year-value {
-            font-size: 1.5rem;
-            font-weight: 700;
-            color: var(--success);
-        }
-
-        .revenue-chart {
-            display: flex;
-            height: 30px;
-            border-radius: 4px;
-            overflow: hidden;
-            gap: 2px;
-            background-color: var(--bg);
-            padding: 2px;
-        }
-
-        .revenue-bar {
-            height: 100%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 0.7rem;
-            font-weight: 600;
-            color: white;
-        }
-
-        .revenue-bar.ssv-ecosystem { background-color: #3fb950; }
-        .revenue-bar.education { background-color: #1f6feb; }
-        .revenue-bar.events { background-color: #f85149; }
-        .revenue-bar.community { background-color: #a371f7; }
-        .revenue-bar.health { background-color: #79c0ff; }
-
-        /* Filter & Search */
-        .controls {
-            display: flex;
-            gap: 1rem;
-            margin-bottom: 2rem;
-            flex-wrap: wrap;
-        }
-
-        .search-input {
-            flex: 1;
-            min-width: 200px;
-            padding: 0.75rem;
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            color: var(--text);
-            border-radius: 6px;
-            font-size: 1rem;
-        }
-
-        .search-input::placeholder {
-            color: var(--muted);
-        }
-
-        .filter-group {
-            display: flex;
-            gap: 0.5rem;
-        }
-
-        .filter-btn {
-            padding: 0.5rem 1rem;
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            color: var(--text);
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 0.9rem;
-            transition: all 0.2s;
-            white-space: nowrap;
-        }
-
-        .filter-btn.active {
-            background-color: var(--accent);
-            border-color: var(--accent);
-        }
-
-        .filter-btn:hover {
-            border-color: var(--accent);
-        }
-
-        /* Project Grid */
-        .project-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 2rem;
-        }
-
-        .project-card {
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.5rem;
-            transition: all 0.2s;
-            position: relative;
-        }
-
-        .project-card:hover {
-            border-color: var(--accent);
-            box-shadow: 0 0 0 1px var(--accent);
-        }
-
-        .card-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 1rem;
-            gap: 0.5rem;
-        }
-
-        .card-title {
-            font-size: 1.1rem;
-            font-weight: 600;
-            color: var(--accent);
-            cursor: pointer;
-            text-decoration: none;
-            flex: 1;
-            transition: opacity 0.2s;
-        }
-
-        .card-title:hover {
-            opacity: 0.8;
-            text-decoration: underline;
-        }
-
-        .card-link {
-            color: var(--muted);
-            text-decoration: none;
-            font-size: 1.2rem;
-            transition: color 0.2s;
-        }
-
-        .card-link:hover {
-            color: var(--accent);
-        }
-
-        .status-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            white-space: nowrap;
-        }
-
-        .status-badge.live { background-color: #1f6feb; color: #c9d1d9; }
-        .status-badge.ready { background-color: #3fb950; color: #0d1117; }
-        .status-badge.dev { background-color: #d29922; color: #0d1117; }
-        .status-badge.paused { background-color: #6e7681; color: #c9d1d9; }
-
-        .revenue-badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            background-color: var(--success);
-            color: #0d1117;
-            margin-left: 0.5rem;
-        }
-
-        .card-description {
-            font-size: 0.95rem;
-            color: var(--text);
-            margin-bottom: 1rem;
-            line-height: 1.5;
-        }
-
-        .progress-bar {
-            height: 6px;
-            background-color: var(--border);
-            border-radius: 3px;
-            overflow: hidden;
-            margin-bottom: 1rem;
-        }
-
-        .progress-fill {
-            height: 100%;
-            background-color: var(--accent);
-            transition: width 0.3s;
-        }
-
-        .card-tags {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.5rem;
-            margin-bottom: 1rem;
-        }
-
-        .tag {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            background-color: var(--border);
-            color: var(--muted);
-            border-radius: 4px;
-            font-size: 0.8rem;
-        }
-
-        
-        .connector-tag {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            background-color: rgba(59, 130, 246, 0.15);
-            color: var(--accent);
-            border-radius: 4px;
-            font-size: 0.75rem;
-            border: 1px solid rgba(59, 130, 246, 0.3);
-        }
-        .plugin-tag {
-            display: inline-block;
-            padding: 0.25rem 0.5rem;
-            background-color: rgba(63, 185, 80, 0.15);
-            color: var(--success);
-            border-radius: 4px;
-            font-size: 0.75rem;
-            border: 1px solid rgba(63, 185, 80, 0.3);
-        }
-        .card-integrations {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 0.35rem;
-            margin-bottom: 0.75rem;
-        }
-        .card-integrations-label {
-            font-size: 0.7rem;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            width: 100%;
-            margin-bottom: 0.1rem;
-        }
-
-        .card-meta {
-            font-size: 0.85rem;
-            color: var(--muted);
-            margin-bottom: 0.75rem;
-        }
-
-        .domain-links {
-            margin-bottom: 0.75rem;
-            font-size: 0.9rem;
-        }
-
-        .domain-link {
-            color: var(--accent);
-            text-decoration: none;
-            font-size: 13px;
-            transition: opacity 0.2s;
-        }
-
-        .domain-link:hover {
-            text-decoration: underline;
-            opacity: 0.8;
-        }
-
-        .next-action {
-            padding: 0.75rem;
-            background-color: rgba(58, 166, 215, 0.1);
-            border-left: 2px solid var(--info);
-            border-radius: 4px;
-            font-size: 0.9rem;
-            color: var(--text);
-        }
-
-        /* Focus Section */
-        .focus-section {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            gap: 1rem;
-            margin-bottom: 2rem;
-        }
-
-        .focus-card {
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1.25rem;
-        }
-
-        .focus-card-title {
-            font-size: 0.85rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            color: var(--muted);
-            margin-bottom: 0.75rem;
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-        }
-
-        .focus-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0.5rem 0;
-            border-bottom: 1px solid var(--border);
-            gap: 0.5rem;
-        }
-
-        .focus-item:last-child {
-            border-bottom: none;
-            padding-bottom: 0;
-        }
-
-        .focus-item-name {
-            font-size: 0.9rem;
-            color: var(--accent);
-            text-decoration: none;
-            font-weight: 500;
-            flex: 1;
-        }
-
-        .focus-item-name:hover {
-            text-decoration: underline;
-        }
-
-        .focus-item-meta {
-            font-size: 0.8rem;
-            color: var(--success);
-            white-space: nowrap;
-            font-weight: 600;
-        }
-
-        .focus-empty {
-            font-size: 0.85rem;
-            color: var(--muted);
-            font-style: italic;
-        }
-
-        /* Budget Section */
-        .budget-summary {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-            gap: 1rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .budget-stat {
-            background: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 1rem;
-            text-align: center;
-        }
-
-        .budget-stat-value {
-            font-size: 1.6rem;
-            font-weight: 700;
-            color: var(--warning);
-        }
-
-        .budget-stat-label {
-            font-size: 0.75rem;
-            color: var(--muted);
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-            margin-top: 0.25rem;
-        }
-
-        .budget-table {
-            width: 100%;
-            border-collapse: collapse;
-            font-size: 0.875rem;
-        }
-
-        .budget-table th {
-            text-align: left;
-            padding: 0.5rem 0.75rem;
-            border-bottom: 2px solid var(--border);
-            color: var(--muted);
-            font-size: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-
-        .budget-table td {
-            padding: 0.5rem 0.75rem;
-            border-bottom: 1px solid var(--border);
-            vertical-align: top;
-        }
-
-        .budget-table tr:hover td {
-            background: rgba(255,255,255,0.02);
-        }
-
-        .budget-alert {
-            margin-top: 1rem;
-            padding: 0.75rem 1rem;
-            border-radius: 6px;
-            font-size: 0.85rem;
-            line-height: 1.5;
-        }
-
-        .budget-alert.warn {
-            background: rgba(210,153,34,0.12);
-            border-left: 3px solid var(--warning);
-            color: #e6c96a;
-        }
-
-        .budget-alert.tip {
-            background: rgba(63,185,80,0.1);
-            border-left: 3px solid var(--success);
-            color: #7ee787;
-        }
-
-        /* Floating Idea Button */
-        .idea-fab {
-            position: fixed;
-            bottom: 2rem;
-            right: 2rem;
-            width: 56px;
-            height: 56px;
-            border-radius: 50%;
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            font-size: 1.8rem;
-            cursor: pointer;
-            box-shadow: 0 4px 20px rgba(59, 130, 246, 0.5);
-            z-index: 100;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .idea-fab:hover {
-            transform: scale(1.1);
-            box-shadow: 0 6px 24px rgba(59, 130, 246, 0.7);
-        }
-
-        /* Modal */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background-color: rgba(0,0,0,0.7);
-            z-index: 200;
-            align-items: center;
-            justify-content: center;
-            padding: 1rem;
-        }
-
-        .modal-overlay.open {
-            display: flex;
-        }
-
-        .modal {
-            background-color: var(--card);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 2rem;
-            width: 100%;
-            max-width: 480px;
-        }
-
-        .modal h3 {
-            font-size: 1.3rem;
-            margin-bottom: 1.5rem;
-        }
-
-        .modal-input {
-            width: 100%;
-            padding: 0.75rem;
-            background-color: var(--bg);
-            border: 1px solid var(--border);
-            color: var(--text);
-            border-radius: 6px;
-            font-size: 1rem;
-            margin-bottom: 1rem;
-        }
-
-        .modal-input:focus {
-            outline: none;
-            border-color: var(--accent);
-        }
-
-        .modal-input::placeholder {
-            color: var(--muted);
-        }
-
-        textarea.modal-input {
-            resize: vertical;
-            min-height: 80px;
-            font-family: inherit;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 1rem;
-            justify-content: flex-end;
-            margin-top: 0.5rem;
-        }
-
-        .btn-primary {
-            padding: 0.6rem 1.5rem;
-            background-color: var(--accent);
-            color: white;
-            border: none;
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-            font-weight: 600;
-            transition: opacity 0.2s;
-        }
-
-        .btn-primary:hover { opacity: 0.85; }
-        .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
-
-        .btn-cancel {
-            padding: 0.6rem 1.5rem;
-            background-color: transparent;
-            color: var(--muted);
-            border: 1px solid var(--border);
-            border-radius: 6px;
-            cursor: pointer;
-            font-size: 1rem;
-        }
-
-        .modal-success {
-            text-align: center;
-            padding: 1rem 0;
-            color: var(--success);
-            font-size: 1.1rem;
-        }
-
-        /* Idea status badge */
-        .status-badge.idea { background-color: #6e4bc4; color: #fff; }
-
-        /* Footer */
-        .footer {
-            text-align: center;
-            color: var(--muted);
-            font-size: 0.85rem;
-            padding-top: 2rem;
-            border-top: 1px solid var(--border);
-            margin-top: 3rem;
-        }
-
-
-        /* Claude Action Buttons */
-        .claude-btns {
-            display: flex;
-            gap: 0.5rem;
-            margin-top: 0.75rem;
-            padding-top: 0.75rem;
-            border-top: 1px solid var(--border);
-        }
-        .claude-resume-btn, .claude-end-btn {
-            flex: 1;
-            padding: 0.4rem 0.6rem;
-            border-radius: 6px;
-            font-size: 0.8rem;
-            font-weight: 600;
-            cursor: pointer;
-            border: none;
-            transition: opacity 0.2s, transform 0.1s;
-        }
-        .claude-resume-btn:hover, .claude-end-btn:hover { opacity: 0.85; transform: translateY(-1px); }
-        .claude-resume-btn:active, .claude-end-btn:active { transform: translateY(0); }
-        .claude-resume-btn { background-color: #3b82f6; color: #fff; }
-        .claude-end-btn { background-color: #3fb950; color: #0d1117; }
+            display:grid; grid-template-columns:40px 1fr auto auto auto;
+            gap:1rem; padding:1rem; border-bottom:1px solid var(--border); align-items:center;
+        }
+        .priority-item:last-child { border-bottom:none; }
+        .priority-rank { font-weight:700; font-size:1.3rem; color:var(--accent); text-align:center; }
+        .priority-name { font-weight:600; color:var(--accent); cursor:pointer; text-decoration:none; transition:opacity 0.2s; }
+        .priority-name:hover { opacity:0.8; text-decoration:underline; }
+        .category-badge { display:inline-block; padding:0.2rem 0.6rem; border-radius:20px; font-size:0.78rem; font-weight:600; white-space:nowrap; }
+        .category-badge.ssv-ecosystem,.category-badge.education { background:#1f6feb; color:#c9d1d9; }
+        .category-badge.events { background:#da3633; color:#fff; }
+        .category-badge.community { background:#a371f7; color:#fff; }
+        .category-badge.health { background:#79c0ff; color:#0d1117; }
+        .revenue-item { text-align:right; min-width:110px; }
+        .revenue-label { font-size:0.75rem; color:var(--muted); display:block; }
+        .revenue-value { font-size:1rem; font-weight:600; color:var(--success); }
+
+        /* ── REVENUE TRACKER ── */
+        .revenue-tracker { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1.5rem; margin-bottom:2rem; }
+        .revenue-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:1.5rem; }
+        .revenue-year { text-align:center; padding:1rem; background:rgba(59,130,246,0.1); border-radius:6px; }
+        .revenue-year-label { font-size:0.8rem; color:var(--muted); margin-bottom:0.25rem; }
+        .revenue-year-value { font-size:1.4rem; font-weight:700; color:var(--success); }
+        .revenue-chart { display:flex; height:30px; border-radius:4px; overflow:hidden; gap:2px; background:var(--bg); padding:2px; }
+        .revenue-bar { height:100%; display:flex; align-items:center; justify-content:center; font-size:0.7rem; font-weight:600; color:#fff; }
+        .revenue-bar.ssv-ecosystem { background:#3fb950; }
+        .revenue-bar.education { background:#1f6feb; }
+        .revenue-bar.events { background:#f85149; }
+        .revenue-bar.community { background:#a371f7; }
+        .revenue-bar.health { background:#79c0ff; }
+
+        /* ── FOCUS SECTION ── */
+        .focus-section { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin-bottom:2rem; }
+        .focus-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1.25rem; }
+        .focus-card-title { font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:0.75rem; }
+        .focus-item { display:flex; justify-content:space-between; align-items:center; padding:0.5rem 0; border-bottom:1px solid var(--border); gap:0.5rem; }
+        .focus-item:last-child { border-bottom:none; padding-bottom:0; }
+        .focus-item-name { font-size:0.9rem; color:var(--accent); text-decoration:none; font-weight:500; flex:1; }
+        .focus-item-name:hover { text-decoration:underline; }
+        .focus-item-meta { font-size:0.8rem; color:var(--success); white-space:nowrap; font-weight:600; }
+        .focus-empty { font-size:0.85rem; color:var(--muted); font-style:italic; }
+
+        /* ── MILESTONES ── */
+        .milestones-grid { display:flex; flex-direction:column; gap:0.6rem; margin-bottom:2rem; }
+        .milestone-row {
+            display:flex; align-items:center; gap:1rem; background:var(--card);
+            border:1px solid var(--border); border-radius:8px; padding:0.85rem 1.25rem;
+            transition:border-color 0.2s;
+        }
+        .milestone-row.overdue { border-left:3px solid var(--danger); }
+        .milestone-row.soon { border-left:3px solid var(--warning); }
+        .milestone-row.upcoming { border-left:3px solid var(--success); }
+        .milestone-row.done { opacity:0.5; }
+        .milestone-date { font-size:0.8rem; color:var(--muted); min-width:80px; }
+        .milestone-project { font-size:0.8rem; font-weight:700; color:var(--accent); min-width:120px; }
+        .milestone-name { flex:1; font-size:0.95rem; }
+        .milestone-badge {
+            font-size:0.72rem; padding:0.2rem 0.5rem; border-radius:10px;
+            font-weight:700; white-space:nowrap;
+        }
+        .milestone-badge.overdue { background:rgba(248,81,73,0.15); color:var(--danger); }
+        .milestone-badge.soon { background:rgba(210,153,34,0.15); color:var(--warning); }
+        .milestone-badge.upcoming { background:rgba(63,185,80,0.15); color:var(--success); }
+        .milestone-badge.done { background:rgba(125,133,144,0.15); color:var(--muted); }
+        .no-milestones { text-align:center; padding:2rem; color:var(--muted); font-size:0.9rem; background:var(--card); border-radius:8px; border:1px solid var(--border); }
+
+        /* ── BUDGET ── */
+        .budget-summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1rem; margin-bottom:1.5rem; }
+        .budget-stat { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1rem; text-align:center; }
+        .budget-stat-value { font-size:1.5rem; font-weight:700; color:var(--warning); }
+        .budget-stat-label { font-size:0.72rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.05em; margin-top:0.25rem; }
+        .budget-table { width:100%; border-collapse:collapse; font-size:0.875rem; }
+        .budget-table th { text-align:left; padding:0.5rem 0.75rem; border-bottom:2px solid var(--border); color:var(--muted); font-size:0.72rem; text-transform:uppercase; letter-spacing:0.05em; }
+        .budget-table td { padding:0.5rem 0.75rem; border-bottom:1px solid var(--border); vertical-align:top; }
+        .budget-table tr:hover td { background:rgba(255,255,255,0.02); }
+        .budget-alert { margin-top:1rem; padding:0.75rem 1rem; border-radius:6px; font-size:0.85rem; line-height:1.5; }
+        .budget-alert.warn { background:rgba(210,153,34,0.12); border-left:3px solid var(--warning); color:#e6c96a; }
+        .budget-alert.tip { background:rgba(63,185,80,0.1); border-left:3px solid var(--success); color:#7ee787; }
+
+        /* ── FILTER & SEARCH ── */
+        .controls { display:flex; gap:1rem; margin-bottom:2rem; flex-wrap:wrap; }
+        .search-input { flex:1; min-width:200px; padding:0.75rem; background:var(--card); border:1px solid var(--border); color:var(--text); border-radius:6px; font-size:1rem; }
+        .search-input::placeholder { color:var(--muted); }
+        .filter-group { display:flex; gap:0.5rem; flex-wrap:wrap; }
+        .filter-btn { padding:0.45rem 0.85rem; background:var(--card); border:1px solid var(--border); color:var(--text); border-radius:6px; cursor:pointer; font-size:0.85rem; transition:all 0.2s; white-space:nowrap; }
+        .filter-btn.active { background:var(--accent); border-color:var(--accent); }
+        .filter-btn:hover { border-color:var(--accent); }
+
+        /* ── PROJECT GRID ── */
+        .project-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1.5rem; margin-bottom:2rem; }
+        .project-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1.5rem; transition:all 0.2s; position:relative; }
+        .project-card:hover { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent); }
+        .card-header { display:flex; justify-content:space-between; align-items:start; margin-bottom:0.75rem; gap:0.5rem; }
+        .card-title { font-size:1.05rem; font-weight:600; color:var(--accent); cursor:pointer; text-decoration:none; flex:1; transition:opacity 0.2s; }
+        .card-title:hover { opacity:0.8; text-decoration:underline; }
+        .card-link { color:var(--muted); text-decoration:none; font-size:1.2rem; transition:color 0.2s; }
+        .card-link:hover { color:var(--accent); }
+        .status-badge { display:inline-block; padding:0.2rem 0.65rem; border-radius:20px; font-size:0.73rem; font-weight:600; white-space:nowrap; }
+        .status-badge.live { background:#1f6feb; color:#c9d1d9; }
+        .status-badge.ready { background:#3fb950; color:#0d1117; }
+        .status-badge.dev,.status-badge.in.development,.status-badge.early.stage { background:#d29922; color:#0d1117; }
+        .status-badge.paused { background:#6e7681; color:#c9d1d9; }
+        .status-badge.idea { background:#6e4bc4; color:#fff; }
+        .revenue-badge { display:inline-block; padding:0.2rem 0.65rem; border-radius:20px; font-size:0.73rem; font-weight:600; background:var(--success); color:#0d1117; margin-left:0.5rem; }
+        .card-description { font-size:0.9rem; color:var(--text); margin-bottom:0.75rem; line-height:1.5; }
+        .progress-bar { height:5px; background:var(--border); border-radius:3px; overflow:hidden; margin-bottom:0.75rem; }
+        .progress-fill { height:100%; background:var(--accent); transition:width 0.3s; }
+        .card-tags { display:flex; flex-wrap:wrap; gap:0.4rem; margin-bottom:0.75rem; }
+        .tag { display:inline-block; padding:0.2rem 0.5rem; background:var(--border); color:var(--muted); border-radius:4px; font-size:0.78rem; }
+        .connector-tag { display:inline-block; padding:0.2rem 0.5rem; background:rgba(59,130,246,0.15); color:var(--accent); border-radius:4px; font-size:0.73rem; border:1px solid rgba(59,130,246,0.3); }
+        .plugin-tag { display:inline-block; padding:0.2rem 0.5rem; background:rgba(63,185,80,0.15); color:var(--success); border-radius:4px; font-size:0.73rem; border:1px solid rgba(63,185,80,0.3); }
+        .card-integrations { display:flex; flex-wrap:wrap; gap:0.35rem; margin-bottom:0.6rem; }
+        .card-integrations-label { font-size:0.67rem; color:var(--muted); text-transform:uppercase; letter-spacing:0.5px; width:100%; margin-bottom:0.1rem; }
+        .card-meta { font-size:0.82rem; color:var(--muted); margin-bottom:0.6rem; }
+        .domain-link { color:var(--accent); text-decoration:none; font-size:13px; transition:opacity 0.2s; }
+        .domain-link:hover { text-decoration:underline; opacity:0.8; }
+        .next-action { padding:0.6rem 0.75rem; background:rgba(88,166,255,0.1); border-left:2px solid var(--info); border-radius:4px; font-size:0.87rem; margin-bottom:0.75rem; }
+        .claude-btns { display:flex; gap:0.5rem; margin-top:0.75rem; padding-top:0.75rem; border-top:1px solid var(--border); }
+        .claude-resume-btn,.claude-end-btn { flex:1; padding:0.4rem 0.6rem; border-radius:6px; font-size:0.78rem; font-weight:600; cursor:pointer; border:none; transition:opacity 0.2s,transform 0.1s; }
+        .claude-resume-btn:hover,.claude-end-btn:hover { opacity:0.85; transform:translateY(-1px); }
+        .claude-resume-btn { background:#3b82f6; color:#fff; }
+        .claude-end-btn { background:#3fb950; color:#0d1117; }
+
+        /* ── SCENARIO DRAWER ── */
+        .scenario-overlay {
+            display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:7000;
+        }
+        .scenario-overlay.open { display:block; }
+        .scenario-drawer {
+            position:fixed; top:0; right:-500px; width:100%; max-width:460px; height:100vh;
+            background:var(--card); border-left:1px solid var(--border);
+            overflow-y:auto; z-index:7001; transition:right 0.3s ease; padding:1.5rem;
+        }
+        .scenario-drawer.open { right:0; }
+        .scenario-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:1.5rem; }
+        .scenario-header h3 { font-size:1.2rem; font-weight:700; }
+        .scenario-close { background:none; border:none; color:var(--muted); font-size:1.5rem; cursor:pointer; padding:0.25rem; line-height:1; }
+        .scenario-mode-toggle { display:flex; border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-bottom:1.5rem; }
+        .scenario-mode-btn { flex:1; padding:0.6rem; border:none; background:transparent; color:var(--muted); font-size:0.85rem; cursor:pointer; font-weight:600; transition:all 0.2s; }
+        .scenario-mode-btn.active.optimistic { background:rgba(63,185,80,0.2); color:var(--success); }
+        .scenario-mode-btn.active.base { background:rgba(59,130,246,0.2); color:var(--accent); }
+        .scenario-mode-btn.active.conservative { background:rgba(210,153,34,0.2); color:var(--warning); }
+        .scenario-totals { display:grid; grid-template-columns:1fr 1fr; gap:0.75rem; margin-bottom:1.5rem; }
+        .scenario-total-card { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:0.75rem; text-align:center; }
+        .scenario-total-label { font-size:0.72rem; color:var(--muted); text-transform:uppercase; margin-bottom:0.25rem; }
+        .scenario-total-value { font-size:1.3rem; font-weight:700; color:var(--success); }
+        .scenario-delta { font-size:0.78rem; font-weight:600; }
+        .scenario-delta.up { color:var(--success); }
+        .scenario-delta.down { color:var(--danger); }
+        .scenario-divider { height:1px; background:var(--border); margin:1.5rem 0 1rem; }
+        .scenario-project-row { margin-bottom:1.25rem; }
+        .scenario-project-name { font-size:0.9rem; font-weight:600; margin-bottom:0.35rem; display:flex; justify-content:space-between; }
+        .scenario-project-revenue { font-size:0.85rem; color:var(--success); font-weight:700; }
+        .scenario-slider { -webkit-appearance:none; appearance:none; width:100%; height:6px; background:var(--border); border-radius:3px; outline:none; cursor:pointer; }
+        .scenario-slider::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:16px; height:16px; border-radius:50%; background:var(--accent); cursor:pointer; }
+        .scenario-slider-labels { display:flex; justify-content:space-between; font-size:0.72rem; color:var(--muted); margin-top:0.25rem; }
+
+        /* ── DIGEST MODAL ── */
+        .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:6000; align-items:center; justify-content:center; padding:1rem; }
+        .modal-overlay.open { display:flex; }
+        .modal { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:2rem; width:100%; max-width:560px; max-height:90vh; overflow-y:auto; }
+        .modal h3 { font-size:1.2rem; margin-bottom:1.25rem; }
+        .modal-input { width:100%; padding:0.75rem; background:var(--bg); border:1px solid var(--border); color:var(--text); border-radius:6px; font-size:1rem; margin-bottom:1rem; font-family:inherit; }
+        .modal-input:focus { outline:none; border-color:var(--accent); }
+        .modal-input::placeholder { color:var(--muted); }
+        textarea.modal-input { resize:vertical; min-height:80px; }
+        .modal-actions { display:flex; gap:0.75rem; justify-content:flex-end; margin-top:1rem; }
+        .btn-primary { padding:0.6rem 1.25rem; background:var(--accent); color:#fff; border:none; border-radius:6px; cursor:pointer; font-size:0.95rem; font-weight:600; transition:opacity 0.2s; }
+        .btn-primary:hover { opacity:0.85; }
+        .btn-primary:disabled { opacity:0.5; cursor:not-allowed; }
+        .btn-cancel { padding:0.6rem 1.25rem; background:transparent; color:var(--muted); border:1px solid var(--border); border-radius:6px; cursor:pointer; font-size:0.95rem; }
+        .modal-success { text-align:center; padding:1rem; color:var(--success); font-size:1rem; }
+        .digest-text {
+            background:var(--bg); border:1px solid var(--border); border-radius:8px;
+            padding:1rem; font-family:monospace; font-size:0.82rem; line-height:1.6;
+            white-space:pre-wrap; max-height:320px; overflow-y:auto; color:var(--text);
+            margin-bottom:1rem;
+        }
+
+        /* ── TOAST ── */
         .toast {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%) scale(0.9);
-            background-color: #1a1d27;
-            border: 2px solid #3b82f6;
-            color: #e6edf3;
-            padding: 1.25rem 2rem;
-            border-radius: 12px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            box-shadow: 0 8px 40px rgba(0,0,0,0.8);
-            z-index: 99999;
-            opacity: 0;
-            transition: opacity 0.15s, transform 0.15s;
-            pointer-events: none;
-            text-align: center;
-            max-width: 420px;
-            line-height: 1.5;
+            position:fixed; top:50%; left:50%;
+            transform:translate(-50%,-50%) scale(0.9);
+            background:var(--card); border:2px solid var(--accent); color:var(--text);
+            padding:1.25rem 2rem; border-radius:12px; font-size:1rem; font-weight:600;
+            box-shadow:0 8px 40px rgba(0,0,0,0.8); z-index:99999; opacity:0;
+            transition:opacity 0.15s,transform 0.15s; pointer-events:none;
+            text-align:center; max-width:400px; line-height:1.5;
         }
-        .toast.show { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-        .empty-state {
-            text-align: center;
-            padding: 3rem;
-            color: var(--muted);
+        .toast.show { opacity:1; transform:translate(-50%,-50%) scale(1); }
+
+        /* ── IDEA FAB ── */
+        .idea-fab {
+            position:fixed; bottom:2rem; right:2rem; width:52px; height:52px;
+            border-radius:50%; background:var(--accent); color:#fff; border:none;
+            font-size:1.7rem; cursor:pointer; box-shadow:0 4px 20px rgba(59,130,246,0.5);
+            z-index:100; display:flex; align-items:center; justify-content:center;
+            transition:transform 0.2s,box-shadow 0.2s;
         }
+        .idea-fab:hover { transform:scale(1.1); box-shadow:0 6px 24px rgba(59,130,246,0.7); }
 
-        @media (max-width: 768px) {
-            .project-grid {
-                grid-template-columns: 1fr;
-            }
+        /* ── FOOTER ── */
+        .footer { text-align:center; color:var(--muted); font-size:0.82rem; padding-top:2rem; border-top:1px solid var(--border); margin-top:3rem; }
 
-            .priority-item {
-                grid-template-columns: 1fr;
-                gap: 0.5rem;
-            }
+        /* ── EMPTY / LOADING ── */
+        .empty-state { text-align:center; padding:3rem; color:var(--muted); }
 
-            .priority-rank {
-                position: absolute;
-                top: 1rem;
-                right: 1rem;
-            }
-
-            .revenue-grid {
-                grid-template-columns: 1fr;
-            }
+        @media(max-width:768px){
+            .project-grid { grid-template-columns:1fr; }
+            .priority-item { grid-template-columns:1fr; gap:0.5rem; position:relative; }
+            .priority-rank { position:absolute; top:1rem; right:1rem; }
+            .revenue-grid { grid-template-columns:1fr; }
+            .scenario-drawer { max-width:100vw; }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <!-- Header -->
-        <div class="header">
-            <h1>Paddy's Project Hub</h1>
-            <div class="header-right">
-                <div class="status-indicator">
-                    <span class="status-dot"></span>
-                    <span>Live from Cloudflare D1</span>
-                </div>
-                <button class="btn" onclick="location.reload()">Refresh</button>
-            </div>
-        </div>
 
-        <!-- Stats Row -->
-        <div class="stats" id="statsContainer">
-            <div class="stat-card">
-                <div class="stat-label">Live</div>
-                <div class="stat-value" id="statLive">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Ready</div>
-                <div class="stat-value" id="statReady">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">In Dev</div>
-                <div class="stat-value" id="statDev">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Actions</div>
-                <div class="stat-value" id="statActions">0</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Avg Progress</div>
-                <div class="stat-value" id="statAvg">0%</div>
-            </div>
-            <div class="stat-card">
-                <div class="stat-label">Total</div>
-                <div class="stat-value" id="statTotal">0</div>
-            </div>
+<!-- ────────────────────────────── AUTH GATE ── -->
+<div id="authGate">
+    <div class="auth-box">
+        <div class="auth-logo">🧠</div>
+        <div class="auth-title" id="authTitle">Welcome back</div>
+        <div class="auth-subtitle" id="authSub">Enter your PIN to unlock</div>
+        <div class="pin-dots" id="pinDots">
+            <div class="pin-dot" id="dot0"></div>
+            <div class="pin-dot" id="dot1"></div>
+            <div class="pin-dot" id="dot2"></div>
+            <div class="pin-dot" id="dot3"></div>
         </div>
-
-        <!-- Overall Priorities Section -->
-        <h2 class="section-title">Overall Priorities</h2>
-        <div class="priorities-list" id="prioritiesList">
-            <div style="padding: 2rem; text-align: center; color: var(--muted);">Loading priorities...</div>
+        <div class="pin-numpad">
+            <button class="pin-key" onclick="pinPress(1)">1</button>
+            <button class="pin-key" onclick="pinPress(2)">2</button>
+            <button class="pin-key" onclick="pinPress(3)">3</button>
+            <button class="pin-key" onclick="pinPress(4)">4</button>
+            <button class="pin-key" onclick="pinPress(5)">5</button>
+            <button class="pin-key" onclick="pinPress(6)">6</button>
+            <button class="pin-key" onclick="pinPress(7)">7</button>
+            <button class="pin-key" onclick="pinPress(8)">8</button>
+            <button class="pin-key" onclick="pinPress(9)">9</button>
+            <button class="pin-key" onclick="pinClear()">⌫</button>
+            <button class="pin-key" onclick="pinPress(0)">0</button>
+            <button class="pin-key" onclick="pinSubmit()">✓</button>
         </div>
-
-        <!-- Revenue Tracker Section -->
-        <h2 class="section-title">3-Year Revenue Projection</h2>
-        <div class="revenue-tracker" id="revenueTracker">
-            <div style="text-align: center; color: var(--muted);">Loading revenue data...</div>
-        </div>
-
-        <!-- What to Focus On Section -->
-        <h2 class="section-title">What to Focus On</h2>
-        <div class="focus-section" id="focusSection">
-            <div class="focus-card">
-                <div class="focus-card-title">&#x1F680; Ready to Launch</div>
-                <div id="focusReady"><span class="focus-empty">Loading...</span></div>
-            </div>
-            <div class="focus-card">
-                <div class="focus-card-title">&#x1F4B0; Quickest Income</div>
-                <div id="focusIncome"><span class="focus-empty">Loading...</span></div>
-            </div>
-            <div class="focus-card">
-                <div class="focus-card-title">&#x1F525; Top Priority</div>
-                <div id="focusPriority"><span class="focus-empty">Loading...</span></div>
-            </div>
-            <div class="focus-card">
-                <div class="focus-card-title">&#x26A0; Needs Attention</div>
-                <div id="focusAttention"><span class="focus-empty">Loading...</span></div>
-            </div>
-        </div>
-
-        <!-- Monthly Budget Section -->
-        <h2 class="section-title">&#x1F4B3; Monthly Costs</h2>
-        <div id="budgetSection">
-            <div style="text-align:center; color: var(--muted); padding: 1rem;">Loading costs...</div>
-        </div>
-
-        <!-- Filter & Search -->
-        <div class="controls">
-            <input
-                type="text"
-                class="search-input"
-                id="searchInput"
-                placeholder="Search projects by name or description..."
-            >
-            <div class="filter-group">
-                <button class="filter-btn active" data-filter="all">All</button>
-                <button class="filter-btn" data-filter="live">Live</button>
-                <button class="filter-btn" data-filter="ready">Ready</button>
-                <button class="filter-btn" data-filter="dev">In Dev</button>
-                <button class="filter-btn" data-filter="idea">Ideas</button>
-            </div>
-        </div>
-
-        <!-- Project Grid -->
-        <div class="project-grid" id="projectGrid">
-            <div class="empty-state">Loading projects...</div>
-        </div>
-
-        <!-- Footer -->
-        <div class="footer">
-            <p>Claude dashboard &bull; Last updated: <span id="lastUpdated">--</span> &bull; Powered by Cloudflare D1</p>
-        </div>
+        <div class="auth-msg" id="authMsg"></div>
+        <div class="auth-switch" id="authSwitch"></div>
     </div>
+</div>
 
-    <div class="toast" id="toast"></div>
-
-    <!-- Floating Idea Button -->
-    <button class="idea-fab" id="ideaFab" title="Capture a new idea">+</button>
-
-    <!-- Idea Capture Modal -->
-    <div class="modal-overlay" id="modalOverlay">
-        <div class="modal">
-            <h3>&#x1F4A1; Capture an Idea</h3>
-            <div id="modalForm">
-                <input type="text" class="modal-input" id="ideaName" placeholder="Idea name *" maxlength="100">
-                <textarea class="modal-input" id="ideaDesc" placeholder="What is it? One or two lines..." maxlength="500"></textarea>
-                <select class="modal-input" id="ideaCategory">
-                    <option value="web app">Web App</option>
-                    <option value="mobile app">Mobile App</option>
-                    <option value="community">Community</option>
-                    <option value="events">Events</option>
-                    <option value="education">Education</option>
-                    <option value="health">Health</option>
-                    <option value="SSV Ecosystem">SSV Ecosystem</option>
-                    <option value="other">Other</option>
-                </select>
-                <div class="modal-actions">
-                    <button class="btn-cancel" id="modalCancel">Cancel</button>
-                    <button class="btn-primary" id="modalSubmit">Save Idea</button>
-                </div>
+<!-- ────────────────────────────── ONBOARDING ── -->
+<div class="onboard-overlay" id="onboardModal">
+    <div class="onboard-box">
+        <div class="onboard-progress">
+            <div class="onboard-dot done" id="ob-d1"></div>
+            <div class="onboard-dot" id="ob-d2"></div>
+            <div class="onboard-dot" id="ob-d3"></div>
+        </div>
+        <!-- Step 1 -->
+        <div class="onboard-step active" id="ob-step-1">
+            <div class="onboard-step-header">👋 Name your hub</div>
+            <div class="onboard-step-sub">This name appears in the header and digest emails. Use your name or studio name.</div>
+            <input class="onboard-input" id="ob-hub-name" placeholder="e.g. Paddy's Project Hub" maxlength="50">
+            <div class="onboard-nav">
+                <button class="btn-primary" onclick="obNext(1)">Next →</button>
             </div>
-            <div class="modal-success" id="modalSuccess" style="display:none">
-                &#x2705; Idea saved! Refresh to see it.
-                <div class="modal-actions" style="justify-content:center; margin-top:1rem">
-                    <button class="btn-primary" onclick="closeModal(); location.reload();">Refresh Now</button>
-                    <button class="btn-cancel" onclick="closeModal()">Close</button>
-                </div>
+        </div>
+        <!-- Step 2 -->
+        <div class="onboard-step" id="ob-step-2">
+            <div class="onboard-step-header">📧 Digest email</div>
+            <div class="onboard-step-sub">Where should your weekly digest summaries be sent?</div>
+            <input class="onboard-input" id="ob-email" type="email" placeholder="you@example.com">
+            <div class="onboard-nav">
+                <button class="btn-cancel" onclick="obBack(2)">← Back</button>
+                <button class="btn-primary" onclick="obNext(2)">Next →</button>
+            </div>
+        </div>
+        <!-- Step 3 -->
+        <div class="onboard-step" id="ob-step-3">
+            <div class="onboard-step-header">🔗 API endpoint</div>
+            <div class="onboard-step-sub">Paste your Cloudflare Worker URL. This powers all project data.</div>
+            <input class="onboard-input" id="ob-api" placeholder="https://your-worker.workers.dev">
+            <div class="onboard-nav">
+                <button class="btn-cancel" onclick="obBack(3)">← Back</button>
+                <button class="btn-primary" onclick="obFinish()">Launch hub →</button>
             </div>
         </div>
     </div>
+</div>
 
-    <script>
-        const API_URL = 'https://project-hub-api.pgallivan.workers.dev';
+<!-- ────────────────────────────── MAIN APP ── -->
+<div id="app" class="container" style="display:none">
 
-        let allProjects = [];
-        let currentFilter = 'all';
+    <!-- Header -->
+    <div class="header">
+        <h1 id="hubTitle">Project Hub</h1>
+        <div class="header-right">
+            <div class="status-indicator">
+                <span class="status-dot"></span>
+                <span id="dbLabel">Cloudflare D1</span>
+            </div>
+            <button class="btn" onclick="openScenario()">📊 Scenario</button>
+            <button class="btn" onclick="openDigest()">📧 Digest</button>
+            <button class="btn" onclick="location.reload()">↻ Refresh</button>
+            <button class="btn" onclick="lockHub()" title="Lock">🔒</button>
+        </div>
+    </div>
 
-        async function fetchProjects() {
-            try {
-                const response = await fetch(
-                    `${API_URL}/projects`,
-                    {
-                        headers: {
-                            'Content-Type': 'application/json',
-                        }
-                    }
-                );
-                const data = await response.json();
-                allProjects = data;
-                render();
-            } catch (error) {
-                console.error('Error fetching projects:', error);
-                document.getElementById('projectGrid').innerHTML =
-                    '<div class="empty-state">Error loading projects. Please refresh.</div>';
-            }
+    <!-- Today's Top Pick -->
+    <div class="pick-hero" id="pickHero" style="display:none"></div>
+
+    <!-- Stats Row -->
+    <div class="stats" id="statsContainer">
+        <div class="stat-card"><div class="stat-label">Live</div><div class="stat-value" id="statLive">–</div></div>
+        <div class="stat-card"><div class="stat-label">Ready</div><div class="stat-value" id="statReady">–</div></div>
+        <div class="stat-card"><div class="stat-label">In Dev</div><div class="stat-value" id="statDev">–</div></div>
+        <div class="stat-card"><div class="stat-label">Actions</div><div class="stat-value" id="statActions">–</div></div>
+        <div class="stat-card"><div class="stat-label">Avg Progress</div><div class="stat-value" id="statAvg">–</div></div>
+        <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">–</div></div>
+    </div>
+
+    <!-- Priorities -->
+    <h2 class="section-title">🏆 Overall Priorities</h2>
+    <div class="priorities-list" id="prioritiesList">
+        <div style="padding:2rem;text-align:center;color:var(--muted)">Loading...</div>
+    </div>
+
+    <!-- Revenue Tracker -->
+    <h2 class="section-title">📈 3-Year Revenue Projection</h2>
+    <div class="revenue-tracker" id="revenueTracker">
+        <div style="text-align:center;color:var(--muted)">Loading...</div>
+    </div>
+
+    <!-- What to Focus On -->
+    <h2 class="section-title">🎯 What to Focus On</h2>
+    <div class="focus-section" id="focusSection">
+        <div class="focus-card"><div class="focus-card-title">🚀 Ready to Launch</div><div id="focusReady"><span class="focus-empty">Loading...</span></div></div>
+        <div class="focus-card"><div class="focus-card-title">💰 Quickest Income</div><div id="focusIncome"><span class="focus-empty">Loading...</span></div></div>
+        <div class="focus-card"><div class="focus-card-title">🔥 Top Priority</div><div id="focusPriority"><span class="focus-empty">Loading...</span></div></div>
+        <div class="focus-card"><div class="focus-card-title">⚠ Needs Attention</div><div id="focusAttention"><span class="focus-empty">Loading...</span></div></div>
+    </div>
+
+    <!-- Upcoming Milestones -->
+    <h2 class="section-title">📅 Upcoming Milestones</h2>
+    <div id="milestonesSection" class="milestones-grid">
+        <div class="no-milestones">Loading milestones...</div>
+    </div>
+
+    <!-- Budget -->
+    <h2 class="section-title">💳 Monthly Costs</h2>
+    <div id="budgetSection">
+        <div style="text-align:center;color:var(--muted);padding:1rem">Loading...</div>
+    </div>
+
+    <!-- Filter & Search -->
+    <div class="controls">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search projects...">
+        <div class="filter-group">
+            <button class="filter-btn active" data-filter="all">All</button>
+            <button class="filter-btn" data-filter="live">Live</button>
+            <button class="filter-btn" data-filter="ready">Ready</button>
+            <button class="filter-btn" data-filter="dev">In Dev</button>
+            <button class="filter-btn" data-filter="idea">Ideas</button>
+        </div>
+    </div>
+
+    <!-- Project Grid -->
+    <div class="project-grid" id="projectGrid">
+        <div class="empty-state">Loading projects...</div>
+    </div>
+
+    <div class="footer">
+        <p id="footerText">Project Hub · Last updated: <span id="lastUpdated">–</span> · Powered by Cloudflare D1</p>
+    </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<!-- IDEA FAB -->
+<button class="idea-fab" id="ideaFab" title="Capture a new idea">+</button>
+
+<!-- ────────────────────────────── IDEA MODAL ── -->
+<div class="modal-overlay" id="modalOverlay">
+    <div class="modal">
+        <h3>💡 Capture an Idea</h3>
+        <div id="modalForm">
+            <input type="text" class="modal-input" id="ideaName" placeholder="Idea name *" maxlength="100">
+            <textarea class="modal-input" id="ideaDesc" placeholder="What is it? One or two lines..." maxlength="500"></textarea>
+            <select class="modal-input" id="ideaCategory">
+                <option value="web app">Web App</option>
+                <option value="mobile app">Mobile App</option>
+                <option value="community">Community</option>
+                <option value="events">Events</option>
+                <option value="education">Education</option>
+                <option value="health">Health</option>
+                <option value="SSV Ecosystem">SSV Ecosystem</option>
+                <option value="other">Other</option>
+            </select>
+            <div class="modal-actions">
+                <button class="btn-cancel" id="modalCancel">Cancel</button>
+                <button class="btn-primary" id="modalSubmit">Save Idea</button>
+            </div>
+        </div>
+        <div class="modal-success" id="modalSuccess" style="display:none">
+            ✅ Idea saved!
+            <div class="modal-actions" style="justify-content:center;margin-top:1rem">
+                <button class="btn-primary" onclick="closeModal();location.reload()">Refresh Now</button>
+                <button class="btn-cancel" onclick="closeModal()">Close</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- ────────────────────────────── DIGEST MODAL ── -->
+<div class="modal-overlay" id="digestOverlay">
+    <div class="modal" style="max-width:620px">
+        <h3>📧 Weekly Digest</h3>
+        <div class="digest-text" id="digestText"></div>
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeDigest()">Close</button>
+            <button class="btn-primary" onclick="emailDigest()">✉ Email it</button>
+            <button class="btn-primary" onclick="copyDigest()">📋 Copy</button>
+        </div>
+    </div>
+</div>
+
+<!-- ────────────────────────────── SCENARIO DRAWER ── -->
+<div class="scenario-overlay" id="scenarioOverlay" onclick="closeScenario()"></div>
+<div class="scenario-drawer" id="scenarioDrawer">
+    <div class="scenario-header">
+        <h3>📊 Scenario Modelling</h3>
+        <button class="scenario-close" onclick="closeScenario()">✕</button>
+    </div>
+    <div class="scenario-mode-toggle">
+        <button class="scenario-mode-btn active optimistic" onclick="setScenarioMode('optimistic')">🚀 Optimistic +30%</button>
+        <button class="scenario-mode-btn base" onclick="setScenarioMode('base')">⚖ Base</button>
+        <button class="scenario-mode-btn active conservative" onclick="setScenarioMode('conservative')">📉 Conservative −30%</button>
+    </div>
+    <div class="scenario-totals">
+        <div class="scenario-total-card">
+            <div class="scenario-total-label">Baseline 3-Yr</div>
+            <div class="scenario-total-value" id="sc-baseline">–</div>
+        </div>
+        <div class="scenario-total-card">
+            <div class="scenario-total-label">This Scenario</div>
+            <div class="scenario-total-value" id="sc-scenario">–</div>
+            <div class="scenario-delta" id="sc-delta"></div>
+        </div>
+    </div>
+    <div style="font-size:0.78rem;color:var(--muted);margin-bottom:1rem">
+        Adjust individual project multipliers or use mode buttons above. Changes are view-only — nothing gets saved.
+    </div>
+    <div class="scenario-divider"></div>
+    <div id="scenarioProjects"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════
+//   CONFIG — loaded from localStorage
+// ══════════════════════════════════════════════
+let CFG = {
+    hubName: 'Project Hub',
+    email: '',
+    apiUrl: 'https://project-hub-api.pgallivan.workers.dev'
+};
+
+function loadConfig() {
+    try {
+        const stored = localStorage.getItem('hub_config');
+        if (stored) CFG = { ...CFG, ...JSON.parse(stored) };
+    } catch(e) {}
+}
+
+function saveConfig() {
+    localStorage.setItem('hub_config', JSON.stringify(CFG));
+}
+
+// ══════════════════════════════════════════════
+//   AUTH
+// ══════════════════════════════════════════════
+let pinBuffer = '';
+let authMode = 'login'; // 'login' | 'setup' | 'confirm'
+let pendingHash = '';
+
+async function sha256(str) {
+    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(str));
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+function initAuth() {
+    loadConfig();
+    const storedHash = localStorage.getItem('hub_pin_hash');
+    const sessionToken = sessionStorage.getItem('hub_auth');
+    if (sessionToken && sessionToken === storedHash) {
+        showApp(); return;
+    }
+    if (!storedHash) {
+        authMode = 'setup';
+        document.getElementById('authTitle').textContent = 'Set up your PIN';
+        document.getElementById('authSub').textContent = 'Choose a 4-digit PIN to protect your hub';
+        document.getElementById('authSwitch').innerHTML = '';
+    } else {
+        authMode = 'login';
+        document.getElementById('authTitle').textContent = 'Welcome back';
+        document.getElementById('authSub').textContent = 'Enter your PIN to unlock';
+        document.getElementById('authSwitch').innerHTML = '<span onclick="resetPin()">Forgot PIN? Reset</span>';
+    }
+}
+
+function pinPress(d) {
+    if (pinBuffer.length >= 4) return;
+    pinBuffer += d;
+    updateDots();
+    if (pinBuffer.length === 4) setTimeout(pinSubmit, 120);
+}
+
+function pinClear() {
+    pinBuffer = pinBuffer.slice(0, -1);
+    updateDots();
+}
+
+function updateDots(state) {
+    for (let i = 0; i < 4; i++) {
+        const dot = document.getElementById(`dot${i}`);
+        dot.classList.remove('filled','error');
+        if (state === 'error') dot.classList.add('error');
+        else if (i < pinBuffer.length) dot.classList.add('filled');
+    }
+}
+
+async function pinSubmit() {
+    if (pinBuffer.length < 4) return;
+    const hash = await sha256(pinBuffer);
+
+    if (authMode === 'setup') {
+        pendingHash = hash;
+        authMode = 'confirm';
+        pinBuffer = '';
+        updateDots();
+        document.getElementById('authTitle').textContent = 'Confirm PIN';
+        document.getElementById('authSub').textContent = 'Enter the same PIN again';
+        document.getElementById('authMsg').textContent = '';
+        return;
+    }
+
+    if (authMode === 'confirm') {
+        if (hash !== pendingHash) {
+            pinBuffer = '';
+            updateDots('error');
+            document.getElementById('authMsg').className = 'auth-msg error';
+            document.getElementById('authMsg').textContent = 'PINs don\'t match. Try again.';
+            authMode = 'setup';
+            pendingHash = '';
+            setTimeout(() => {
+                document.getElementById('authTitle').textContent = 'Set up your PIN';
+                document.getElementById('authSub').textContent = 'Choose a 4-digit PIN';
+                document.getElementById('authMsg').textContent = '';
+                updateDots();
+            }, 1200);
+            return;
         }
+        localStorage.setItem('hub_pin_hash', hash);
+        sessionStorage.setItem('hub_auth', hash);
+        document.getElementById('authMsg').className = 'auth-msg success';
+        document.getElementById('authMsg').textContent = '✓ PIN set!';
+        setTimeout(showApp, 500);
+        return;
+    }
 
-        function formatCurrency(value) {
-            if (!value) return '$0';
-            return `$${value.toLocaleString()}`;
-        }
+    // login
+    const stored = localStorage.getItem('hub_pin_hash');
+    if (hash === stored) {
+        sessionStorage.setItem('hub_auth', hash);
+        document.getElementById('authMsg').className = 'auth-msg success';
+        document.getElementById('authMsg').textContent = '✓ Unlocking...';
+        setTimeout(showApp, 300);
+    } else {
+        pinBuffer = '';
+        updateDots('error');
+        document.getElementById('authMsg').className = 'auth-msg error';
+        document.getElementById('authMsg').textContent = 'Incorrect PIN';
+        setTimeout(() => { updateDots(); document.getElementById('authMsg').textContent = ''; }, 1200);
+    }
+}
 
-        function getCategoryBadgeClass(category) {
-            if (!category) return '';
-            const normalized = category.toLowerCase().replace(/\s+/g, '-');
-            return `category-badge ${normalized}`;
-        }
+function resetPin() {
+    if (!confirm('This will clear your PIN and require you to set a new one. Continue?')) return;
+    localStorage.removeItem('hub_pin_hash');
+    sessionStorage.removeItem('hub_auth');
+    pinBuffer = '';
+    authMode = 'setup';
+    updateDots();
+    document.getElementById('authTitle').textContent = 'Set up your PIN';
+    document.getElementById('authSub').textContent = 'Choose a 4-digit PIN to protect your hub';
+    document.getElementById('authMsg').textContent = '';
+    document.getElementById('authSwitch').innerHTML = '';
+}
 
-        function getStatusBadgeClass(status) {
-            if (!status) return 'status-badge';
-            const normalized = status.toLowerCase();
-            return `status-badge ${normalized}`;
-        }
+function lockHub() {
+    sessionStorage.removeItem('hub_auth');
+    location.reload();
+}
 
-        function renderStats() {
-            const live = allProjects.filter(p => (p.status || '').toLowerCase() === 'live').length;
-            const ready = allProjects.filter(p => ['ready', 'ready to deploy'].includes((p.status || '').toLowerCase())).length;
-            const dev = allProjects.filter(p => ['dev', 'in_dev', 'in development', 'early stage'].includes((p.status || '').toLowerCase())).length;
-            const actions = allProjects.filter(p => p.next_action).length;
-            const avgProgress = allProjects.length > 0
-                ? Math.round(allProjects.reduce((sum, p) => sum + (p.progress_pct || 0), 0) / allProjects.length)
-                : 0;
-            const total = allProjects.length;
+function showApp() {
+    document.getElementById('authGate').style.display = 'none';
+    document.getElementById('app').style.display = 'block';
+    document.getElementById('hubTitle').textContent = CFG.hubName;
+    fetchProjects();
+    checkOnboarding();
+}
 
-            document.getElementById('statLive').textContent = live;
-            document.getElementById('statReady').textContent = ready;
-            document.getElementById('statDev').textContent = dev;
-            document.getElementById('statActions').textContent = actions;
-            document.getElementById('statAvg').textContent = `${avgProgress}%`;
-            document.getElementById('statTotal').textContent = total;
-        }
+// ══════════════════════════════════════════════
+//   ONBOARDING
+// ══════════════════════════════════════════════
+function checkOnboarding() {
+    if (!localStorage.getItem('hub_onboarded')) {
+        document.getElementById('on-hub-name') && (document.getElementById('ob-hub-name').value = CFG.hubName);
+        document.getElementById('ob-email') && (document.getElementById('ob-email').value = CFG.email);
+        document.getElementById('ob-api') && (document.getElementById('ob-api').value = CFG.apiUrl);
+        document.getElementById('onboardModal').classList.add('open');
+    }
+}
 
-        function renderPriorities() {
-            const priorities = allProjects
-                .filter(p => p.income_priority && p.income_priority > 0)
-                .sort((a, b) => a.income_priority - b.income_priority);
+function obNext(step) {
+    if (step === 1) {
+        const name = document.getElementById('ob-hub-name').value.trim();
+        if (!name) return;
+        CFG.hubName = name;
+        document.getElementById('hubTitle').textContent = name;
+    } else if (step === 2) {
+        const email = document.getElementById('ob-email').value.trim();
+        if (email) CFG.email = email;
+    }
+    document.getElementById(`ob-step-${step}`).classList.remove('active');
+    document.getElementById(`ob-step-${step+1}`).classList.add('active');
+    document.getElementById(`ob-d${step+1}`).classList.add('done');
+}
 
-            if (priorities.length === 0) {
-                document.getElementById('prioritiesList').innerHTML =
-                    '<div style="padding: 2rem; text-align: center; color: var(--muted);">No priority projects configured.</div>';
-                return;
-            }
+function obBack(step) {
+    document.getElementById(`ob-step-${step}`).classList.remove('active');
+    document.getElementById(`ob-step-${step-1}`).classList.add('active');
+}
 
-            const html = priorities.map((project, index) => {
-                const y1 = project.revenue_y1 || 0;
-                const y2 = project.revenue_y2 || 0;
-                const y3 = project.revenue_y3 || 0;
-                const total = y1 + y2 + y3;
-                const categoryClass = getCategoryBadgeClass(project.revenue_category);
+function obFinish() {
+    const api = document.getElementById('ob-api').value.trim();
+    if (api) CFG.apiUrl = api;
+    saveConfig();
+    localStorage.setItem('hub_onboarded', '1');
+    document.getElementById('onboardModal').classList.remove('open');
+    fetchProjects();
+}
 
-                return `
-                    <div class="priority-item">
-                        <div class="priority-rank">${index + 1}</div>
-                        <a href="project.html?id=${project.id}" class="priority-name">${project.project_name}</a>
-                        <div class="${categoryClass}">${project.revenue_category || 'N/A'}</div>
-                        <div class="revenue-item">
-                            <span class="revenue-label">Y1</span>
-                            <div class="revenue-value">${formatCurrency(y1)}</div>
-                        </div>
-                        <div class="revenue-item">
-                            <span class="revenue-label">3-Yr Total</span>
-                            <div class="revenue-value">${formatCurrency(total)}</div>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+// ══════════════════════════════════════════════
+//   DATA
+// ══════════════════════════════════════════════
+let allProjects = [];
+let currentFilter = 'all';
+let scenarioMultipliers = {}; // projectId -> multiplier
+let scenarioMode = 'base';
 
-            document.getElementById('prioritiesList').innerHTML = html;
-        }
+async function fetchProjects() {
+    try {
+        const response = await fetch(`${CFG.apiUrl}/projects`);
+        const data = await response.json();
+        allProjects = data;
+        render();
+    } catch (error) {
+        document.getElementById('projectGrid').innerHTML =
+            '<div class="empty-state">Error loading projects. Check your API URL.</div>';
+    }
+}
 
-        function renderRevenueTracker() {
-            let y1Total = 0, y2Total = 0, y3Total = 0;
-            const categoryTotals = {};
+// ══════════════════════════════════════════════
+//   SCORING ENGINE
+// ══════════════════════════════════════════════
+function scoreProject(p) {
+    let score = 0;
+    const status = (p.status || '').toLowerCase();
 
-            allProjects.forEach(p => {
-                y1Total += p.revenue_y1 || 0;
-                y2Total += p.revenue_y2 || 0;
-                y3Total += p.revenue_y3 || 0;
+    // Skip ideas and live from main recommendation
+    if (status === 'idea') return -100;
+    if (status === 'live') return -50;
 
-                if (p.revenue_category) {
-                    if (!categoryTotals[p.revenue_category]) {
-                        categoryTotals[p.revenue_category] = 0;
-                    }
-                    categoryTotals[p.revenue_category] += (p.revenue_y1 || 0) + (p.revenue_y2 || 0) + (p.revenue_y3 || 0);
-                }
-            });
+    // Priority rank: #1 = 50pts, #5 = 30pts, etc.
+    if (p.income_priority > 0) {
+        score += Math.max(0, (11 - p.income_priority) * 5);
+    }
 
-            const totalRevenue = y1Total + y2Total + y3Total;
-            const categoryBars = Object.entries(categoryTotals)
-                .map(([category, amount]) => {
-                    const percentage = totalRevenue > 0 ? (amount / totalRevenue * 100) : 0;
-                    const categoryClass = category.toLowerCase().replace(/\s+/g, '-');
-                    return `<div class="revenue-bar ${categoryClass}" style="flex: ${percentage}">
-                        ${percentage > 8 ? category.substring(0, 3) : ''}
-                    </div>`;
-                })
-                .join('');
+    // Y1 revenue potential (max 25 pts)
+    const revenues = allProjects.map(x => x.revenue_y1 || 0);
+    const maxY1 = Math.max(...revenues, 1);
+    score += ((p.revenue_y1 || 0) / maxY1) * 25;
 
-            document.getElementById('revenueTracker').innerHTML = `
-                <div class="revenue-grid">
-                    <div class="revenue-year">
-                        <div class="revenue-year-label">Year 1</div>
-                        <div class="revenue-year-value">${formatCurrency(y1Total)}</div>
-                    </div>
-                    <div class="revenue-year">
-                        <div class="revenue-year-label">Year 2</div>
-                        <div class="revenue-year-value">${formatCurrency(y2Total)}</div>
-                    </div>
-                    <div class="revenue-year">
-                        <div class="revenue-year-label">Year 3</div>
-                        <div class="revenue-year-value">${formatCurrency(y3Total)}</div>
-                    </div>
-                </div>
-                <div class="revenue-chart">
-                    ${categoryBars}
-                </div>
-            `;
-        }
+    // Progress sweet spot: 30–80% = most actionable
+    const prog = p.progress_pct || 0;
+    if (prog >= 30 && prog < 80) score += 15;
+    else if (prog >= 80 && prog < 95) score += 8;
+    else if (prog < 30) score += 3;
 
-        function renderProjects() {
-            let filtered = allProjects;
+    // Status bonuses
+    if (status === 'ready' || status === 'ready to deploy') score += 25;
+    else if (['dev','in_dev','in development','early stage'].includes(status)) score += 10;
 
-            if (currentFilter === 'idea') {
-                filtered = filtered.filter(p => p.status === 'idea');
-            } else if (currentFilter === 'dev') {
-                filtered = filtered.filter(p => ['dev', 'in_dev', 'in development', 'early stage'].includes((p.status || '').toLowerCase()));
-            } else if (currentFilter === 'ready') {
-                filtered = filtered.filter(p => ['ready', 'ready to deploy'].includes((p.status || '').toLowerCase()));
-            } else if (currentFilter !== 'all') {
-                filtered = filtered.filter(p => p.status === currentFilter);
-            }
+    // Freshness: stale projects lose points
+    if (p.last_updated) {
+        const days = (Date.now() - new Date(p.last_updated)) / 86400000;
+        if (days > 60) score -= 15;
+        else if (days > 30) score -= 7;
+    }
 
-            const searchQuery = document.getElementById('searchInput').value.toLowerCase();
-            if (searchQuery) {
-                filtered = filtered.filter(p =>
-                    (p.project_name && p.project_name.toLowerCase().includes(searchQuery)) ||
-                    (p.description && p.description.toLowerCase().includes(searchQuery))
-                );
-            }
+    // Has a clear next action = more actionable
+    if (p.next_action) score += 8;
 
-            if (filtered.length === 0) {
-                document.getElementById('projectGrid').innerHTML =
-                    '<div class="empty-state">No projects found.</div>';
-                return;
-            }
+    return score;
+}
 
-            const html = filtered.map(project => {
-                const domains = project.domains ? (Array.isArray(project.domains) ? project.domains : [project.domains]) : [];
-                const domainLinks = domains.map(d => `<a href="https://${d}" target="_blank" class="domain-link">${d}</a>`).join(', ');
+function getTopPick() {
+    const scored = allProjects
+        .map(p => ({ p, score: scoreProject(p) }))
+        .filter(x => x.score > 0)
+        .sort((a, b) => b.score - a.score);
+    return scored.length ? scored[0] : null;
+}
 
-                const revenueTag = project.income_priority && project.income_priority > 0
-                    ? '<span class="revenue-badge">$</span>'
-                    : '';
+function renderTopPick() {
+    const hero = document.getElementById('pickHero');
+    const top = getTopPick();
+    if (!top) { hero.style.display = 'none'; return; }
+    const { p, score } = top;
 
-                // Extract multiple app links from notes
-                const appLinks = [];
-                if (project.notes) {
-                    const urlPattern = /((?:Player|Host|Admin|App|Dashboard|API|Demo|Preview)[^:]*?):\s*(https?:\/\/[^\s|,]+)/gi;
-                    let match;
-                    while ((match = urlPattern.exec(project.notes)) !== null) {
-                        const label = match[1].trim();
-                        const url = match[2].trim();
-                        if (url !== project.live_url) {
-                            appLinks.push({ label, url });
-                        }
-                    }
-                }
+    const reasons = [];
+    if (p.income_priority > 0 && p.income_priority <= 3) reasons.push(`#${p.income_priority} income priority`);
+    if ((p.revenue_y1 || 0) > 0) reasons.push(`$${(p.revenue_y1||0).toLocaleString()} Y1 potential`);
+    const prog = p.progress_pct || 0;
+    if (prog >= 30) reasons.push(`${prog}% complete`);
+    if ((p.status||'').toLowerCase() === 'ready') reasons.push('ready to launch');
+    if (p.next_action) reasons.push('has clear next step');
 
-                const appLinksHtml = appLinks.length > 0
-                    ? `<div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.75rem">
-                        ${project.live_url ? `<a href="${project.live_url}" target="_blank" style="font-size:0.8rem;padding:0.2rem 0.6rem;background:var(--accent);color:#fff;border-radius:4px;text-decoration:none;font-weight:600">Main &#x2197;</a>` : ''}
-                        ${appLinks.map(l => `<a href="${l.url}" target="_blank" style="font-size:0.8rem;padding:0.2rem 0.6rem;border:1px solid var(--accent);color:var(--accent);border-radius:4px;text-decoration:none;font-weight:500">${l.label} &#x2197;</a>`).join('')}
-                       </div>`
-                    : '';
+    const pills = [
+        p.status ? `<span class="pick-score-pill">${p.status}</span>` : '',
+        p.income_priority ? `<span class="pick-score-pill">Priority #${p.income_priority}</span>` : '',
+        prog ? `<span class="pick-score-pill">${prog}% done</span>` : '',
+        p.revenue_y1 ? `<span class="pick-score-pill">$${(p.revenue_y1||0).toLocaleString()}/yr</span>` : '',
+    ].filter(Boolean).join('');
 
-                return `
-                    <div class="project-card">
-                        <div class="card-header">
-                            <a href="project.html?id=${project.id}" class="card-title">${project.project_name}</a>
-                            ${project.live_url && appLinks.length === 0 ? `<a href="${project.live_url}" target="_blank" class="card-link" title="Open live site">&#x2197;</a>` : ''}
-                        </div>
-                        <div style="margin-bottom:0.75rem">
-                            <span class="${getStatusBadgeClass(project.status)}">${project.status || 'N/A'}</span>
-                            ${revenueTag}
-                            ${parseFloat(project.cost_monthly || 0) > 0 ? `<span style="font-size:0.75rem;color:var(--warning);margin-left:0.5rem">A$${parseFloat(project.cost_monthly).toFixed(2)}/mo</span>` : ''}
-                        </div>
-                        ${appLinksHtml}
-                        ${project.description ? `<div class="card-description">${project.description}</div>` : ''}
-                        ${project.progress_pct !== null && project.progress_pct !== undefined ? `
-                            <div class="progress-bar">
-                                <div class="progress-fill" style="width: ${project.progress_pct}%"></div>
-                            </div>
-                        ` : ''}
-                        <div class="card-tags">
-                            ${project.category ? `<span class="tag">${project.category}</span>` : ''}
-                            ${project.tech_stack ? project.tech_stack.split(',').map(t => `<span class="tag">${t.trim()}</span>`).join('') : ''}
-                        </div>
-                        ${project.connectors && project.connectors !== 'None' ? `
-                    <div class="card-integrations">
-                        <div class="card-integrations-label">Connectors</div>
-                        ${project.connectors.split(',').map(c => `<span class="connector-tag">${c.trim()}</span>`).join('')}
-                    </div>
-                ` : ''}
-                ${project.plugins && project.plugins !== 'None' ? `
-                    <div class="card-integrations">
-                        <div class="card-integrations-label">Plugins</div>
-                        ${project.plugins.split(',').map(p => `<span class="plugin-tag">${p.trim()}</span>`).join('')}
-                    </div>
-                ` : ''}
-                ${domainLinks ? `<div class="domain-links">${domainLinks}</div>` : ''}
-                        ${project.next_action ? `<div class="next-action"><strong>Next:</strong> ${project.next_action}</div>` : ''}
-                        <div class="card-meta">Updated: ${project.last_updated ? new Date(project.last_updated).toLocaleDateString() : 'N/A'}</div>
-                        <div class="claude-btns">
-                            <button class="claude-resume-btn" onclick="copyResume(${JSON.stringify(project.project_name)}, ${JSON.stringify(project.live_url || '')})">▶ Open in Claude</button>
-                            <button class="claude-end-btn" onclick="copyWrapUp(${JSON.stringify(project.project_name)})">✓ End Session</button>
-                        </div>
-                    </div>
-                `;
-            }).join('');
+    // Runner-up
+    const scored = allProjects.map(p => ({ p, score: scoreProject(p) })).filter(x => x.score > 0).sort((a,b) => b.score - a.score);
+    const runners = scored.slice(1, 3).map(x => `<div class="pick-secondary-item"><strong>${x.p.project_name}</strong> — ${(x.p.status||'')} · $${(x.p.revenue_y1||0).toLocaleString()}/yr</div>`).join('');
 
-            document.getElementById('projectGrid').innerHTML = html;
-        }
+    hero.style.display = 'block';
+    hero.innerHTML = `
+        <div class="pick-label">⚡ Today's Top Pick · Score: ${Math.round(score)}</div>
+        <div class="pick-title">${p.project_name}</div>
+        <div class="pick-why">Why: ${reasons.join(' · ') || 'Highest composite score'}</div>
+        <div class="pick-scores">${pills}</div>
+        ${p.next_action ? `<div class="next-action" style="margin-bottom:1rem"><strong>Next:</strong> ${p.next_action}</div>` : ''}
+        <div class="pick-actions">
+            <button class="btn accent" onclick="copyResume(${JSON.stringify(p.project_name)}, '')">▶ Open in Claude</button>
+            ${p.live_url ? `<a href="${p.live_url}" target="_blank" class="btn">↗ View live</a>` : ''}
+            <a href="project.html?id=${p.id}" class="btn">📋 Details</a>
+        </div>
+        ${runners ? `<div class="pick-secondary"><div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;width:100%;margin-bottom:0.25rem">Also consider</div>${runners}</div>` : ''}
+    `;
+}
 
-        function renderFocusSection() {
-            // Ready to Launch
-            const ready = allProjects.filter(p => p.status === 'ready').slice(0, 4);
-            document.getElementById('focusReady').innerHTML = ready.length
-                ? ready.map(p => `<div class="focus-item">
-                    <a href="project.html?id=${p.id}" class="focus-item-name">${p.project_name}</a>
-                  </div>`).join('')
-                : '<span class="focus-empty">None ready right now</span>';
+// ══════════════════════════════════════════════
+//   MILESTONES
+// ══════════════════════════════════════════════
+function getMilestones() {
+    const milestones = [];
+    const now = new Date();
 
-            // Quickest Income (non-live, highest Y1 revenue)
-            const income = allProjects
-                .filter(p => p.status !== 'live' && p.status !== 'idea' && (p.revenue_y1 || 0) > 0)
-                .sort((a, b) => (b.revenue_y1 || 0) - (a.revenue_y1 || 0))
-                .slice(0, 4);
-            document.getElementById('focusIncome').innerHTML = income.length
-                ? income.map(p => `<div class="focus-item">
-                    <a href="project.html?id=${p.id}" class="focus-item-name">${p.project_name}</a>
-                    <span class="focus-item-meta">$${(p.revenue_y1 || 0).toLocaleString()}/yr</span>
-                  </div>`).join('')
-                : '<span class="focus-empty">No revenue data</span>';
-
-            // Top Priority (by income_priority rank)
-            const priority = allProjects
-                .filter(p => p.income_priority && p.income_priority > 0)
-                .sort((a, b) => a.income_priority - b.income_priority)
-                .slice(0, 4);
-            document.getElementById('focusPriority').innerHTML = priority.length
-                ? priority.map((p, i) => `<div class="focus-item">
-                    <a href="project.html?id=${p.id}" class="focus-item-name">${p.project_name}</a>
-                    <span class="focus-item-meta">#${i + 1}</span>
-                  </div>`).join('')
-                : '<span class="focus-empty">No priorities set</span>';
-
-            // Needs Attention (has next_action, not live or idea)
-            const attention = allProjects
-                .filter(p => p.next_action && p.status !== 'live' && p.status !== 'idea')
-                .slice(0, 4);
-            document.getElementById('focusAttention').innerHTML = attention.length
-                ? attention.map(p => `<div class="focus-item">
-                    <a href="project.html?id=${p.id}" class="focus-item-name">${p.project_name}</a>
-                    <span class="focus-item-meta" style="color:var(--warning)">${p.status}</span>
-                  </div>`).join('')
-                : '<span class="focus-empty">Nothing flagged</span>';
-        }
-
-        function renderBudget() {
-            const AUD_RATE = 1.58;
-
-            // Per-project domain costs from DB
-            const projectCosts = allProjects
-                .filter(p => parseFloat(p.cost_monthly || 0) > 0)
-                .sort((a, b) => parseFloat(b.cost_monthly) - parseFloat(a.cost_monthly));
-
-            const domainTotal = projectCosts.reduce((sum, p) => sum + parseFloat(p.cost_monthly || 0), 0);
-            const grandTotal = domainTotal; // Cloudflare D1 + Workers = free
-
-            // Savings opportunities
-            const ideaDomainCost = allProjects
-                .filter(p => p.status === 'idea' && parseFloat(p.cost_monthly || 0) > 0)
-                .reduce((sum, p) => sum + parseFloat(p.cost_monthly || 0), 0);
-
-            document.getElementById('budgetSection').innerHTML = `
-                <div class="budget-summary">
-                    <div class="budget-stat">
-                        <div class="budget-stat-value">A$${grandTotal.toFixed(0)}</div>
-                        <div class="budget-stat-label">Total / Month</div>
-                    </div>
-                    <div class="budget-stat">
-                        <div class="budget-stat-value">A$${(grandTotal * 12).toFixed(0)}</div>
-                        <div class="budget-stat-label">Total / Year</div>
-                    </div>
-                    <div class="budget-stat">
-                        <div class="budget-stat-value" style="color:var(--success)">A$0</div>
-                        <div class="budget-stat-label">Hosting / Month</div>
-                    </div>
-                    <div class="budget-stat">
-                        <div class="budget-stat-value">A$${domainTotal.toFixed(2)}</div>
-                        <div class="budget-stat-label">Domains / Month</div>
-                    </div>
-                </div>
-                <table class="budget-table">
-                    <thead>
-                        <tr>
-                            <th>Item</th>
-                            <th>Type</th>
-                            <th>Monthly (AUD)</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Cloudflare Workers + D1</strong></td>
-                            <td><span class="status-badge" style="background:#f6821f;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.75rem">Hosting</span></td>
-                            <td style="color:var(--success);font-weight:700">FREE</td>
-                            <td style="color:var(--muted);font-size:0.8rem">100K requests/day free. D1 5GB free. Migrated from Supabase Pro (~A$103/mo saved).</td>
-                        </tr>
-                        ${projectCosts.map(p => `
-                        <tr>
-                            <td><a href="project.html?id=${p.id}" style="color:var(--accent);text-decoration:none;font-weight:500">${p.project_name}</a></td>
-                            <td><span style="font-size:0.8rem;color:var(--muted)">Domain</span></td>
-                            <td>A$${parseFloat(p.cost_monthly).toFixed(2)}</td>
-                            <td style="color:var(--muted);font-size:0.8rem">${p.cost_notes || ''}</td>
-                        </tr>`).join('')}
-                        <tr style="border-top:2px solid var(--border)">
-                            <td colspan="2"><strong>TOTAL</strong></td>
-                            <td><strong>A$${grandTotal.toFixed(2)}</strong></td>
-                            <td style="color:var(--muted);font-size:0.8rem">A$${(grandTotal * 12).toFixed(0)}/year (domains only)</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="budget-alert tip">
-                    &#x2705; <strong>Migrated to Cloudflare &mdash; saving ~A$103/mo vs Supabase Pro.</strong>
-                    Project Hub now runs on Cloudflare Workers + D1 (free tier). Database: project-hub-db.
-                </div>
-                <div class="budget-alert tip">
-                    &#x1F4A1; <strong>More savings available:</strong>
-                    (1) Drop idea-only domains you're not committed to = save A$1.58/domain/mo.
-                    (2) Carousel has 4 domains for an idea = A$6.30/mo &mdash; drop 2-3?
-                    (3) Move domains from Squarespace to Cloudflare Registrar &asymp; A$8-10/yr vs A$18.90/yr.
-                </div>
-            `;
-        }
-
-        function render() {
-            renderStats();
-            renderPriorities();
-            renderRevenueTracker();
-            renderFocusSection();
-            renderBudget();
-            renderProjects();
-            document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
-        }
-
-        // Event Listeners
-        document.getElementById('searchInput').addEventListener('input', renderProjects);
-
-        document.querySelectorAll('.filter-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
-                e.target.classList.add('active');
-                currentFilter = e.target.dataset.filter;
-                renderProjects();
-            });
-        });
-
-        // --- Claude Buttons ---
-        function showToast(msg) {
-            const t = document.getElementById('toast');
-            t.textContent = msg;
-            t.classList.add('show');
-            clearTimeout(window._toastTimer);
-            window._toastTimer = setTimeout(() => t.classList.remove('show'), 4000);
-        }
-        function fallbackCopy(text, successMsg) {
-            const ta = document.createElement('textarea');
-            ta.value = text;
-            ta.style.cssText = 'position:fixed;top:-999px;left:-999px;opacity:0';
-            document.body.appendChild(ta);
-            ta.focus(); ta.select();
-            try { document.execCommand('copy'); showToast(successMsg); }
-            catch(e) { showToast('📋 Copy manually: ' + text); }
-            document.body.removeChild(ta);
-        }
-        function copyResume(name, url) {
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText(name).then(() => {
-                    showToast('✅ "' + name + '" copied!\nOpen Cowork — Claude will ask which project.');
-                }).catch(() => fallbackCopy(name, '✅ "' + name + '" copied!'));
-            } else {
-                fallbackCopy(name, '✅ "' + name + '" copied!');
-            }
-        }
-        function copyWrapUp(name) {
-            if (navigator.clipboard && window.isSecureContext) {
-                navigator.clipboard.writeText('wrap up').then(() => {
-                    showToast('✅ "wrap up" copied!\nPaste into Claude to save and close the session.');
-                }).catch(() => fallbackCopy('wrap up', '✅ "wrap up" copied! Paste into Claude.'));
-            } else {
-                fallbackCopy('wrap up', '✅ "wrap up" copied! Paste into Claude.');
-            }
-        }
-
-        // Load data
-        fetchProjects();
-
-        // --- Idea Capture Modal ---
-        function openModal() {
-            document.getElementById('modalOverlay').classList.add('open');
-            document.getElementById('ideaName').focus();
-            document.getElementById('modalSuccess').style.display = 'none';
-            document.getElementById('modalForm').style.display = 'block';
-            document.getElementById('ideaName').value = '';
-            document.getElementById('ideaDesc').value = '';
-        }
-
-        function closeModal() {
-            document.getElementById('modalOverlay').classList.remove('open');
-        }
-
-        document.getElementById('ideaFab').addEventListener('click', openModal);
-        document.getElementById('modalCancel').addEventListener('click', closeModal);
-        document.getElementById('modalOverlay').addEventListener('click', (e) => {
-            if (e.target === document.getElementById('modalOverlay')) closeModal();
-        });
-
-        document.getElementById('modalSubmit').addEventListener('click', async () => {
-            const name = document.getElementById('ideaName').value.trim();
-            const desc = document.getElementById('ideaDesc').value.trim();
-            const category = document.getElementById('ideaCategory').value;
-
-            if (!name) {
-                document.getElementById('ideaName').style.borderColor = 'var(--danger)';
-                return;
-            }
-
-            const submitBtn = document.getElementById('modalSubmit');
-            submitBtn.disabled = true;
-            submitBtn.textContent = 'Saving...';
-
-            try {
-                const res = await fetch(`${API_URL}/projects`, {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                    },
-                    body: JSON.stringify({
-                        project_name: name,
-                        description: desc || null,
-                        category: category,
-                        status: 'idea',
-                        progress_pct: 0,
-                        last_updated: new Date().toISOString().split('T')[0]
-                    })
+    allProjects.forEach(p => {
+        if (!p.detail_md) return;
+        try {
+            const json = JSON.parse(p.detail_md);
+            if (json.milestones && Array.isArray(json.milestones)) {
+                json.milestones.forEach(m => {
+                    milestones.push({ ...m, projectName: p.project_name, projectId: p.id });
                 });
-
-                if (res.ok || res.status === 201) {
-                    document.getElementById('modalForm').style.display = 'none';
-                    document.getElementById('modalSuccess').style.display = 'block';
-                } else {
-                    alert('Error saving idea. Please try again.');
-                }
-            } catch (err) {
-                alert('Network error. Please check connection.');
             }
+        } catch(e) {}
+    });
 
-            submitBtn.disabled = false;
-            submitBtn.textContent = 'Save Idea';
+    return milestones.sort((a, b) => new Date(a.target) - new Date(b.target));
+}
+
+function renderMilestones() {
+    const milestones = getMilestones();
+    const now = new Date();
+    const section = document.getElementById('milestonesSection');
+
+    if (milestones.length === 0) {
+        section.innerHTML = `<div class="no-milestones">
+            No milestones found.<br>
+            <span style="font-size:0.82rem">Add milestones to any project's detail_md field as JSON:<br>
+            <code style="color:var(--accent)">{"milestones":[{"name":"Launch","target":"2026-06-01","done":false}]}</code>
+            </span>
+        </div>`;
+        return;
+    }
+
+    // Show next 8 (hide done ones unless they're recent)
+    const visible = milestones.filter(m => {
+        if (m.done) {
+            const d = new Date(m.target);
+            const daysSince = (now - d) / 86400000;
+            return daysSince < 14; // show recently done
+        }
+        return true;
+    }).slice(0, 8);
+
+    section.innerHTML = visible.map(m => {
+        const target = new Date(m.target);
+        const diff = Math.round((target - now) / 86400000);
+        let cls, badge;
+        if (m.done) { cls = 'done'; badge = '✓ Done'; }
+        else if (diff < 0) { cls = 'overdue'; badge = `${Math.abs(diff)}d overdue`; }
+        else if (diff <= 7) { cls = 'soon'; badge = `${diff}d away`; }
+        else { cls = 'upcoming'; badge = `in ${diff}d`; }
+
+        return `<div class="milestone-row ${cls}">
+            <div class="milestone-date">${target.toLocaleDateString('en-AU',{month:'short',day:'numeric'})}</div>
+            <div class="milestone-project">${m.projectName}</div>
+            <div class="milestone-name">${m.name}</div>
+            <span class="milestone-badge ${cls}">${badge}</span>
+        </div>`;
+    }).join('');
+}
+
+// ══════════════════════════════════════════════
+//   RENDER FUNCTIONS
+// ══════════════════════════════════════════════
+function formatCurrency(v) {
+    if (!v) return '$0';
+    return `$${Number(v).toLocaleString()}`;
+}
+
+function getCategoryBadgeClass(cat) {
+    if (!cat) return 'category-badge';
+    return `category-badge ${cat.toLowerCase().replace(/\s+/g,'-')}`;
+}
+
+function getStatusBadgeClass(status) {
+    if (!status) return 'status-badge';
+    return `status-badge ${status.toLowerCase().replace(/[\s_]+/g,'.')}`;
+}
+
+function renderStats() {
+    const live = allProjects.filter(p => (p.status||'').toLowerCase() === 'live').length;
+    const ready = allProjects.filter(p => ['ready','ready to deploy'].includes((p.status||'').toLowerCase())).length;
+    const dev = allProjects.filter(p => ['dev','in_dev','in development','early stage'].includes((p.status||'').toLowerCase())).length;
+    const actions = allProjects.filter(p => p.next_action).length;
+    const avg = allProjects.length ? Math.round(allProjects.reduce((s,p) => s + (p.progress_pct||0), 0) / allProjects.length) : 0;
+    document.getElementById('statLive').textContent = live;
+    document.getElementById('statReady').textContent = ready;
+    document.getElementById('statDev').textContent = dev;
+    document.getElementById('statActions').textContent = actions;
+    document.getElementById('statAvg').textContent = `${avg}%`;
+    document.getElementById('statTotal').textContent = allProjects.length;
+}
+
+function renderPriorities() {
+    const priorities = allProjects.filter(p => p.income_priority > 0).sort((a,b) => a.income_priority - b.income_priority);
+    if (!priorities.length) {
+        document.getElementById('prioritiesList').innerHTML = '<div style="padding:2rem;text-align:center;color:var(--muted)">No priorities configured.</div>';
+        return;
+    }
+    document.getElementById('prioritiesList').innerHTML = priorities.map((p, i) => {
+        const y1 = p.revenue_y1 || 0, y2 = p.revenue_y2 || 0, y3 = p.revenue_y3 || 0;
+        return `<div class="priority-item">
+            <div class="priority-rank">${i+1}</div>
+            <a href="project.html?id=${p.id}" class="priority-name">${p.project_name}</a>
+            <div class="${getCategoryBadgeClass(p.revenue_category)}">${p.revenue_category||'N/A'}</div>
+            <div class="revenue-item"><span class="revenue-label">Y1</span><div class="revenue-value">${formatCurrency(y1)}</div></div>
+            <div class="revenue-item"><span class="revenue-label">3-Yr</span><div class="revenue-value">${formatCurrency(y1+y2+y3)}</div></div>
+        </div>`;
+    }).join('');
+}
+
+function renderRevenueTracker() {
+    let y1=0, y2=0, y3=0;
+    const cats = {};
+    allProjects.forEach(p => {
+        y1 += p.revenue_y1||0; y2 += p.revenue_y2||0; y3 += p.revenue_y3||0;
+        if (p.revenue_category) cats[p.revenue_category] = (cats[p.revenue_category]||0) + (p.revenue_y1||0) + (p.revenue_y2||0) + (p.revenue_y3||0);
+    });
+    const total = y1+y2+y3;
+    const bars = Object.entries(cats).map(([cat, amt]) => {
+        const pct = total > 0 ? (amt/total*100) : 0;
+        const cls = cat.toLowerCase().replace(/\s+/g,'-');
+        return `<div class="revenue-bar ${cls}" style="flex:${pct}">${pct > 8 ? cat.substring(0,3) : ''}</div>`;
+    }).join('');
+
+    document.getElementById('revenueTracker').innerHTML = `
+        <div class="revenue-grid">
+            <div class="revenue-year"><div class="revenue-year-label">Year 1</div><div class="revenue-year-value">${formatCurrency(y1)}</div></div>
+            <div class="revenue-year"><div class="revenue-year-label">Year 2</div><div class="revenue-year-value">${formatCurrency(y2)}</div></div>
+            <div class="revenue-year"><div class="revenue-year-label">Year 3</div><div class="revenue-year-value">${formatCurrency(y3)}</div></div>
+        </div>
+        <div class="revenue-chart">${bars}</div>
+    `;
+}
+
+function renderFocusSection() {
+    const ready = allProjects.filter(p => p.status === 'ready').slice(0,4);
+    document.getElementById('focusReady').innerHTML = ready.length
+        ? ready.map(p => `<div class="focus-item"><a href="project.html?id=${p.id}" class="focus-item-name">${p.project_name}</a></div>`).join('')
+        : '<span class="focus-empty">None ready right now</span>';
+
+    const income = allProjects.filter(p => p.status !== 'live' && p.status !== 'idea' && (p.revenue_y1||0) > 0)
+        .sort((a,b) => (b.revenue_y1||0) - (a.revenue_y1||0)).slice(0,4);
+    document.getElementById('focusIncome').innerHTML = income.length
+        ? income.map(p => `<div class="focus-item"><a href="project.html?id=${p.id}" class="focus-item-name">${p.project_name}</a><span class="focus-item-meta">$${(p.revenue_y1||0).toLocaleString()}/yr</span></div>`).join('')
+        : '<span class="focus-empty">No revenue data</span>';
+
+    const priority = allProjects.filter(p => p.income_priority > 0).sort((a,b) => a.income_priority - b.income_priority).slice(0,4);
+    document.getElementById('focusPriority').innerHTML = priority.length
+        ? priority.map((p,i) => `<div class="focus-item"><a href="project.html?id=${p.id}" class="focus-item-name">${p.project_name}</a><span class="focus-item-meta">#${i+1}</span></div>`).join('')
+        : '<span class="focus-empty">No priorities set</span>';
+
+    const attention = allProjects.filter(p => p.next_action && p.status !== 'live' && p.status !== 'idea').slice(0,4);
+    document.getElementById('focusAttention').innerHTML = attention.length
+        ? attention.map(p => `<div class="focus-item"><a href="project.html?id=${p.id}" class="focus-item-name">${p.project_name}</a><span class="focus-item-meta" style="color:var(--warning)">${p.status}</span></div>`).join('')
+        : '<span class="focus-empty">Nothing flagged</span>';
+}
+
+function renderBudget() {
+    const costs = allProjects.filter(p => parseFloat(p.cost_monthly||0) > 0).sort((a,b) => parseFloat(b.cost_monthly) - parseFloat(a.cost_monthly));
+    const domainTotal = costs.reduce((s,p) => s + parseFloat(p.cost_monthly||0), 0);
+
+    document.getElementById('budgetSection').innerHTML = `
+        <div class="budget-summary">
+            <div class="budget-stat"><div class="budget-stat-value">A$${domainTotal.toFixed(0)}</div><div class="budget-stat-label">Total / Month</div></div>
+            <div class="budget-stat"><div class="budget-stat-value">A$${(domainTotal*12).toFixed(0)}</div><div class="budget-stat-label">Total / Year</div></div>
+            <div class="budget-stat"><div class="budget-stat-value" style="color:var(--success)">A$0</div><div class="budget-stat-label">Hosting / Month</div></div>
+            <div class="budget-stat"><div class="budget-stat-value">A$${domainTotal.toFixed(2)}</div><div class="budget-stat-label">Domains / Month</div></div>
+        </div>
+        <table class="budget-table">
+            <thead><tr><th>Item</th><th>Type</th><th>Monthly (AUD)</th><th>Notes</th></tr></thead>
+            <tbody>
+                <tr>
+                    <td><strong>Cloudflare Workers + D1</strong></td>
+                    <td><span style="font-size:0.75rem;background:#f6821f;color:#fff;padding:2px 8px;border-radius:4px;font-weight:600">Hosting</span></td>
+                    <td style="color:var(--success);font-weight:700">FREE</td>
+                    <td style="color:var(--muted);font-size:0.8rem">100K requests/day free. D1 5GB free.</td>
+                </tr>
+                ${costs.map(p => `<tr>
+                    <td><a href="project.html?id=${p.id}" style="color:var(--accent);text-decoration:none;font-weight:500">${p.project_name}</a></td>
+                    <td><span style="font-size:0.8rem;color:var(--muted)">Domain</span></td>
+                    <td>A$${parseFloat(p.cost_monthly).toFixed(2)}</td>
+                    <td style="color:var(--muted);font-size:0.8rem">${p.cost_notes||''}</td>
+                </tr>`).join('')}
+                <tr style="border-top:2px solid var(--border)">
+                    <td colspan="2"><strong>TOTAL</strong></td>
+                    <td><strong>A$${domainTotal.toFixed(2)}</strong></td>
+                    <td style="color:var(--muted);font-size:0.8rem">A$${(domainTotal*12).toFixed(0)}/year</td>
+                </tr>
+            </tbody>
+        </table>
+        <div class="budget-alert tip">✅ <strong>Running on Cloudflare — $0 hosting costs.</strong></div>
+    `;
+}
+
+function renderProjects() {
+    let filtered = [...allProjects];
+    if (currentFilter === 'idea') filtered = filtered.filter(p => p.status === 'idea');
+    else if (currentFilter === 'dev') filtered = filtered.filter(p => ['dev','in_dev','in development','early stage'].includes((p.status||'').toLowerCase()));
+    else if (currentFilter === 'ready') filtered = filtered.filter(p => ['ready','ready to deploy'].includes((p.status||'').toLowerCase()));
+    else if (currentFilter !== 'all') filtered = filtered.filter(p => p.status === currentFilter);
+
+    const q = document.getElementById('searchInput').value.toLowerCase();
+    if (q) filtered = filtered.filter(p => (p.project_name||'').toLowerCase().includes(q) || (p.description||'').toLowerCase().includes(q));
+
+    if (!filtered.length) { document.getElementById('projectGrid').innerHTML = '<div class="empty-state">No projects found.</div>'; return; }
+
+    document.getElementById('projectGrid').innerHTML = filtered.map(project => {
+        const domains = project.domains ? (Array.isArray(project.domains) ? project.domains : [project.domains]) : [];
+        const domainLinks = domains.map(d => `<a href="https://${d}" target="_blank" class="domain-link">${d}</a>`).join(', ');
+        const revenueTag = project.income_priority > 0 ? '<span class="revenue-badge">$</span>' : '';
+
+        const appLinks = [];
+        if (project.notes) {
+            const urlPattern = /((?:Player|Host|Admin|App|Dashboard|API|Demo|Preview)[^:]*?):\s*(https?:\/\/[^\s|,]+)/gi;
+            let match;
+            while ((match = urlPattern.exec(project.notes)) !== null) {
+                if (match[2] !== project.live_url) appLinks.push({ label: match[1].trim(), url: match[2].trim() });
+            }
+        }
+
+        const appLinksHtml = appLinks.length > 0
+            ? `<div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.75rem">
+                ${project.live_url ? `<a href="${project.live_url}" target="_blank" style="font-size:0.78rem;padding:0.2rem 0.6rem;background:var(--accent);color:#fff;border-radius:4px;text-decoration:none;font-weight:600">Main ↗</a>` : ''}
+                ${appLinks.map(l => `<a href="${l.url}" target="_blank" style="font-size:0.78rem;padding:0.2rem 0.6rem;border:1px solid var(--accent);color:var(--accent);border-radius:4px;text-decoration:none;font-weight:500">${l.label} ↗</a>`).join('')}
+               </div>` : '';
+
+        return `<div class="project-card">
+            <div class="card-header">
+                <a href="project.html?id=${project.id}" class="card-title">${project.project_name}</a>
+                ${project.live_url && !appLinks.length ? `<a href="${project.live_url}" target="_blank" class="card-link">↗</a>` : ''}
+            </div>
+            <div style="margin-bottom:0.75rem">
+                <span class="${getStatusBadgeClass(project.status)}">${project.status||'N/A'}</span>
+                ${revenueTag}
+                ${parseFloat(project.cost_monthly||0) > 0 ? `<span style="font-size:0.75rem;color:var(--warning);margin-left:0.5rem">A$${parseFloat(project.cost_monthly).toFixed(2)}/mo</span>` : ''}
+            </div>
+            ${appLinksHtml}
+            ${project.description ? `<div class="card-description">${project.description}</div>` : ''}
+            ${project.progress_pct != null ? `<div class="progress-bar"><div class="progress-fill" style="width:${project.progress_pct}%"></div></div>` : ''}
+            <div class="card-tags">
+                ${project.category ? `<span class="tag">${project.category}</span>` : ''}
+                ${project.tech_stack ? project.tech_stack.split(',').map(t => `<span class="tag">${t.trim()}</span>`).join('') : ''}
+            </div>
+            ${project.connectors && project.connectors !== 'None' ? `<div class="card-integrations"><div class="card-integrations-label">Connectors</div>${project.connectors.split(',').map(c => `<span class="connector-tag">${c.trim()}</span>`).join('')}</div>` : ''}
+            ${project.plugins && project.plugins !== 'None' ? `<div class="card-integrations"><div class="card-integrations-label">Plugins</div>${project.plugins.split(',').map(p => `<span class="plugin-tag">${p.trim()}</span>`).join('')}</div>` : ''}
+            ${domainLinks ? `<div style="margin-bottom:0.6rem">${domainLinks}</div>` : ''}
+            ${project.next_action ? `<div class="next-action"><strong>Next:</strong> ${project.next_action}</div>` : ''}
+            <div class="card-meta">Updated: ${project.last_updated ? new Date(project.last_updated).toLocaleDateString() : 'N/A'}</div>
+            <div class="claude-btns">
+                <button class="claude-resume-btn" onclick="copyResume(${JSON.stringify(project.project_name)}, '')">▶ Open in Claude</button>
+                <button class="claude-end-btn" onclick="copyWrapUp(${JSON.stringify(project.project_name)})">✓ End Session</button>
+            </div>
+        </div>`;
+    }).join('');
+}
+
+function render() {
+    renderStats();
+    renderTopPick();
+    renderPriorities();
+    renderRevenueTracker();
+    renderFocusSection();
+    renderMilestones();
+    renderBudget();
+    renderProjects();
+    document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+}
+
+// ══════════════════════════════════════════════
+//   SCENARIO PANEL
+// ══════════════════════════════════════════════
+const SCENARIO_MULTIPLIERS = { optimistic: 1.3, base: 1.0, conservative: 0.7 };
+
+function openScenario() {
+    // Init multipliers if not set
+    allProjects.forEach(p => {
+        if (!(p.id in scenarioMultipliers)) scenarioMultipliers[p.id] = 1.0;
+    });
+    setScenarioMode(scenarioMode);
+    document.getElementById('scenarioOverlay').classList.add('open');
+    document.getElementById('scenarioDrawer').classList.add('open');
+}
+
+function closeScenario() {
+    document.getElementById('scenarioOverlay').classList.remove('open');
+    document.getElementById('scenarioDrawer').classList.remove('open');
+}
+
+function setScenarioMode(mode) {
+    scenarioMode = mode;
+    document.querySelectorAll('.scenario-mode-btn').forEach(b => b.classList.remove('active'));
+    document.querySelector(`.scenario-mode-btn.${mode}`).classList.add('active');
+    const mult = SCENARIO_MULTIPLIERS[mode];
+    allProjects.forEach(p => { scenarioMultipliers[p.id] = mult; });
+    updateScenarioUI();
+}
+
+function updateScenarioUI() {
+    const baseline = allProjects.reduce((s,p) => s + (p.revenue_y1||0) + (p.revenue_y2||0) + (p.revenue_y3||0), 0);
+    const scenario = allProjects.reduce((s,p) => {
+        const mult = scenarioMultipliers[p.id] ?? 1.0;
+        return s + ((p.revenue_y1||0) + (p.revenue_y2||0) + (p.revenue_y3||0)) * mult;
+    }, 0);
+    const delta = scenario - baseline;
+
+    document.getElementById('sc-baseline').textContent = formatCurrency(Math.round(baseline));
+    document.getElementById('sc-scenario').textContent = formatCurrency(Math.round(scenario));
+    const deltaEl = document.getElementById('sc-delta');
+    deltaEl.textContent = `${delta >= 0 ? '+' : ''}${formatCurrency(Math.round(delta))}`;
+    deltaEl.className = `scenario-delta ${delta >= 0 ? 'up' : 'down'}`;
+
+    // Render project sliders
+    const prioritized = allProjects
+        .filter(p => (p.revenue_y1||0) + (p.revenue_y2||0) + (p.revenue_y3||0) > 0)
+        .sort((a,b) => (a.income_priority||99) - (b.income_priority||99));
+
+    document.getElementById('scenarioProjects').innerHTML = prioritized.map(p => {
+        const total = (p.revenue_y1||0) + (p.revenue_y2||0) + (p.revenue_y3||0);
+        const mult = scenarioMultipliers[p.id] ?? 1.0;
+        const adj = Math.round(total * mult);
+        const pct = Math.round(mult * 100);
+        return `<div class="scenario-project-row">
+            <div class="scenario-project-name">
+                <span>${p.project_name}</span>
+                <span class="scenario-project-revenue">${formatCurrency(adj)} (${pct}%)</span>
+            </div>
+            <input type="range" class="scenario-slider" min="0" max="200" value="${pct}"
+                oninput="onSlider(${p.id}, this.value)"
+                onchange="onSlider(${p.id}, this.value)">
+            <div class="scenario-slider-labels"><span>$0</span><span>Base</span><span>×2</span></div>
+        </div>`;
+    }).join('');
+}
+
+function onSlider(id, val) {
+    scenarioMultipliers[id] = parseFloat(val) / 100;
+    updateScenarioUI();
+}
+
+// ══════════════════════════════════════════════
+//   DIGEST GENERATOR
+// ══════════════════════════════════════════════
+function openDigest() {
+    const text = generateDigest();
+    document.getElementById('digestText').textContent = text;
+    document.getElementById('digestOverlay').classList.add('open');
+}
+
+function closeDigest() { document.getElementById('digestOverlay').classList.remove('open'); }
+
+function generateDigest() {
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('en-AU', { weekday:'long', year:'numeric', month:'long', day:'numeric' });
+    const live = allProjects.filter(p => p.status === 'live').length;
+    const ready = allProjects.filter(p => ['ready','ready to deploy'].includes((p.status||'').toLowerCase())).length;
+    const dev = allProjects.filter(p => ['dev','in_dev','in development','early stage'].includes((p.status||'').toLowerCase())).length;
+    const y1Total = allProjects.reduce((s,p) => s + (p.revenue_y1||0), 0);
+    const y3Total = allProjects.reduce((s,p) => s + (p.revenue_y1||0) + (p.revenue_y2||0) + (p.revenue_y3||0), 0);
+    const top = getTopPick();
+    const actions = allProjects.filter(p => p.next_action && p.status !== 'idea').slice(0,5);
+    const milestones = getMilestones().filter(m => !m.done).slice(0,5);
+
+    let lines = [
+        `${CFG.hubName} — Weekly Digest`,
+        `${dateStr}`,
+        `${'─'.repeat(50)}`,
+        '',
+        `PORTFOLIO STATUS`,
+        `  Live: ${live} · Ready: ${ready} · In Dev: ${dev} · Total: ${allProjects.length}`,
+        `  Y1 Revenue Potential: ${formatCurrency(y1Total)}`,
+        `  3-Year Total: ${formatCurrency(y3Total)}`,
+        '',
+    ];
+
+    if (top) {
+        lines.push('TOP PICK THIS WEEK');
+        lines.push(`  → ${top.p.project_name} (score: ${Math.round(top.score)})`);
+        if (top.p.next_action) lines.push(`     Next: ${top.p.next_action}`);
+        lines.push('');
+    }
+
+    if (actions.length) {
+        lines.push('ACTIONS NEEDED');
+        actions.forEach(p => lines.push(`  • ${p.project_name}: ${p.next_action}`));
+        lines.push('');
+    }
+
+    if (milestones.length) {
+        lines.push('UPCOMING MILESTONES');
+        milestones.forEach(m => {
+            const d = new Date(m.target);
+            const diff = Math.round((d - now) / 86400000);
+            const when = diff < 0 ? `${Math.abs(diff)}d overdue` : diff === 0 ? 'TODAY' : `in ${diff}d`;
+            lines.push(`  • ${m.projectName}: ${m.name} (${when})`);
         });
-    </script>
+        lines.push('');
+    }
+
+    lines.push('─'.repeat(50));
+    lines.push(`Generated: ${now.toLocaleTimeString()}`);
+
+    return lines.join('\n');
+}
+
+function copyDigest() {
+    const text = document.getElementById('digestText').textContent;
+    navigator.clipboard.writeText(text).then(() => showToast('✅ Digest copied!')).catch(() => showToast('Couldn\'t copy — try selecting and copying manually.'));
+}
+
+function emailDigest() {
+    const text = document.getElementById('digestText').textContent;
+    const to = CFG.email || '';
+    const subject = encodeURIComponent(`${CFG.hubName} — Weekly Digest`);
+    const body = encodeURIComponent(text);
+    window.open(`mailto:${to}?subject=${subject}&body=${body}`);
+}
+
+// ══════════════════════════════════════════════
+//   CLAUDE BUTTONS
+// ══════════════════════════════════════════════
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
+function fallbackCopy(text, successMsg) {
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    ta.style.cssText = 'position:fixed;top:-999px;left:-999px;opacity:0';
+    document.body.appendChild(ta);
+    ta.focus(); ta.select();
+    try { document.execCommand('copy'); showToast(successMsg); } catch(e) { showToast('Copy: ' + text); }
+    document.body.removeChild(ta);
+}
+
+function copyResume(name) {
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText(name).then(() => showToast(`✅ "${name}" copied!\nOpen Cowork — Claude will ask which project.`)).catch(() => fallbackCopy(name, `✅ "${name}" copied!`));
+    } else { fallbackCopy(name, `✅ "${name}" copied!`); }
+}
+
+function copyWrapUp(name) {
+    if (navigator.clipboard && window.isSecureContext) {
+        navigator.clipboard.writeText('wrap up').then(() => showToast('✅ "wrap up" copied!')).catch(() => fallbackCopy('wrap up', '✅ "wrap up" copied!'));
+    } else { fallbackCopy('wrap up', '✅ "wrap up" copied!'); }
+}
+
+// ══════════════════════════════════════════════
+//   FILTER & SEARCH
+// ══════════════════════════════════════════════
+document.getElementById('searchInput').addEventListener('input', renderProjects);
+document.querySelectorAll('.filter-btn').forEach(btn => {
+    btn.addEventListener('click', e => {
+        document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+        e.target.classList.add('active');
+        currentFilter = e.target.dataset.filter;
+        renderProjects();
+    });
+});
+
+// ══════════════════════════════════════════════
+//   IDEA MODAL
+// ══════════════════════════════════════════════
+function openModal() {
+    document.getElementById('modalOverlay').classList.add('open');
+    document.getElementById('modalSuccess').style.display = 'none';
+    document.getElementById('modalForm').style.display = 'block';
+    document.getElementById('ideaName').value = '';
+    document.getElementById('ideaDesc').value = '';
+    setTimeout(() => document.getElementById('ideaName').focus(), 100);
+}
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+
+document.getElementById('ideaFab').addEventListener('click', openModal);
+document.getElementById('modalCancel').addEventListener('click', closeModal);
+document.getElementById('modalOverlay').addEventListener('click', e => { if (e.target === document.getElementById('modalOverlay')) closeModal(); });
+
+document.getElementById('modalSubmit').addEventListener('click', async () => {
+    const name = document.getElementById('ideaName').value.trim();
+    if (!name) { document.getElementById('ideaName').style.borderColor = 'var(--danger)'; return; }
+    const submitBtn = document.getElementById('modalSubmit');
+    submitBtn.disabled = true; submitBtn.textContent = 'Saving...';
+    try {
+        const res = await fetch(`${CFG.apiUrl}/projects`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+                project_name: name,
+                description: document.getElementById('ideaDesc').value.trim() || null,
+                category: document.getElementById('ideaCategory').value,
+                status: 'idea', progress_pct: 0,
+                last_updated: new Date().toISOString().split('T')[0]
+            })
+        });
+        if (res.ok || res.status === 201) {
+            document.getElementById('modalForm').style.display = 'none';
+            document.getElementById('modalSuccess').style.display = 'block';
+        } else { alert('Error saving idea. Please try again.'); }
+    } catch(err) { alert('Network error. Check connection.'); }
+    submitBtn.disabled = false; submitBtn.textContent = 'Save Idea';
+});
+
+// ══════════════════════════════════════════════
+//   INIT
+// ══════════════════════════════════════════════
+initAuth();
+</script>
 </body>
 </html>
