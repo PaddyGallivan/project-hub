@@ -1105,7 +1105,7 @@ function renderTopPick() {
         <div class="pick-scores">${pills}</div>
         ${p.next_action ? `<div class="next-action" style="margin-bottom:1rem"><strong>Next:</strong> ${p.next_action}</div>` : ''}
         <div class="pick-actions">
-            <button class="btn accent" onclick="copyResume(${JSON.stringify(p.project_name)})">▶ Open in Claude</button>
+            <button class="btn accent" onclick="copyResume(${p.id})">▶ Open in Claude</button>
             ${p.live_url ? `<a href="${p.live_url}" target="_blank" class="btn">↗ View live</a>` : ''}
             <a href="project.html?id=${p.id}" class="btn">📋 Details</a>
         </div>
@@ -1399,8 +1399,8 @@ function renderProjects() {
             ${project.next_action ? `<div class="next-action"><strong>Next:</strong> ${project.next_action}</div>` : ''}
             <div class="card-meta">Updated: ${project.last_updated ? new Date(project.last_updated).toLocaleDateString() : 'N/A'}</div>
             <div class="claude-btns">
-                <button class="claude-resume-btn" onclick="copyResume(${JSON.stringify(project.project_name)})">▶ Open in Claude</button>
-                <button class="claude-end-btn" onclick="copyWrapUp(${JSON.stringify(project.project_name)})">✓ End Session</button>
+                <button class="claude-resume-btn" onclick="copyResume(${project.id})">▶ Open in Claude</button>
+                <button class="claude-end-btn" onclick="copyWrapUp(${project.id})">✓ Wrap Up</button>
             </div>
         </div>`;
     }).join('');
@@ -1590,16 +1590,35 @@ function fallbackCopy(text, successMsg) {
     document.body.removeChild(ta);
 }
 
-function copyResume(name) {
+function copyResume(id) {
+    const p = allProjects.find(x => x.id === id);
+    if (!p) return;
+    const parts = [
+        `Let's work on **${p.project_name}**.`,
+        `Status: ${p.status || 'unknown'} · ${p.progress_pct || 0}% done.`,
+        p.next_action ? `Current next action: ${p.next_action}.` : '',
+        p.revenue_y1 ? `Y1 target: $${Number(p.revenue_y1).toLocaleString()}.` : '',
+        p.tech_stack ? `Stack: ${p.tech_stack}.` : '',
+        p.live_url ? `Live at: ${p.live_url}` : '',
+        `\nLoad the full project context from the hub and Drive notes, then let's pick up from here.`
+    ].filter(Boolean).join(' ');
+
     if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(name).then(() => showToast(`✅ "${name}" copied!\nOpen Cowork — Claude will ask which project.`)).catch(() => fallbackCopy(name, `✅ "${name}" copied!`));
-    } else { fallbackCopy(name, `✅ "${name}" copied!`); }
+        navigator.clipboard.writeText(parts)
+            .then(() => showToast(`✅ Context for "${p.project_name}" copied!\nPaste into a new Cowork chat.`))
+            .catch(() => fallbackCopy(parts, `✅ "${p.project_name}" context copied!`));
+    } else { fallbackCopy(parts, `✅ "${p.project_name}" context copied!`); }
 }
 
-function copyWrapUp(name) {
+function copyWrapUp(id) {
+    const p = allProjects.find(x => x.id === id);
+    const name = p ? p.project_name : 'this project';
+    const msg = `Wrap up the ${name} session — summarise what we did, ask for the updated progress %, then update the project hub.`;
     if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText('wrap up').then(() => showToast('✅ "wrap up" copied!')).catch(() => fallbackCopy('wrap up', '✅ "wrap up" copied!'));
-    } else { fallbackCopy('wrap up', '✅ "wrap up" copied!'); }
+        navigator.clipboard.writeText(msg)
+            .then(() => showToast(`✅ Wrap-up prompt copied for "${name}"!`))
+            .catch(() => fallbackCopy(msg, '✅ Wrap-up copied!'));
+    } else { fallbackCopy(msg, '✅ Wrap-up copied!'); }
 }
 
 // ══════════════════════════════════════════════
