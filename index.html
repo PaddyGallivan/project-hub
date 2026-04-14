@@ -249,8 +249,8 @@
         .card-link:hover { color:var(--accent); }
         .status-badge { display:inline-block; padding:0.2rem 0.65rem; border-radius:20px; font-size:0.73rem; font-weight:600; white-space:nowrap; }
         .status-badge.live { background:#1f6feb; color:#c9d1d9; }
-        .status-badge.ready { background:#3fb950; color:#0d1117; }
-        .status-badge.dev,.status-badge.in.development,.status-badge.early.stage { background:#d29922; color:#0d1117; }
+        .status-badge.ready,.status-badge.ready-to-deploy { background:#3fb950; color:#0d1117; }
+        .status-badge.dev,.status-badge.in-dev,.status-badge.in-development,.status-badge.early-stage { background:#d29922; color:#0d1117; }
         .status-badge.paused { background:#6e7681; color:#c9d1d9; }
         .status-badge.idea { background:#6e4bc4; color:#fff; }
         .revenue-badge { display:inline-block; padding:0.2rem 0.65rem; border-radius:20px; font-size:0.73rem; font-weight:600; background:var(--success); color:#0d1117; margin-left:0.5rem; }
@@ -584,9 +584,9 @@
         <button class="scenario-close" onclick="closeScenario()">✕</button>
     </div>
     <div class="scenario-mode-toggle">
-        <button class="scenario-mode-btn active optimistic" onclick="setScenarioMode('optimistic')">🚀 Optimistic +30%</button>
-        <button class="scenario-mode-btn base" onclick="setScenarioMode('base')">⚖ Base</button>
-        <button class="scenario-mode-btn active conservative" onclick="setScenarioMode('conservative')">📉 Conservative −30%</button>
+        <button class="scenario-mode-btn optimistic" onclick="setScenarioMode('optimistic')">🚀 Optimistic +30%</button>
+        <button class="scenario-mode-btn active base" onclick="setScenarioMode('base')">⚖ Base</button>
+        <button class="scenario-mode-btn conservative" onclick="setScenarioMode('conservative')">📉 Conservative −30%</button>
     </div>
     <div class="scenario-totals">
         <div class="scenario-total-card">
@@ -766,7 +766,7 @@ function showApp() {
 // ══════════════════════════════════════════════
 function checkOnboarding() {
     if (!localStorage.getItem('hub_onboarded')) {
-        document.getElementById('on-hub-name') && (document.getElementById('ob-hub-name').value = CFG.hubName);
+        document.getElementById('ob-hub-name') && (document.getElementById('ob-hub-name').value = CFG.hubName);
         document.getElementById('ob-email') && (document.getElementById('ob-email').value = CFG.email);
         document.getElementById('ob-api') && (document.getElementById('ob-api').value = CFG.apiUrl);
         document.getElementById('onboardModal').classList.add('open');
@@ -995,7 +995,7 @@ function getCategoryBadgeClass(cat) {
 
 function getStatusBadgeClass(status) {
     if (!status) return 'status-badge';
-    return `status-badge ${status.toLowerCase().replace(/[\s_]+/g,'.')}`;
+    return `status-badge ${status.toLowerCase().replace(/[\s_]+/g,'-')}`;
 }
 
 function renderStats() {
