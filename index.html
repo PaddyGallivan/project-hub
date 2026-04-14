@@ -702,7 +702,9 @@
 let CFG = {
     hubName: 'Project Hub',
     email: '',
-    apiUrl: 'https://project-hub-api.pgallivan.workers.dev'
+    apiUrl: 'https://project-hub-api.pgallivan.workers.dev',
+    readKey: '2e6e88b4f1f2e1d6836bd20873a2423a',
+    apiKey: 'c3e02642a8dab86d1f5294ddf3bce398f2cc27c642fc729f'
 };
 
 function loadConfig() {
@@ -907,7 +909,9 @@ let lastFetchTime = null;
 
 async function fetchProjects() {
     try {
-        const response = await fetch(`${CFG.apiUrl}/projects`);
+        const response = await fetch(`${CFG.apiUrl}/projects`, {
+            headers: { 'X-Read-Key': CFG.readKey || '' }
+        });
         const data = await response.json();
         allProjects = data;
         lastFetchTime = Date.now();
@@ -933,7 +937,7 @@ async function updateProgress(id, pct, sliderEl) {
     try {
         await fetch(`${CFG.apiUrl}/projects/${id}`, {
             method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'X-Api-Key': CFG.apiKey || '' },
             body: JSON.stringify({ progress_pct: pctNum })
         });
         // Update local data
@@ -1593,29 +1597,21 @@ function fallbackCopy(text, successMsg) {
 function copyResume(id) {
     const p = allProjects.find(x => x.id === id);
     if (!p) return;
-
-    const lines = [
-        `We're working on: ${p.project_name}`,
-        `Status: ${p.status || 'unknown'} · Progress: ${p.progress_pct || 0}%`,
-        p.next_action   ? `Current next action: ${p.next_action}` : '',
-        p.revenue_y1    ? `Revenue targets — Y1: $${Number(p.revenue_y1).toLocaleString()} · Y2: $${Number(p.revenue_y2||0).toLocaleString()} · Y3: $${Number(p.revenue_y3||0).toLocaleString()}` : '',
-        p.tech_stack    ? `Stack: ${p.tech_stack}` : '',
-        p.live_url      ? `Live at: ${p.live_url}` : '',
-        `Last updated: ${p.last_updated || 'unknown'}`,
-        ``,
-        `--- INSTRUCTIONS FOR CLAUDE ---`,
-        `1. Check Google Drive (pgallivan@outlook.com) at: My Drive/Claude/project-hub/${p.project_name.toLowerCase().replace(/\s+/g,'-')}.md for deeper notes on this project — read it if it exists.`,
-        `2. Give a one-paragraph briefing summarising the above, plus anything useful from the Drive notes.`,
-        `3. Then ask what to work on, or start straight away if it's obvious.`,
-        `4. When I say "wrap up": summarise what we did, confirm the new progress %, confirm next action, then PATCH https://project-hub-api.pgallivan.workers.dev/projects/${p.id} with JSON body: {"progress_pct": <new %>, "next_action": "<next action>", "last_updated": "<today YYYY-MM-DD>"}.`,
-        `5. Never ask questions you can answer from the above data or the Drive notes.`
-    ].filter(Boolean).join('\n');
+    const parts = [
+        `Let's work on **${p.project_name}**.`,
+        `Status: ${p.status || 'unknown'} · ${p.progress_pct || 0}% done.`,
+        p.next_action ? `Current next action: ${p.next_action}.` : '',
+        p.revenue_y1 ? `Y1 target: $${Number(p.revenue_y1).toLocaleString()}.` : '',
+        p.tech_stack ? `Stack: ${p.tech_stack}.` : '',
+        p.live_url ? `Live at: ${p.live_url}` : '',
+        `\nLoad the full project context from the hub and Drive notes, then let's pick up from here.`
+    ].filter(Boolean).join(' ');
 
     if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(lines)
-            .then(() => showToast(`✅ "${p.project_name}" copied — paste into any Claude chat.`))
-            .catch(() => fallbackCopy(lines, `✅ "${p.project_name}" copied!`));
-    } else { fallbackCopy(lines, `✅ "${p.project_name}" copied!`); }
+        navigator.clipboard.writeText(parts)
+            .then(() => showToast(`✅ Context for "${p.project_name}" copied!\nPaste into a new Cowork chat.`))
+            .catch(() => fallbackCopy(parts, `✅ "${p.project_name}" context copied!`));
+    } else { fallbackCopy(parts, `✅ "${p.project_name}" context copied!`); }
 }
 
 function copyWrapUp(id) {
@@ -1667,7 +1663,7 @@ document.getElementById('modalSubmit').addEventListener('click', async () => {
     try {
         const res = await fetch(`${CFG.apiUrl}/projects`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: { 'Content-Type': 'application/json', 'X-Api-Key': CFG.apiKey || '' },
             body: JSON.stringify({
                 project_name: name,
                 description: document.getElementById('ideaDesc').value.trim() || null,
