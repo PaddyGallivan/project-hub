@@ -369,6 +369,63 @@
         /* ── EMPTY / LOADING ── */
         .empty-state { text-align:center; padding:3rem; color:var(--muted); }
 
+        /* ── SORT & EXPORT CONTROLS ── */
+        .grid-controls {
+            display:flex; gap:0.75rem; margin-bottom:1rem; flex-wrap:wrap; align-items:center;
+        }
+        .sort-select {
+            padding:0.4rem 0.75rem; background:var(--card); border:1px solid var(--border);
+            color:var(--text); border-radius:6px; font-size:0.85rem; cursor:pointer;
+        }
+        .sort-select:focus { outline:none; border-color:var(--accent); }
+        .cat-filters {
+            display:flex; gap:0.4rem; flex-wrap:wrap; margin-bottom:1.25rem;
+        }
+        .cat-btn {
+            padding:0.3rem 0.7rem; border-radius:20px; font-size:0.78rem; font-weight:600;
+            border:1px solid var(--border); background:var(--card); color:var(--muted);
+            cursor:pointer; transition:all 0.15s; white-space:nowrap;
+        }
+        .cat-btn.active { border-color:var(--accent); color:var(--accent); background:rgba(59,130,246,0.1); }
+        .cat-btn:hover:not(.active) { border-color:var(--muted); }
+
+        /* ── INLINE PROGRESS SLIDER ── */
+        .progress-inline {
+            display:flex; align-items:center; gap:0.5rem; margin-top:0.25rem; margin-bottom:0.5rem;
+        }
+        .progress-inline-slider {
+            flex:1; -webkit-appearance:none; appearance:none; height:4px;
+            background:var(--border); border-radius:2px; outline:none; cursor:pointer;
+        }
+        .progress-inline-slider::-webkit-slider-thumb {
+            -webkit-appearance:none; appearance:none; width:14px; height:14px;
+            border-radius:50%; background:var(--accent); cursor:pointer;
+        }
+        .progress-pct-label {
+            font-size:0.78rem; color:var(--muted); min-width:30px; text-align:right;
+        }
+        .progress-save-indicator {
+            font-size:0.72rem; color:var(--success); opacity:0; transition:opacity 0.3s;
+            white-space:nowrap;
+        }
+        .progress-save-indicator.show { opacity:1; }
+
+        /* ── PRIORITY YEAR BARS ── */
+        .priority-year-bar {
+            display:flex; height:5px; border-radius:3px; overflow:hidden;
+            gap:1px; margin-top:0.3rem; min-width:80px;
+        }
+        .pyb-y1 { background:var(--accent); }
+        .pyb-y2 { background:var(--success); }
+        .pyb-y3 { background:#a371f7; }
+
+        /* ── AUTO-REFRESH INDICATOR ── */
+        .refresh-age {
+            font-size:0.75rem; color:var(--muted); display:flex; align-items:center; gap:0.3rem;
+        }
+        .refresh-dot { width:6px; height:6px; border-radius:50%; background:var(--success); }
+        .refresh-dot.stale { background:var(--warning); }
+
         @media(max-width:768px){
             .project-grid { grid-template-columns:1fr; }
             .priority-item { grid-template-columns:1fr; gap:0.5rem; position:relative; }
@@ -464,6 +521,7 @@
             </div>
             <button class="btn" onclick="openScenario()">📊 Scenario</button>
             <button class="btn" onclick="openDigest()">📧 Digest</button>
+            <button class="btn" onclick="exportCSV()">⬇ CSV</button>
             <button class="btn" onclick="location.reload()">↻ Refresh</button>
             <button class="btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle light/dark mode">🌙</button>
             <button class="btn" onclick="lockHub()" title="Lock">🔒</button>
@@ -518,13 +576,31 @@
 
     <!-- Filter & Search -->
     <div class="controls">
-        <input type="text" class="search-input" id="searchInput" placeholder="Search projects...">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search projects… (or press /)">
         <div class="filter-group">
             <button class="filter-btn active" data-filter="all">All</button>
             <button class="filter-btn" data-filter="live">Live</button>
             <button class="filter-btn" data-filter="ready">Ready</button>
             <button class="filter-btn" data-filter="dev">In Dev</button>
             <button class="filter-btn" data-filter="idea">Ideas</button>
+        </div>
+    </div>
+    <!-- Category filters (rendered dynamically) -->
+    <div class="cat-filters" id="catFilters"></div>
+    <!-- Sort + count -->
+    <div class="grid-controls">
+        <span style="font-size:0.82rem;color:var(--muted)" id="projectCount"></span>
+        <select class="sort-select" id="sortSelect" onchange="renderProjects()">
+            <option value="default">Sort: Default</option>
+            <option value="revenue">↓ Y1 Revenue</option>
+            <option value="progress">↓ Progress</option>
+            <option value="priority">↑ Priority rank</option>
+            <option value="updated">↓ Last updated</option>
+            <option value="name">A → Z</option>
+        </select>
+        <div class="refresh-age" id="refreshAge">
+            <span class="refresh-dot" id="refreshDot"></span>
+            <span id="refreshAgeText">–</span>
         </div>
     </div>
 
@@ -534,7 +610,7 @@
     </div>
 
     <div class="footer">
-        <p id="footerText">Project Hub · Last updated: <span id="lastUpdated">–</span> · Powered by Cloudflare D1</p>
+        <p>Project Hub · Data loaded: <span id="lastUpdated">–</span> · Cloudflare D1 · Auto-refreshes every 5 min</p>
     </div>
 </div>
 
@@ -824,20 +900,125 @@ function obFinish() {
 // ══════════════════════════════════════════════
 let allProjects = [];
 let currentFilter = 'all';
-let scenarioMultipliers = {}; // projectId -> multiplier
+let currentCategory = 'all';
+let scenarioMultipliers = {};
 let scenarioMode = 'base';
+let lastFetchTime = null;
 
 async function fetchProjects() {
     try {
         const response = await fetch(`${CFG.apiUrl}/projects`);
         const data = await response.json();
         allProjects = data;
+        lastFetchTime = Date.now();
         render();
     } catch (error) {
         document.getElementById('projectGrid').innerHTML =
             '<div class="empty-state">Error loading projects. Check your API URL.</div>';
     }
 }
+
+// ── INLINE PROGRESS UPDATE ──
+async function updateProgress(id, pct, sliderEl) {
+    const pctNum = parseInt(pct);
+    // Update bar visually
+    const card = sliderEl.closest('.project-card');
+    if (card) {
+        const fill = card.querySelector('.progress-fill');
+        if (fill) fill.style.width = pctNum + '%';
+        const label = card.querySelector('.progress-pct-label');
+        if (label) label.textContent = pctNum + '%';
+    }
+    // PATCH the API
+    try {
+        await fetch(`${CFG.apiUrl}/projects/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ progress_pct: pctNum })
+        });
+        // Update local data
+        const proj = allProjects.find(p => p.id === id);
+        if (proj) proj.progress_pct = pctNum;
+        // Show saved indicator
+        if (card) {
+            const indicator = card.querySelector('.progress-save-indicator');
+            if (indicator) {
+                indicator.classList.add('show');
+                setTimeout(() => indicator.classList.remove('show'), 1500);
+            }
+        }
+    } catch(e) { showToast('Failed to save progress'); }
+}
+
+// ── EXPORT CSV ──
+function exportCSV() {
+    const headers = ['Name','Status','Category','Progress %','Y1 Revenue','Y2 Revenue','Y3 Revenue','Priority Rank','Next Action','Tech Stack','Monthly Cost (AUD)','Live URL','Last Updated'];
+    const rows = allProjects.map(p => [
+        p.project_name, p.status, p.category || '', p.progress_pct || 0,
+        p.revenue_y1 || 0, p.revenue_y2 || 0, p.revenue_y3 || 0,
+        p.income_priority || '', p.next_action || '', p.tech_stack || '',
+        p.cost_monthly || 0, p.live_url || '', p.last_updated || ''
+    ].map(v => `"${v.toString().replace(/"/g,'""')}"`).join(','));
+    const csv = [headers.join(','), ...rows].join('\n');
+    const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `projects-${new Date().toISOString().slice(0,10)}.csv`;
+    a.click();
+    URL.revokeObjectURL(url);
+    showToast('✅ CSV downloaded!');
+}
+
+// ── CATEGORY FILTERS ──
+function renderCatFilters() {
+    const cats = [...new Set(allProjects.map(p => p.category).filter(Boolean))].sort();
+    const container = document.getElementById('catFilters');
+    if (!cats.length) { container.innerHTML = ''; return; }
+    container.innerHTML = [
+        `<button class="cat-btn ${currentCategory === 'all' ? 'active' : ''}" onclick="setCatFilter('all')">All categories</button>`,
+        ...cats.map(c => `<button class="cat-btn ${currentCategory === c ? 'active' : ''}" onclick="setCatFilter('${c.replace(/'/g,"\\'")}')">${c}</button>`)
+    ].join('');
+}
+
+function setCatFilter(cat) {
+    currentCategory = cat;
+    renderCatFilters();
+    renderProjects();
+}
+
+// ── SORT HELPERS ──
+function sortProjects(projects) {
+    const sort = document.getElementById('sortSelect')?.value || 'default';
+    const sorted = [...projects];
+    switch(sort) {
+        case 'revenue': return sorted.sort((a,b) => (b.revenue_y1||0) - (a.revenue_y1||0));
+        case 'progress': return sorted.sort((a,b) => (b.progress_pct||0) - (a.progress_pct||0));
+        case 'priority': return sorted.sort((a,b) => {
+            const ra = a.income_priority || 999, rb = b.income_priority || 999;
+            return ra - rb;
+        });
+        case 'updated': return sorted.sort((a,b) => {
+            return new Date(b.last_updated||0) - new Date(a.last_updated||0);
+        });
+        case 'name': return sorted.sort((a,b) => (a.project_name||'').localeCompare(b.project_name||''));
+        default: return sorted;
+    }
+}
+
+// ── AUTO-REFRESH ──
+setInterval(fetchProjects, 5 * 60 * 1000);
+
+function updateRefreshAge() {
+    if (!lastFetchTime) return;
+    const mins = Math.floor((Date.now() - lastFetchTime) / 60000);
+    const text = mins < 1 ? 'just now' : `${mins}m ago`;
+    const el = document.getElementById('refreshAgeText');
+    const dot = document.getElementById('refreshDot');
+    if (el) el.textContent = text;
+    if (dot) { dot.classList.toggle('stale', mins >= 4); }
+}
+setInterval(updateRefreshAge, 15000);
 
 // ══════════════════════════════════════════════
 //   SCORING ENGINE
@@ -1033,14 +1214,27 @@ function renderPriorities() {
         document.getElementById('prioritiesList').innerHTML = '<div style="padding:2rem;text-align:center;color:var(--muted)">No priorities configured.</div>';
         return;
     }
+    const maxTotal = Math.max(...priorities.map(p => (p.revenue_y1||0)+(p.revenue_y2||0)+(p.revenue_y3||0)), 1);
     document.getElementById('prioritiesList').innerHTML = priorities.map((p, i) => {
         const y1 = p.revenue_y1 || 0, y2 = p.revenue_y2 || 0, y3 = p.revenue_y3 || 0;
+        const total = y1 + y2 + y3;
+        const barW = total > 0 ? Math.round((total / maxTotal) * 100) : 0;
+        const y1w = total > 0 ? Math.round((y1/total)*100) : 0;
+        const y2w = total > 0 ? Math.round((y2/total)*100) : 0;
+        const y3w = 100 - y1w - y2w;
         return `<div class="priority-item">
             <div class="priority-rank">${i+1}</div>
-            <a href="project.html?id=${p.id}" class="priority-name">${p.project_name}</a>
+            <div style="min-width:0">
+                <a href="project.html?id=${p.id}" class="priority-name">${p.project_name}</a>
+                <div class="priority-year-bar" style="width:${barW}%" title="Y1: ${formatCurrency(y1)} · Y2: ${formatCurrency(y2)} · Y3: ${formatCurrency(y3)}">
+                    <div class="pyb-y1" style="flex:${y1w}"></div>
+                    <div class="pyb-y2" style="flex:${y2w}"></div>
+                    <div class="pyb-y3" style="flex:${y3w}"></div>
+                </div>
+            </div>
             <div class="${getCategoryBadgeClass(p.revenue_category)}">${p.revenue_category||'N/A'}</div>
             <div class="revenue-item"><span class="revenue-label">Y1</span><div class="revenue-value">${formatCurrency(y1)}</div></div>
-            <div class="revenue-item"><span class="revenue-label">3-Yr</span><div class="revenue-value">${formatCurrency(y1+y2+y3)}</div></div>
+            <div class="revenue-item"><span class="revenue-label">3-Yr</span><div class="revenue-value">${formatCurrency(total)}</div></div>
         </div>`;
     }).join('');
 }
@@ -1131,13 +1325,26 @@ function renderBudget() {
 
 function renderProjects() {
     let filtered = [...allProjects];
+
+    // Status filter
     if (currentFilter === 'idea') filtered = filtered.filter(p => (p.status||'').toLowerCase() === 'idea');
     else if (currentFilter === 'dev') filtered = filtered.filter(p => ['dev','in_dev','in development','early stage'].includes((p.status||'').toLowerCase()));
     else if (currentFilter === 'ready') filtered = filtered.filter(p => ['ready','ready to deploy'].includes((p.status||'').toLowerCase()));
-    else if (currentFilter !== 'all') filtered = filtered.filter(p => p.status === currentFilter);
+    else if (currentFilter === 'live') filtered = filtered.filter(p => (p.status||'').toLowerCase() === 'live');
 
+    // Category filter
+    if (currentCategory !== 'all') filtered = filtered.filter(p => p.category === currentCategory);
+
+    // Search
     const q = document.getElementById('searchInput').value.toLowerCase();
-    if (q) filtered = filtered.filter(p => (p.project_name||'').toLowerCase().includes(q) || (p.description||'').toLowerCase().includes(q));
+    if (q) filtered = filtered.filter(p => (p.project_name||'').toLowerCase().includes(q) || (p.description||'').toLowerCase().includes(q) || (p.tech_stack||'').toLowerCase().includes(q));
+
+    // Sort
+    filtered = sortProjects(filtered);
+
+    // Count
+    const countEl = document.getElementById('projectCount');
+    if (countEl) countEl.textContent = `${filtered.length} project${filtered.length !== 1 ? 's' : ''}`;
 
     if (!filtered.length) { document.getElementById('projectGrid').innerHTML = '<div class="empty-state">No projects found.</div>'; return; }
 
@@ -1173,7 +1380,15 @@ function renderProjects() {
             </div>
             ${appLinksHtml}
             ${project.description ? `<div class="card-description">${project.description}</div>` : ''}
-            ${project.progress_pct != null ? `<div class="progress-bar"><div class="progress-fill" style="width:${project.progress_pct}%"></div></div>` : ''}
+            ${project.progress_pct != null ? `
+            <div class="progress-bar"><div class="progress-fill" style="width:${project.progress_pct}%"></div></div>
+            <div class="progress-inline">
+                <input type="range" class="progress-inline-slider" min="0" max="100" value="${project.progress_pct}"
+                    oninput="this.nextElementSibling.textContent=this.value+'%';this.closest('.project-card').querySelector('.progress-fill').style.width=this.value+'%'"
+                    onchange="updateProgress(${project.id}, this.value, this)">
+                <span class="progress-pct-label">${project.progress_pct}%</span>
+                <span class="progress-save-indicator">✓ saved</span>
+            </div>` : ''}
             <div class="card-tags">
                 ${project.category ? `<span class="tag">${project.category}</span>` : ''}
                 ${project.tech_stack ? project.tech_stack.split(',').map(t => `<span class="tag">${t.trim()}</span>`).join('') : ''}
@@ -1199,8 +1414,10 @@ function render() {
     renderFocusSection();
     renderMilestones();
     renderBudget();
+    renderCatFilters();
     renderProjects();
     document.getElementById('lastUpdated').textContent = new Date().toLocaleString();
+    updateRefreshAge();
 }
 
 // ══════════════════════════════════════════════
