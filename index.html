@@ -974,7 +974,7 @@ async function fetchProjects() {
 }
 
 // ── INLINE PROGRESS UPDATE ──
-async function updateProgress(id, pct, sliderEl) {
+async async function updateProgress(id, pct, sliderEl) {
     const pctNum = parseInt(pct);
     // Update bar visually
     const card = sliderEl.closest('.project-card');
@@ -1447,7 +1447,15 @@ function renderProjects() {
                 ${project.live_url && !appLinks.length ? `<a href="${project.live_url}" target="_blank" class="card-link">↗</a>` : ''}
             </div>
             <div style="margin-bottom:0.75rem">
-                <span class="${getStatusBadgeClass(project.status)}">${project.status||'N/A'}</span>
+                <select class="${getStatusBadgeClass(project.status)} status-select"
+                    data-id="${project.id}" data-field="status"
+                    onchange="autoSaveField(this)"
+                    style="border:none;background:transparent;cursor:pointer;font-size:0.75rem;font-weight:600;padding:0.15rem 0.3rem;border-radius:4px"
+                    title="Click to change status">
+                    ${['idea','planning','dev','in_dev','ready','live','paused','archived'].map(s =>
+                        `<option value="${s}" ${(project.status||'').toLowerCase()===s?'selected':''}>${s}</option>`
+                    ).join('')}
+                </select>
                 ${revenueTag}
                 ${parseFloat(project.cost_monthly||0) > 0 ? `<span style="font-size:0.75rem;color:var(--warning);margin-left:0.5rem">A$${parseFloat(project.cost_monthly).toFixed(2)}/mo</span>` : ''}
             </div>
@@ -1469,7 +1477,17 @@ function renderProjects() {
             ${project.connectors && project.connectors !== 'None' ? `<div class="card-integrations"><div class="card-integrations-label">Connectors</div>${project.connectors.split(',').map(c => `<span class="connector-tag">${c.trim()}</span>`).join('')}</div>` : ''}
             ${project.plugins && project.plugins !== 'None' ? `<div class="card-integrations"><div class="card-integrations-label">Plugins</div>${project.plugins.split(',').map(p => `<span class="plugin-tag">${p.trim()}</span>`).join('')}</div>` : ''}
             ${domainLinks ? `<div style="margin-bottom:0.6rem">${domainLinks}</div>` : ''}
-            ${project.next_action ? `<div class="next-action"><strong>Next:</strong> ${linkify(project.next_action)}</div>` : ''}
+            <div class="next-action-edit" style="margin-bottom:0.5rem">
+                <span style="font-size:0.75rem;color:var(--muted)">Next: </span>
+                <span class="inline-editable" contenteditable="true"
+                    data-id="${project.id}" data-field="next_action"
+                    onblur="autoSaveField(this)"
+                    onkeydown="if(event.key==='Enter'){event.preventDefault();this.blur()}"
+                    title="Click to edit"
+                    style="outline:none;border-bottom:1px dashed var(--border);cursor:text;font-size:0.82rem;color:var(--text);min-width:60px;display:inline-block"
+                >${project.next_action || 'click to add…'}</span>
+                <span class="field-save-indicator" style="font-size:0.7rem;color:var(--success);opacity:0;transition:opacity 0.3s;margin-left:0.3rem">✓</span>
+            </div>
             <span class="list-progress">${project.progress_pct != null ? project.progress_pct+'%' : ''}</span>
             <div class="card-meta">Updated: ${project.last_updated ? new Date(project.last_updated).toLocaleDateString() : 'N/A'}</div>
             <div class="claude-btns">
@@ -1838,6 +1856,45 @@ document.addEventListener('keydown', e => {
 //   INIT
 // ══════════════════════════════════════════════
 initAuth();
+
+// ── INLINE AUTO-SAVE ──────────────────────────
+const _saveTimers = {};
+
+async function autoSaveField(el) {
+    const id = parseInt(el.dataset.id);
+    const field = el.dataset.field;
+    const value = el.tagName === 'SELECT' ? el.value : el.innerText.trim();
+
+    if (!id || !field) return;
+
+    // Debounce 800ms
+    clearTimeout(_saveTimers[`${id}_${field}`]);
+    _saveTimers[`${id}_${field}`] = setTimeout(async () => {
+        try {
+            await fetch(`${CFG.apiUrl}/projects/${id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ [field]: value })
+            });
+            // Update local cache
+            const proj = allProjects.find(p => p.id === id);
+            if (proj) proj[field] = value;
+            // Flash ✓
+            const indicator = el.nextElementSibling;
+            if (indicator && indicator.classList.contains('field-save-indicator')) {
+                indicator.style.opacity = '1';
+                setTimeout(() => indicator.style.opacity = '0', 1500);
+            }
+            // Update status badge colour if status changed
+            if (field === 'status') {
+                el.className = getStatusBadgeClass(value) + ' status-select';
+                el.style.cssText = 'border:none;background:transparent;cursor:pointer;font-size:0.75rem;font-weight:600;padding:0.15rem 0.3rem;border-radius:4px';
+            }
+        } catch(e) {
+            showToast('⚠️ Save failed — check connection');
+        }
+    }, 800);
+}
 </script>
 
 <!-- ═══════════════════════════════════════════ -->
