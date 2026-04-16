@@ -4,6 +4,12 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Project Hub</title>
+    <meta name="theme-color" content="#0f1117">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Project Hub">
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f1117'/><text y='.9em' font-size='80' x='10'>🧠</text></svg>">
+    <link rel="manifest" href="data:application/manifest+json,{&quot;name&quot;:&quot;Project Hub&quot;,&quot;short_name&quot;:&quot;Project Hub&quot;,&quot;start_url&quot;:&quot;/project-hub/&quot;,&quot;display&quot;:&quot;standalone&quot;,&quot;background_color&quot;:&quot;%230f1117&quot;,&quot;theme_color&quot;:&quot;%230f1117&quot;,&quot;icons&quot;:[{&quot;src&quot;:&quot;data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect width='100' height='100' rx='20' fill='%230f1117'/><text y='.9em' font-size='80' x='10'>🧠</text></svg>&quot;,&quot;sizes&quot;:&quot;any&quot;,&quot;type&quot;:&quot;image/svg+xml&quot;}]}">
     <style>
         :root {
             --bg: #0f1117;
@@ -32,7 +38,7 @@
         * { margin:0; padding:0; box-sizing:border-box; }
         body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; background-color:var(--bg); color:var(--text); line-height:1.6; transition:background-color 0.2s,color 0.2s; }
 
-        /* Ã¢ÂÂÃ¢ÂÂ AUTH GATE Ã¢ÂÂÃ¢ÂÂ */
+        /* ── AUTH GATE ── */
         #authGate {
             position:fixed; inset:0; background:var(--bg); z-index:9999;
             display:flex; align-items:center; justify-content:center;
@@ -66,7 +72,7 @@
         .auth-switch { margin-top:1rem; font-size:0.85rem; color:var(--muted); cursor:pointer; }
         .auth-switch span { color:var(--accent); text-decoration:underline; cursor:pointer; }
 
-        /* Ã¢ÂÂÃ¢ÂÂ ONBOARDING Ã¢ÂÂÃ¢ÂÂ */
+        /* ── ONBOARDING ── */
         .onboard-overlay {
             display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85);
             z-index:8000; align-items:center; justify-content:center;
@@ -92,10 +98,10 @@
         .onboard-input:focus { outline:none; border-color:var(--accent); }
         .onboard-nav { display:flex; gap:1rem; justify-content:flex-end; margin-top:1rem; }
 
-        /* Ã¢ÂÂÃ¢ÂÂ LAYOUT Ã¢ÂÂÃ¢ÂÂ */
+        /* ── LAYOUT ── */
         .container { max-width:1200px; margin:0 auto; padding:2rem; }
 
-        /* Ã¢ÂÂÃ¢ÂÂ HEADER Ã¢ÂÂÃ¢ÂÂ */
+        /* ── HEADER ── */
         .header {
             display:flex; justify-content:space-between; align-items:center;
             margin-bottom:2rem; padding-bottom:1.5rem; border-bottom:1px solid var(--border);
@@ -115,7 +121,7 @@
         .btn.accent { background-color:var(--accent); border-color:var(--accent); color:#fff; }
         .btn.warning { background-color:rgba(210,153,34,0.2); border-color:var(--warning); color:var(--warning); }
 
-        /* Ã¢ÂÂÃ¢ÂÂ TODAY'S PICK Ã¢ÂÂÃ¢ÂÂ */
+        /* ── TODAY'S PICK ── */
         .pick-hero {
             background:linear-gradient(135deg, rgba(59,130,246,0.15) 0%, rgba(63,185,80,0.08) 100%);
             border:1px solid rgba(59,130,246,0.4); border-radius:12px;
@@ -147,20 +153,20 @@
         .pick-secondary-item { font-size:0.85rem; }
         .pick-secondary-item strong { color:var(--accent); }
 
-        /* Ã¢ÂÂÃ¢ÂÂ STATS Ã¢ÂÂÃ¢ÂÂ */
+        /* ── STATS ── */
         .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:1rem; margin-bottom:2rem; }
         .stat-card { background:var(--card); padding:1rem; border-radius:8px; border:1px solid var(--border); }
         .stat-label { font-size:0.8rem; color:var(--muted); margin-bottom:0.25rem; }
         .stat-value { font-size:1.8rem; font-weight:700; color:var(--accent); }
 
-        /* Ã¢ÂÂÃ¢ÂÂ SECTION TITLE Ã¢ÂÂÃ¢ÂÂ */
+        /* ── SECTION TITLE ── */
         .section-title {
             font-size:1.2rem; font-weight:600; margin:2rem 0 1rem;
             padding-bottom:0.5rem; border-bottom:2px solid var(--accent);
             display:flex; align-items:center; gap:0.5rem;
         }
 
-        /* Ã¢ÂÂÃ¢ÂÂ PRIORITIES Ã¢ÂÂÃ¢ÂÂ */
+        /* ── PRIORITIES ── */
         .priorities-list { background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-bottom:2rem; }
         .priority-item {
             display:grid; grid-template-columns:40px 1fr auto auto auto;
@@ -179,7 +185,7 @@
         .revenue-label { font-size:0.75rem; color:var(--muted); display:block; }
         .revenue-value { font-size:1rem; font-weight:600; color:var(--success); }
 
-        /* Ã¢ÂÂÃ¢ÂÂ REVENUE TRACKER Ã¢ÂÂÃ¢ÂÂ */
+        /* ── REVENUE TRACKER ── */
         .revenue-tracker { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1.5rem; margin-bottom:2rem; }
         .revenue-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:1.5rem; }
         .revenue-year { text-align:center; padding:1rem; background:rgba(59,130,246,0.1); border-radius:6px; }
@@ -193,7 +199,7 @@
         .revenue-bar.community { background:#a371f7; }
         .revenue-bar.health { background:#79c0ff; }
 
-        /* Ã¢ÂÂÃ¢ÂÂ FOCUS SECTION Ã¢ÂÂÃ¢ÂÂ */
+        /* ── FOCUS SECTION ── */
         .focus-section { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin-bottom:2rem; }
         .focus-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1.25rem; }
         .focus-card-title { font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:0.75rem; }
@@ -204,7 +210,7 @@
         .focus-item-meta { font-size:0.8rem; color:var(--success); white-space:nowrap; font-weight:600; }
         .focus-empty { font-size:0.85rem; color:var(--muted); font-style:italic; }
 
-        /* Ã¢ÂÂÃ¢ÂÂ MILESTONES Ã¢ÂÂÃ¢ÂÂ */
+        /* ── MILESTONES ── */
         .milestones-grid { display:flex; flex-direction:column; gap:0.6rem; margin-bottom:2rem; }
         .milestone-row {
             display:flex; align-items:center; gap:1rem; background:var(--card);
@@ -228,7 +234,7 @@
         .milestone-badge.done { background:rgba(125,133,144,0.15); color:var(--muted); }
         .no-milestones { text-align:center; padding:2rem; color:var(--muted); font-size:0.9rem; background:var(--card); border-radius:8px; border:1px solid var(--border); }
 
-        /* Ã¢ÂÂÃ¢ÂÂ BUDGET Ã¢ÂÂÃ¢ÂÂ */
+        /* ── BUDGET ── */
         .budget-summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1rem; margin-bottom:1.5rem; }
         .budget-stat { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1rem; text-align:center; }
         .budget-stat-value { font-size:1.5rem; font-weight:700; color:var(--warning); }
@@ -241,7 +247,7 @@
         .budget-alert.warn { background:rgba(210,153,34,0.12); border-left:3px solid var(--warning); color:#e6c96a; }
         .budget-alert.tip { background:rgba(63,185,80,0.1); border-left:3px solid var(--success); color:#7ee787; }
 
-        /* Ã¢ÂÂÃ¢ÂÂ FILTER & SEARCH Ã¢ÂÂÃ¢ÂÂ */
+        /* ── FILTER & SEARCH ── */
         .controls { display:flex; gap:1rem; margin-bottom:2rem; flex-wrap:wrap; }
         .search-input { flex:1; min-width:200px; padding:0.75rem; background:var(--card); border:1px solid var(--border); color:var(--text); border-radius:6px; font-size:1rem; }
         .search-input::placeholder { color:var(--muted); }
@@ -251,7 +257,7 @@
         .filter-btn:hover { border-color:var(--accent); }
         .filter-count { font-size:0.72rem; opacity:0.75; margin-left:0.2rem; }
 
-        /* Ã¢ÂÂÃ¢ÂÂ PROJECT GRID Ã¢ÂÂÃ¢ÂÂ */
+        /* ── PROJECT GRID ── */
         .project-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1.5rem; margin-bottom:2rem; }
         .project-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1.5rem; transition:all 0.2s; position:relative; }
         .project-card:hover { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent); }
@@ -317,7 +323,7 @@
         .claude-resume-btn { background:#3b82f6; color:#fff; }
         .claude-end-btn { background:#3fb950; color:#0d1117; }
 
-        /* Ã¢ÂÂÃ¢ÂÂ SCENARIO DRAWER Ã¢ÂÂÃ¢ÂÂ */
+        /* ── SCENARIO DRAWER ── */
         .scenario-overlay {
             display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:7000;
         }
@@ -351,7 +357,7 @@
         .scenario-slider::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:16px; height:16px; border-radius:50%; background:var(--accent); cursor:pointer; }
         .scenario-slider-labels { display:flex; justify-content:space-between; font-size:0.72rem; color:var(--muted); margin-top:0.25rem; }
 
-        /* Ã¢ÂÂÃ¢ÂÂ DIGEST MODAL Ã¢ÂÂÃ¢ÂÂ */
+        /* ── DIGEST MODAL ── */
         .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:6000; align-items:center; justify-content:center; padding:1rem; }
         .modal-overlay.open { display:flex; }
         .modal { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:2rem; width:100%; max-width:560px; max-height:90vh; overflow-y:auto; }
@@ -373,7 +379,7 @@
             margin-bottom:1rem;
         }
 
-        /* Ã¢ÂÂÃ¢ÂÂ TOAST Ã¢ÂÂÃ¢ÂÂ */
+        /* ── TOAST ── */
         .toast {
             position:fixed; top:50%; left:50%;
             transform:translate(-50%,-50%) scale(0.9);
@@ -385,7 +391,7 @@
         }
         .toast.show { opacity:1; transform:translate(-50%,-50%) scale(1); }
 
-        /* Ã¢ÂÂÃ¢ÂÂ IDEA FAB Ã¢ÂÂÃ¢ÂÂ */
+        /* ── IDEA FAB ── */
         .idea-fab {
             position:fixed; bottom:2rem; right:2rem; width:52px; height:52px;
             border-radius:50%; background:var(--accent); color:#fff; border:none;
@@ -395,13 +401,13 @@
         }
         .idea-fab:hover { transform:scale(1.1); box-shadow:0 6px 24px rgba(59,130,246,0.7); }
 
-        /* Ã¢ÂÂÃ¢ÂÂ FOOTER Ã¢ÂÂÃ¢ÂÂ */
+        /* ── FOOTER ── */
         .footer { text-align:center; color:var(--muted); font-size:0.82rem; padding-top:2rem; border-top:1px solid var(--border); margin-top:3rem; }
 
-        /* Ã¢ÂÂÃ¢ÂÂ EMPTY / LOADING Ã¢ÂÂÃ¢ÂÂ */
+        /* ── EMPTY / LOADING ── */
         .empty-state { text-align:center; padding:3rem; color:var(--muted); }
 
-        /* Ã¢ÂÂÃ¢ÂÂ SORT & EXPORT CONTROLS Ã¢ÂÂÃ¢ÂÂ */
+        /* ── SORT & EXPORT CONTROLS ── */
         .grid-controls {
             display:flex; gap:0.75rem; margin-bottom:1rem; flex-wrap:wrap; align-items:center;
         }
@@ -421,7 +427,7 @@
         .cat-btn.active { border-color:var(--accent); color:var(--accent); background:rgba(59,130,246,0.1); }
         .cat-btn:hover:not(.active) { border-color:var(--muted); }
 
-        /* Ã¢ÂÂÃ¢ÂÂ INLINE PROGRESS SLIDER Ã¢ÂÂÃ¢ÂÂ */
+        /* ── INLINE PROGRESS SLIDER ── */
         .progress-inline {
             display:flex; align-items:center; gap:0.5rem; margin-top:0.25rem; margin-bottom:0.5rem;
         }
@@ -442,7 +448,7 @@
         }
         .progress-save-indicator.show { opacity:1; }
 
-        /* Ã¢ÂÂÃ¢ÂÂ PRIORITY YEAR BARS Ã¢ÂÂÃ¢ÂÂ */
+        /* ── PRIORITY YEAR BARS ── */
         .priority-year-bar {
             display:flex; height:5px; border-radius:3px; overflow:hidden;
             gap:1px; margin-top:0.3rem; min-width:80px;
@@ -451,7 +457,7 @@
         .pyb-y2 { background:var(--success); }
         .pyb-y3 { background:#a371f7; }
 
-        /* Ã¢ÂÂÃ¢ÂÂ AUTO-REFRESH INDICATOR Ã¢ÂÂÃ¢ÂÂ */
+        /* ── AUTO-REFRESH INDICATOR ── */
         .refresh-age {
             font-size:0.75rem; color:var(--muted); display:flex; align-items:center; gap:0.3rem;
         }
@@ -469,10 +475,10 @@
 </head>
 <body>
 
-<!-- Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ AUTH GATE Ã¢ÂÂÃ¢ÂÂ -->
+<!-- ────────────────────────────── AUTH GATE ── -->
 <div id="authGate">
     <div class="auth-box">
-        <div class="auth-logo">Ã°ÂÂ§Â </div>
+        <div class="auth-logo">🧠</div>
         <div class="auth-title" id="authTitle">Welcome back</div>
         <div class="auth-subtitle" id="authSub">Enter your PIN to unlock</div>
         <div class="pin-dots" id="pinDots">
@@ -491,16 +497,16 @@
             <button class="pin-key" onclick="pinPress(7)">7</button>
             <button class="pin-key" onclick="pinPress(8)">8</button>
             <button class="pin-key" onclick="pinPress(9)">9</button>
-            <button class="pin-key" onclick="pinClear()">Ã¢ÂÂ«</button>
+            <button class="pin-key" onclick="pinClear()">⌫</button>
             <button class="pin-key" onclick="pinPress(0)">0</button>
-            <button class="pin-key" onclick="pinSubmit()">Ã¢ÂÂ</button>
+            <button class="pin-key" onclick="pinSubmit()">✓</button>
         </div>
         <div class="auth-msg" id="authMsg"></div>
         <div class="auth-switch" id="authSwitch"></div>
     </div>
 </div>
 
-<!-- Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ ONBOARDING Ã¢ÂÂÃ¢ÂÂ -->
+<!-- ────────────────────────────── ONBOARDING ── -->
 <div class="onboard-overlay" id="onboardModal">
     <div class="onboard-box">
         <div class="onboard-progress">
@@ -510,37 +516,37 @@
         </div>
         <!-- Step 1 -->
         <div class="onboard-step active" id="ob-step-1">
-            <div class="onboard-step-header">Ã°ÂÂÂ Name your hub</div>
+            <div class="onboard-step-header">👋 Name your hub</div>
             <div class="onboard-step-sub">This name appears in the header and digest emails. Use your name or studio name.</div>
             <input class="onboard-input" id="ob-hub-name" placeholder="e.g. Paddy's Project Hub" maxlength="50">
             <div class="onboard-nav">
-                <button class="btn-primary" onclick="obNext(1)">Next Ã¢ÂÂ</button>
+                <button class="btn-primary" onclick="obNext(1)">Next →</button>
             </div>
         </div>
         <!-- Step 2 -->
         <div class="onboard-step" id="ob-step-2">
-            <div class="onboard-step-header">Ã°ÂÂÂ§ Digest email</div>
+            <div class="onboard-step-header">📧 Digest email</div>
             <div class="onboard-step-sub">Where should your weekly digest summaries be sent?</div>
             <input class="onboard-input" id="ob-email" type="email" placeholder="you@example.com">
             <div class="onboard-nav">
-                <button class="btn-cancel" onclick="obBack(2)">Ã¢ÂÂ Back</button>
-                <button class="btn-primary" onclick="obNext(2)">Next Ã¢ÂÂ</button>
+                <button class="btn-cancel" onclick="obBack(2)">← Back</button>
+                <button class="btn-primary" onclick="obNext(2)">Next →</button>
             </div>
         </div>
         <!-- Step 3 -->
         <div class="onboard-step" id="ob-step-3">
-            <div class="onboard-step-header">Ã°ÂÂÂ API endpoint</div>
+            <div class="onboard-step-header">🔗 API endpoint</div>
             <div class="onboard-step-sub">Paste your Cloudflare Worker URL. This powers all project data.</div>
             <input class="onboard-input" id="ob-api" placeholder="https://your-worker.workers.dev">
             <div class="onboard-nav">
-                <button class="btn-cancel" onclick="obBack(3)">Ã¢ÂÂ Back</button>
-                <button class="btn-primary" onclick="obFinish()">Launch hub Ã¢ÂÂ</button>
+                <button class="btn-cancel" onclick="obBack(3)">← Back</button>
+                <button class="btn-primary" onclick="obFinish()">Launch hub →</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ MAIN APP Ã¢ÂÂÃ¢ÂÂ -->
+<!-- ────────────────────────────── MAIN APP ── -->
 <div id="app" class="container" style="display:none">
 
     <!-- Header -->
@@ -551,13 +557,13 @@
                 <span class="status-dot"></span>
                 <span id="dbLabel">Cloudflare D1</span>
             </div>
-            <button class="btn" onclick="openScenario()">Ã°ÂÂÂ Scenario</button>
-            <button class="btn" onclick="openDigest()">Ã°ÂÂÂ§ Digest</button>
-            <button class="btn" onclick="exportCSV()">Ã¢Â¬Â CSV</button>
-            <button class="btn" onclick="location.reload()">Ã¢ÂÂ» Refresh</button>
-            <button class="btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle light/dark mode">Ã°ÂÂÂ</button>
-            <button class="btn" onclick="lockHub()" title="Lock">Ã°ÂÂÂ</button>
-            <button class="btn" id="dashboardToggleBtn" onclick="toggleDashboard()" title="Toggle dashboard sections">ð Dashboard</button>
+            <button class="btn" onclick="openScenario()">📊 Scenario</button>
+            <button class="btn" onclick="openDigest()">📧 Digest</button>
+            <button class="btn" onclick="exportCSV()">⬇ CSV</button>
+            <button class="btn" onclick="location.reload()">↻ Refresh</button>
+            <button class="btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle light/dark mode">🌙</button>
+            <button class="btn" onclick="lockHub()" title="Lock">🔒</button>
+            <button class="btn" id="dashboardToggleBtn" onclick="toggleDashboard()" title="Toggle dashboard sections">📊 Dashboard</button>
         </div>
     </div>
 
@@ -566,44 +572,44 @@
 
     <!-- Stats Row -->
     <div class="stats" id="statsContainer">
-        <div class="stat-card"><div class="stat-label">Live</div><div class="stat-value" id="statLive">Ã¢ÂÂ</div></div>
-        <div class="stat-card"><div class="stat-label">Ready</div><div class="stat-value" id="statReady">Ã¢ÂÂ</div></div>
-        <div class="stat-card"><div class="stat-label">In Dev</div><div class="stat-value" id="statDev">Ã¢ÂÂ</div></div>
-        <div class="stat-card"><div class="stat-label">Actions</div><div class="stat-value" id="statActions">Ã¢ÂÂ</div></div>
-        <div class="stat-card"><div class="stat-label">Avg Progress</div><div class="stat-value" id="statAvg">Ã¢ÂÂ</div></div>
-        <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">Ã¢ÂÂ</div></div>
+        <div class="stat-card"><div class="stat-label">Live</div><div class="stat-value" id="statLive">–</div></div>
+        <div class="stat-card"><div class="stat-label">Ready</div><div class="stat-value" id="statReady">–</div></div>
+        <div class="stat-card"><div class="stat-label">In Dev</div><div class="stat-value" id="statDev">–</div></div>
+        <div class="stat-card"><div class="stat-label">Actions</div><div class="stat-value" id="statActions">–</div></div>
+        <div class="stat-card"><div class="stat-label">Avg Progress</div><div class="stat-value" id="statAvg">–</div></div>
+        <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">–</div></div>
     </div>
 
     <div id="dashboardSections" class="dashboard-sections" style="display:none">
     <!-- Priorities -->
-    <h2 class="section-title">Ã°ÂÂÂ Overall Priorities</h2>
+    <h2 class="section-title">🏆 Overall Priorities</h2>
     <div class="priorities-list" id="prioritiesList">
         <div style="padding:2rem;text-align:center;color:var(--muted)">Loading...</div>
     </div>
 
     <!-- Revenue Tracker -->
-    <h2 class="section-title">Ã°ÂÂÂ 3-Year Revenue Projection</h2>
+    <h2 class="section-title">📈 3-Year Revenue Projection</h2>
     <div class="revenue-tracker" id="revenueTracker">
         <div style="text-align:center;color:var(--muted)">Loading...</div>
     </div>
 
     <!-- What to Focus On -->
-    <h2 class="section-title">Ã°ÂÂÂ¯ What to Focus On</h2>
+    <h2 class="section-title">🎯 What to Focus On</h2>
     <div class="focus-section" id="focusSection">
-        <div class="focus-card"><div class="focus-card-title">Ã°ÂÂÂ Ready to Launch</div><div id="focusReady"><span class="focus-empty">Loading...</span></div></div>
-        <div class="focus-card"><div class="focus-card-title">Ã°ÂÂÂ° Quickest Income</div><div id="focusIncome"><span class="focus-empty">Loading...</span></div></div>
-        <div class="focus-card"><div class="focus-card-title">Ã°ÂÂÂ¥ Top Priority</div><div id="focusPriority"><span class="focus-empty">Loading...</span></div></div>
-        <div class="focus-card"><div class="focus-card-title">Ã¢ÂÂ  Needs Attention</div><div id="focusAttention"><span class="focus-empty">Loading...</span></div></div>
+        <div class="focus-card"><div class="focus-card-title">🚀 Ready to Launch</div><div id="focusReady"><span class="focus-empty">Loading...</span></div></div>
+        <div class="focus-card"><div class="focus-card-title">💰 Quickest Income</div><div id="focusIncome"><span class="focus-empty">Loading...</span></div></div>
+        <div class="focus-card"><div class="focus-card-title">🔥 Top Priority</div><div id="focusPriority"><span class="focus-empty">Loading...</span></div></div>
+        <div class="focus-card"><div class="focus-card-title">⚠ Needs Attention</div><div id="focusAttention"><span class="focus-empty">Loading...</span></div></div>
     </div>
 
     <!-- Upcoming Milestones -->
-    <h2 class="section-title">Ã°ÂÂÂ Upcoming Milestones</h2>
+    <h2 class="section-title">📅 Upcoming Milestones</h2>
     <div id="milestonesSection" class="milestones-grid">
         <div class="no-milestones">Loading milestones...</div>
     </div>
 
     <!-- Budget -->
-    <h2 class="section-title">Ã°ÂÂÂ³ Monthly Costs</h2>
+    <h2 class="section-title">💳 Monthly Costs</h2>
     <div id="budgetSection">
         <div style="text-align:center;color:var(--muted);padding:1rem">Loading...</div>
     </div>
@@ -612,7 +618,7 @@
     <div class="sticky-bar">
     <!-- Filter & Search -->
     <div class="controls">
-        <input type="text" class="search-input" id="searchInput" placeholder="Search projectsÃ¢ÂÂ¦ (or press /)">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search projects… (or press /)">
         <div class="filter-group">
             <button class="filter-btn active" data-filter="all">All <span class="filter-count" id="fc-all"></span></button>
             <button class="filter-btn" data-filter="live">Live <span class="filter-count" id="fc-live"></span></button>
@@ -627,17 +633,17 @@
     <div class="grid-controls">
         <span style="font-size:0.82rem;color:var(--muted)" id="projectCount"></span>
         <select class="sort-select" id="sortSelect" onchange="renderProjects()">
-            <option value="name">A Ã¢ÂÂ Z</option>
+            <option value="name">A → Z</option>
             <option value="default">Sort: Default</option>
-            <option value="revenue">Ã¢ÂÂ Y1 Revenue</option>
-            <option value="progress">Ã¢ÂÂ Progress</option>
-            <option value="priority">Ã¢ÂÂ Priority rank</option>
-            <option value="updated">Ã¢ÂÂ Last updated</option>
+            <option value="revenue">↓ Y1 Revenue</option>
+            <option value="progress">↓ Progress</option>
+            <option value="priority">↑ Priority rank</option>
+            <option value="updated">↓ Last updated</option>
         </select>
-        <button class="btn" id="viewToggleBtn" onclick="toggleViewMode()" title="Toggle list/card view">ð List</button>
+        <button class="btn" id="viewToggleBtn" onclick="toggleViewMode()" title="Toggle list/card view">🃏 List</button>
         <div class="refresh-age" id="refreshAge">
             <span class="refresh-dot" id="refreshDot"></span>
-            <span id="refreshAgeText">Ã¢ÂÂ</span>
+            <span id="refreshAgeText">–</span>
         </div>
     </div>
     </div><!-- /sticky-bar -->
@@ -648,8 +654,8 @@
     </div>
 
     <div class="footer">
-        <p>Project Hub ÃÂ· Data loaded: <span id="lastUpdated">Ã¢ÂÂ</span> ÃÂ· Cloudflare D1 ÃÂ· Auto-refreshes every 5 min</p>
-        <p style="margin-top:0.4rem">Paddy Gallivan ÃÂ· ABN 78 312 753 967</p>
+        <p>Project Hub · Data loaded: <span id="lastUpdated">–</span> · Cloudflare D1 · Auto-refreshes every 5 min</p>
+        <p style="margin-top:0.4rem">Paddy Gallivan · ABN 78 312 753 967</p>
     </div>
 </div>
 
@@ -659,10 +665,10 @@
 <!-- IDEA FAB -->
 <button class="idea-fab" id="ideaFab" title="Capture a new idea">+</button>
 
-<!-- Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ IDEA MODAL Ã¢ÂÂÃ¢ÂÂ -->
+<!-- ────────────────────────────── IDEA MODAL ── -->
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
-        <h3>Ã°ÂÂÂ¡ Capture an Idea</h3>
+        <h3>💡 Capture an Idea</h3>
         <div id="modalForm">
             <input type="text" class="modal-input" id="ideaName" placeholder="Idea name *" maxlength="100">
             <textarea class="modal-input" id="ideaDesc" placeholder="What is it? One or two lines..." maxlength="500"></textarea>
@@ -682,7 +688,7 @@
             </div>
         </div>
         <div class="modal-success" id="modalSuccess" style="display:none">
-            Ã¢ÂÂ Idea saved!
+            ✅ Idea saved!
             <div class="modal-actions" style="justify-content:center;margin-top:1rem">
                 <button class="btn-primary" onclick="closeModal();location.reload()">Refresh Now</button>
                 <button class="btn-cancel" onclick="closeModal()">Close</button>
@@ -691,53 +697,53 @@
     </div>
 </div>
 
-<!-- Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ DIGEST MODAL Ã¢ÂÂÃ¢ÂÂ -->
+<!-- ────────────────────────────── DIGEST MODAL ── -->
 <div class="modal-overlay" id="digestOverlay">
     <div class="modal" style="max-width:620px">
-        <h3>Ã°ÂÂÂ§ Weekly Digest</h3>
+        <h3>📧 Weekly Digest</h3>
         <div class="digest-text" id="digestText"></div>
         <div class="modal-actions">
             <button class="btn-cancel" onclick="closeDigest()">Close</button>
-            <button class="btn-primary" onclick="emailDigest()">Ã¢ÂÂ Email it</button>
-            <button class="btn-primary" onclick="copyDigest()">Ã°ÂÂÂ Copy</button>
+            <button class="btn-primary" onclick="emailDigest()">✉ Email it</button>
+            <button class="btn-primary" onclick="copyDigest()">📋 Copy</button>
         </div>
     </div>
 </div>
 
-<!-- Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ SCENARIO DRAWER Ã¢ÂÂÃ¢ÂÂ -->
+<!-- ────────────────────────────── SCENARIO DRAWER ── -->
 <div class="scenario-overlay" id="scenarioOverlay" onclick="closeScenario()"></div>
 <div class="scenario-drawer" id="scenarioDrawer">
     <div class="scenario-header">
-        <h3>Ã°ÂÂÂ Scenario Modelling</h3>
-        <button class="scenario-close" onclick="closeScenario()">Ã¢ÂÂ</button>
+        <h3>📊 Scenario Modelling</h3>
+        <button class="scenario-close" onclick="closeScenario()">✕</button>
     </div>
     <div class="scenario-mode-toggle">
-        <button class="scenario-mode-btn optimistic" onclick="setScenarioMode('optimistic')">Ã°ÂÂÂ Optimistic +30%</button>
-        <button class="scenario-mode-btn active base" onclick="setScenarioMode('base')">Ã¢ÂÂ Base</button>
-        <button class="scenario-mode-btn conservative" onclick="setScenarioMode('conservative')">Ã°ÂÂÂ Conservative Ã¢ÂÂ30%</button>
+        <button class="scenario-mode-btn optimistic" onclick="setScenarioMode('optimistic')">🚀 Optimistic +30%</button>
+        <button class="scenario-mode-btn active base" onclick="setScenarioMode('base')">⚖ Base</button>
+        <button class="scenario-mode-btn conservative" onclick="setScenarioMode('conservative')">📉 Conservative −30%</button>
     </div>
     <div class="scenario-totals">
         <div class="scenario-total-card">
             <div class="scenario-total-label">Baseline 3-Yr</div>
-            <div class="scenario-total-value" id="sc-baseline">Ã¢ÂÂ</div>
+            <div class="scenario-total-value" id="sc-baseline">–</div>
         </div>
         <div class="scenario-total-card">
             <div class="scenario-total-label">This Scenario</div>
-            <div class="scenario-total-value" id="sc-scenario">Ã¢ÂÂ</div>
+            <div class="scenario-total-value" id="sc-scenario">–</div>
             <div class="scenario-delta" id="sc-delta"></div>
         </div>
     </div>
     <div style="font-size:0.78rem;color:var(--muted);margin-bottom:1rem">
-        Adjust individual project multipliers or use mode buttons above. Changes are view-only Ã¢ÂÂ nothing gets saved.
+        Adjust individual project multipliers or use mode buttons above. Changes are view-only — nothing gets saved.
     </div>
     <div class="scenario-divider"></div>
     <div id="scenarioProjects"></div>
 </div>
 
 <script>
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
-//   CONFIG Ã¢ÂÂ loaded from localStorage
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
+//   CONFIG — loaded from localStorage
+// ══════════════════════════════════════════════
 let CFG = {
     hubName: 'Project Hub',
     email: '',
@@ -755,9 +761,9 @@ function saveConfig() {
     localStorage.setItem('hub_config', JSON.stringify(CFG));
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 //   AUTH
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 let pinBuffer = '';
 let authMode = 'login'; // 'login' | 'setup' | 'confirm'
 let pendingHash = '';
@@ -842,7 +848,7 @@ async function pinSubmit() {
         localStorage.setItem('hub_pin_hash', hash);
         sessionStorage.setItem('hub_auth', hash);
         document.getElementById('authMsg').className = 'auth-msg success';
-        document.getElementById('authMsg').textContent = 'Ã¢ÂÂ PIN set!';
+        document.getElementById('authMsg').textContent = '✓ PIN set!';
         setTimeout(showApp, 500);
         return;
     }
@@ -852,7 +858,7 @@ async function pinSubmit() {
     if (hash === stored) {
         sessionStorage.setItem('hub_auth', hash);
         document.getElementById('authMsg').className = 'auth-msg success';
-        document.getElementById('authMsg').textContent = 'Ã¢ÂÂ Unlocking...';
+        document.getElementById('authMsg').textContent = '✓ Unlocking...';
         setTimeout(showApp, 300);
     } else {
         pinBuffer = '';
@@ -888,14 +894,14 @@ function showApp() {
     // Sync theme button icon
     const saved = localStorage.getItem('hub_theme') || 'dark';
     const btn = document.getElementById('themeToggleBtn');
-    if (btn) btn.textContent = saved === 'light' ? 'Ã°ÂÂÂ' : 'Ã¢ÂÂÃ¯Â¸Â';
+    if (btn) btn.textContent = saved === 'light' ? '🌙' : '☀️';
     fetchProjects();
     checkOnboarding();
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 //   ONBOARDING
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 function checkOnboarding() {
     if (!localStorage.getItem('hub_onboarded')) {
         document.getElementById('ob-hub-name') && (document.getElementById('ob-hub-name').value = CFG.hubName);
@@ -934,9 +940,9 @@ function obFinish() {
     fetchProjects();
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 //   DATA
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 let allProjects = [];
 let currentFilter = 'all';
 let currentCategory = 'all';
@@ -967,7 +973,7 @@ async function fetchProjects() {
     }
 }
 
-// Ã¢ÂÂÃ¢ÂÂ INLINE PROGRESS UPDATE Ã¢ÂÂÃ¢ÂÂ
+// ── INLINE PROGRESS UPDATE ──
 async function updateProgress(id, pct, sliderEl) {
     const pctNum = parseInt(pct);
     // Update bar visually
@@ -999,7 +1005,7 @@ async function updateProgress(id, pct, sliderEl) {
     } catch(e) { showToast('Failed to save progress'); }
 }
 
-// Ã¢ÂÂÃ¢ÂÂ EXPORT CSV Ã¢ÂÂÃ¢ÂÂ
+// ── EXPORT CSV ──
 function exportCSV() {
     const headers = ['Name','Status','Category','Progress %','Y1 Revenue','Y2 Revenue','Y3 Revenue','Priority Rank','Next Action','Tech Stack','Monthly Cost (AUD)','Live URL','Last Updated'];
     const rows = allProjects.map(p => [
@@ -1016,10 +1022,10 @@ function exportCSV() {
     a.download = `projects-${new Date().toISOString().slice(0,10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
-    showToast('Ã¢ÂÂ CSV downloaded!');
+    showToast('✅ CSV downloaded!');
 }
 
-// Ã¢ÂÂÃ¢ÂÂ CATEGORY FILTERS Ã¢ÂÂÃ¢ÂÂ
+// ── CATEGORY FILTERS ──
 function renderCatFilters() {
     const cats = [...new Set(allProjects.map(p => p.category).filter(Boolean))].sort();
     const container = document.getElementById('catFilters');
@@ -1054,7 +1060,7 @@ function setCatFilter(cat) {
     renderProjects();
 }
 
-// Ã¢ÂÂÃ¢ÂÂ SORT HELPERS Ã¢ÂÂÃ¢ÂÂ
+// ── SORT HELPERS ──
 function sortProjects(projects) {
     const sort = document.getElementById('sortSelect')?.value || 'default';
     const sorted = [...projects];
@@ -1073,7 +1079,7 @@ function sortProjects(projects) {
     }
 }
 
-// Ã¢ÂÂÃ¢ÂÂ AUTO-REFRESH Ã¢ÂÂÃ¢ÂÂ
+// ── AUTO-REFRESH ──
 setInterval(fetchProjects, 5 * 60 * 1000);
 
 function updateRefreshAge() {
@@ -1087,9 +1093,9 @@ function updateRefreshAge() {
 }
 setInterval(updateRefreshAge, 15000);
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 //   SCORING ENGINE
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 function scoreProject(p) {
     let score = 0;
     const status = (p.status || '').toLowerCase();
@@ -1108,7 +1114,7 @@ function scoreProject(p) {
     const maxY1 = Math.max(...revenues, 1);
     score += ((p.revenue_y1 || 0) / maxY1) * 25;
 
-    // Progress sweet spot: 30Ã¢ÂÂ80% = most actionable
+    // Progress sweet spot: 30–80% = most actionable
     const prog = p.progress_pct || 0;
     if (prog >= 30 && prog < 80) score += 15;
     else if (prog >= 80 && prog < 95) score += 8;
@@ -1162,27 +1168,27 @@ function renderTopPick() {
 
     // Runner-up
     const scored = allProjects.map(p => ({ p, score: scoreProject(p) })).filter(x => x.score > 0).sort((a,b) => b.score - a.score);
-    const runners = scored.slice(1, 3).map(x => `<div class="pick-secondary-item"><strong>${x.p.project_name}</strong> Ã¢ÂÂ ${(x.p.status||'')} ÃÂ· $${(x.p.revenue_y1||0).toLocaleString()}/yr</div>`).join('');
+    const runners = scored.slice(1, 3).map(x => `<div class="pick-secondary-item"><strong>${x.p.project_name}</strong> — ${(x.p.status||'')} · $${(x.p.revenue_y1||0).toLocaleString()}/yr</div>`).join('');
 
     hero.style.display = 'block';
     hero.innerHTML = `
-        <div class="pick-label">Ã¢ÂÂ¡ Today's Top Pick ÃÂ· Score: ${Math.round(score)}</div>
+        <div class="pick-label">⚡ Today's Top Pick · Score: ${Math.round(score)}</div>
         <div class="pick-title">${p.project_name}</div>
-        <div class="pick-why">Why: ${reasons.join(' ÃÂ· ') || 'Highest composite score'}</div>
+        <div class="pick-why">Why: ${reasons.join(' · ') || 'Highest composite score'}</div>
         <div class="pick-scores">${pills}</div>
         ${p.next_action ? `<div class="next-action" style="margin-bottom:1rem"><strong>Next:</strong> ${linkify(p.next_action)}</div>` : ''}
         <div class="pick-actions">
-            <button class="btn accent" onclick="copyResume(${p.id})">Ã¢ÂÂ¶ Open in Claude</button>
-            ${p.live_url ? `<a href="${p.live_url}" target="_blank" class="btn">Ã¢ÂÂ View live</a>` : ''}
-            <a href="project.html?id=${p.id}" class="btn">Ã°ÂÂÂ Details</a>
+            <button class="btn accent" onclick="copyResume(${p.id})">▶ Open in Claude</button>
+            ${p.live_url ? `<a href="${p.live_url}" target="_blank" class="btn">↗ View live</a>` : ''}
+            <a href="project.html?id=${p.id}" class="btn">📋 Details</a>
         </div>
         ${runners ? `<div class="pick-secondary"><div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;width:100%;margin-bottom:0.25rem">Also consider</div>${runners}</div>` : ''}
     `;
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 //   MILESTONES
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 function getMilestones() {
     const milestones = [];
     allProjects.forEach(p => {
@@ -1229,7 +1235,7 @@ function renderMilestones() {
         const target = new Date(m.target);
         const diff = Math.round((target - now) / 86400000);
         let cls, badge;
-        if (m.done) { cls = 'done'; badge = 'Ã¢ÂÂ Done'; }
+        if (m.done) { cls = 'done'; badge = '✓ Done'; }
         else if (diff < 0) { cls = 'overdue'; badge = `${Math.abs(diff)}d overdue`; }
         else if (diff <= 7) { cls = 'soon'; badge = `${diff}d away`; }
         else { cls = 'upcoming'; badge = `in ${diff}d`; }
@@ -1243,9 +1249,9 @@ function renderMilestones() {
     }).join('');
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 //   RENDER FUNCTIONS
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 function formatCurrency(v) {
     if (!v) return '$0';
     return `$${Number(v).toLocaleString()}`;
@@ -1293,7 +1299,7 @@ function renderPriorities() {
             <div class="priority-rank">${i+1}</div>
             <div style="min-width:0">
                 <a href="project.html?id=${p.id}" class="priority-name">${p.project_name}</a>
-                <div class="priority-year-bar" style="width:${barW}%" title="Y1: ${formatCurrency(y1)} ÃÂ· Y2: ${formatCurrency(y2)} ÃÂ· Y3: ${formatCurrency(y3)}">
+                <div class="priority-year-bar" style="width:${barW}%" title="Y1: ${formatCurrency(y1)} · Y2: ${formatCurrency(y2)} · Y3: ${formatCurrency(y3)}">
                     <div class="pyb-y1" style="flex:${y1w}"></div>
                     <div class="pyb-y2" style="flex:${y2w}"></div>
                     <div class="pyb-y3" style="flex:${y3w}"></div>
@@ -1386,7 +1392,7 @@ function renderBudget() {
                 </tr>
             </tbody>
         </table>
-        <div class="budget-alert tip">Ã¢ÂÂ <strong>Running on Cloudflare Ã¢ÂÂ $0 hosting costs.</strong></div>
+        <div class="budget-alert tip">✅ <strong>Running on Cloudflare — $0 hosting costs.</strong></div>
     `;
 }
 
@@ -1431,14 +1437,14 @@ function renderProjects() {
 
         const appLinksHtml = appLinks.length > 0
             ? `<div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.75rem">
-                ${project.live_url ? `<a href="${project.live_url}" target="_blank" style="font-size:0.78rem;padding:0.2rem 0.6rem;background:var(--accent);color:#fff;border-radius:4px;text-decoration:none;font-weight:600">Main Ã¢ÂÂ</a>` : ''}
-                ${appLinks.map(l => `<a href="${l.url}" target="_blank" style="font-size:0.78rem;padding:0.2rem 0.6rem;border:1px solid var(--accent);color:var(--accent);border-radius:4px;text-decoration:none;font-weight:500">${l.label} Ã¢ÂÂ</a>`).join('')}
+                ${project.live_url ? `<a href="${project.live_url}" target="_blank" style="font-size:0.78rem;padding:0.2rem 0.6rem;background:var(--accent);color:#fff;border-radius:4px;text-decoration:none;font-weight:600">Main ↗</a>` : ''}
+                ${appLinks.map(l => `<a href="${l.url}" target="_blank" style="font-size:0.78rem;padding:0.2rem 0.6rem;border:1px solid var(--accent);color:var(--accent);border-radius:4px;text-decoration:none;font-weight:500">${l.label} ↗</a>`).join('')}
                </div>` : '';
 
         return `<div class="project-card">
             <div class="card-header">
                 <a href="project.html?id=${project.id}" class="card-title">${project.project_name}</a>
-                ${project.live_url && !appLinks.length ? `<a href="${project.live_url}" target="_blank" class="card-link">Ã¢ÂÂ</a>` : ''}
+                ${project.live_url && !appLinks.length ? `<a href="${project.live_url}" target="_blank" class="card-link">↗</a>` : ''}
             </div>
             <div style="margin-bottom:0.75rem">
                 <span class="${getStatusBadgeClass(project.status)}">${project.status||'N/A'}</span>
@@ -1454,7 +1460,7 @@ function renderProjects() {
                     oninput="this.nextElementSibling.textContent=this.value+'%';this.closest('.project-card').querySelector('.progress-fill').style.width=this.value+'%'"
                     onchange="updateProgress(${project.id}, this.value, this)">
                 <span class="progress-pct-label">${project.progress_pct}%</span>
-                <span class="progress-save-indicator">Ã¢ÂÂ saved</span>
+                <span class="progress-save-indicator">✓ saved</span>
             </div>` : ''}
             <div class="card-tags">
                 ${project.category ? `<span class="tag">${project.category}</span>` : ''}
@@ -1467,8 +1473,8 @@ function renderProjects() {
             <span class="list-progress">${project.progress_pct != null ? project.progress_pct+'%' : ''}</span>
             <div class="card-meta">Updated: ${project.last_updated ? new Date(project.last_updated).toLocaleDateString() : 'N/A'}</div>
             <div class="claude-btns">
-                <button class="claude-resume-btn" onclick="copyResume(${project.id})">Ã¢ÂÂ¶ Open in Claude</button>
-                <button class="claude-end-btn" onclick="copyWrapUp(${project.id})">Ã¢ÂÂ Wrap Up</button>
+                <button class="claude-resume-btn" onclick="copyResume(${project.id})">▶ Open in Claude</button>
+                <button class="claude-end-btn" onclick="copyWrapUp(${project.id})">✓ Wrap Up</button>
             </div>
         </div>`;
     }).join('');
@@ -1489,9 +1495,9 @@ function render() {
     updateRefreshAge();
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 //   SCENARIO PANEL
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 const SCENARIO_MULTIPLIERS = { optimistic: 1.3, base: 1.0, conservative: 0.7 };
 
 function openScenario() {
@@ -1550,7 +1556,7 @@ function updateScenarioUI() {
             <input type="range" class="scenario-slider" min="0" max="200" value="${pct}"
                 oninput="onSlider(${p.id}, this.value)"
                 onchange="onSlider(${p.id}, this.value)">
-            <div class="scenario-slider-labels"><span>$0</span><span>Base</span><span>ÃÂ2</span></div>
+            <div class="scenario-slider-labels"><span>$0</span><span>Base</span><span>×2</span></div>
         </div>`;
     }).join('');
 }
@@ -1560,9 +1566,9 @@ function onSlider(id, val) {
     updateScenarioUI();
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 //   DIGEST GENERATOR
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 function openDigest() {
     const text = generateDigest();
     document.getElementById('digestText').textContent = text;
@@ -1584,12 +1590,12 @@ function generateDigest() {
     const milestones = getMilestones().filter(m => !m.done).slice(0,5);
 
     let lines = [
-        `${CFG.hubName} Ã¢ÂÂ Weekly Digest`,
+        `${CFG.hubName} — Weekly Digest`,
         `${dateStr}`,
-        `${'Ã¢ÂÂ'.repeat(50)}`,
+        `${'─'.repeat(50)}`,
         '',
         `PORTFOLIO STATUS`,
-        `  Live: ${live} ÃÂ· Ready: ${ready} ÃÂ· In Dev: ${dev} ÃÂ· Total: ${allProjects.length}`,
+        `  Live: ${live} · Ready: ${ready} · In Dev: ${dev} · Total: ${allProjects.length}`,
         `  Y1 Revenue Potential: ${formatCurrency(y1Total)}`,
         `  3-Year Total: ${formatCurrency(y3Total)}`,
         '',
@@ -1597,14 +1603,14 @@ function generateDigest() {
 
     if (top) {
         lines.push('TOP PICK THIS WEEK');
-        lines.push(`  Ã¢ÂÂ ${top.p.project_name} (score: ${Math.round(top.score)})`);
+        lines.push(`  → ${top.p.project_name} (score: ${Math.round(top.score)})`);
         if (top.p.next_action) lines.push(`     Next: ${top.p.next_action}`);
         lines.push('');
     }
 
     if (actions.length) {
         lines.push('ACTIONS NEEDED');
-        actions.forEach(p => lines.push(`  Ã¢ÂÂ¢ ${p.project_name}: ${p.next_action}`));
+        actions.forEach(p => lines.push(`  • ${p.project_name}: ${p.next_action}`));
         lines.push('');
     }
 
@@ -1614,12 +1620,12 @@ function generateDigest() {
             const d = new Date(m.target);
             const diff = Math.round((d - now) / 86400000);
             const when = diff < 0 ? `${Math.abs(diff)}d overdue` : diff === 0 ? 'TODAY' : `in ${diff}d`;
-            lines.push(`  Ã¢ÂÂ¢ ${m.projectName}: ${m.name} (${when})`);
+            lines.push(`  • ${m.projectName}: ${m.name} (${when})`);
         });
         lines.push('');
     }
 
-    lines.push('Ã¢ÂÂ'.repeat(50));
+    lines.push('─'.repeat(50));
     lines.push(`Generated: ${now.toLocaleTimeString()}`);
 
     return lines.join('\n');
@@ -1627,24 +1633,24 @@ function generateDigest() {
 
 function copyDigest() {
     const text = document.getElementById('digestText').textContent;
-    navigator.clipboard.writeText(text).then(() => showToast('Ã¢ÂÂ Digest copied!')).catch(() => showToast('Couldn\'t copy Ã¢ÂÂ try selecting and copying manually.'));
+    navigator.clipboard.writeText(text).then(() => showToast('✅ Digest copied!')).catch(() => showToast('Couldn\'t copy — try selecting and copying manually.'));
 }
 
 function emailDigest() {
     const text = document.getElementById('digestText').textContent;
     const to = CFG.email || '';
-    const subject = encodeURIComponent(`${CFG.hubName} Ã¢ÂÂ Weekly Digest`);
+    const subject = encodeURIComponent(`${CFG.hubName} — Weekly Digest`);
     const body = encodeURIComponent(text);
     window.open(`mailto:${to}?subject=${subject}&body=${body}`);
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 //   CLAUDE BUTTONS
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 
-// ââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════
 //   UTILITIES
-// ââââââââââââââââââââââââââââââââââââââââââââ
+// ════════════════════════════════════════════
 function linkify(text) {
     if (!text) return '';
     return text.replace(/(https?:\/\/[^\s<>"']+)/g, function(url) {
@@ -1678,15 +1684,15 @@ function copyResume(id) {
 
     const lines = [
         `${p.project_name}`,
-        `Status: ${p.status || 'unknown'} ÃÂ· Progress: ${p.progress_pct || 0}%`,
+        `Status: ${p.status || 'unknown'} · Progress: ${p.progress_pct || 0}%`,
         p.next_action   ? `Current next action: ${p.next_action}` : '',
-        p.revenue_y1    ? `Revenue targets Ã¢ÂÂ Y1: $${Number(p.revenue_y1).toLocaleString()} ÃÂ· Y2: $${Number(p.revenue_y2||0).toLocaleString()} ÃÂ· Y3: $${Number(p.revenue_y3||0).toLocaleString()}` : '',
+        p.revenue_y1    ? `Revenue targets — Y1: $${Number(p.revenue_y1).toLocaleString()} · Y2: $${Number(p.revenue_y2||0).toLocaleString()} · Y3: $${Number(p.revenue_y3||0).toLocaleString()}` : '',
         p.tech_stack    ? `Stack: ${p.tech_stack}` : '',
         p.live_url      ? `Live at: ${p.live_url}` : '',
         `Last updated: ${p.last_updated || 'unknown'}`,
         ``,
         `--- INSTRUCTIONS FOR CLAUDE ---`,
-        `1. Check Google Drive (pgallivan@outlook.com) at: My Drive/Claude/project-hub/${p.project_name.toLowerCase().replace(/\s+/g,'-')}.md for deeper notes on this project Ã¢ÂÂ read it if it exists.`,
+        `1. Check Google Drive (pgallivan@outlook.com) at: My Drive/Claude/project-hub/${p.project_name.toLowerCase().replace(/\s+/g,'-')}.md for deeper notes on this project — read it if it exists.`,
         `2. Give a one-paragraph briefing summarising the above, plus anything useful from the Drive notes.`,
         `3. Then ask what to work on, or start straight away if it's obvious.`,
         `4. When I say "wrap up": summarise what we did, confirm the new progress %, confirm next action, then PATCH https://project-hub-api.pgallivan.workers.dev/projects/${p.id} with JSON body: {"progress_pct": <new %>, "next_action": "<next action>", "last_updated": "<today YYYY-MM-DD>"}.`,
@@ -1694,24 +1700,24 @@ function copyResume(id) {
     ].filter(Boolean).join('\n');
 
     window.open('https://claude.ai/new?q=' + encodeURIComponent(lines), '_blank');
-    showToast(`â Opening "${p.project_name}" in Claudeâ¦`);
+    showToast(`✅ Opening "${p.project_name}" in Claude…`);
 }
 
 function copyWrapUp(id) {
     const p = allProjects.find(x => x.id === id);
     const name = p ? p.project_name : 'this project';
     const pct = p ? p.progress_pct || 0 : 0;
-    const msg = `Wrap up the ${name} session. Current progress is ${pct}%. Based on what we accomplished this session, estimate the new progress % yourself Ã¢ÂÂ do not ask me, just make a reasonable call. Then confirm the next action (ask me if unclear), and PATCH https://project-hub-api.pgallivan.workers.dev/projects/${p?.id || ''} with the updated progress_pct, next_action, and last_updated.`;
+    const msg = `Wrap up the ${name} session. Current progress is ${pct}%. Based on what we accomplished this session, estimate the new progress % yourself — do not ask me, just make a reasonable call. Then confirm the next action (ask me if unclear), and PATCH https://project-hub-api.pgallivan.workers.dev/projects/${p?.id || ''} with the updated progress_pct, next_action, and last_updated.`;
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(msg)
-            .then(() => showToast(`Ã¢ÂÂ Wrap-up prompt copied for "${name}"!`))
-            .catch(() => fallbackCopy(msg, 'Ã¢ÂÂ Wrap-up copied!'));
-    } else { fallbackCopy(msg, 'Ã¢ÂÂ Wrap-up copied!'); }
+            .then(() => showToast(`✅ Wrap-up prompt copied for "${name}"!`))
+            .catch(() => fallbackCopy(msg, '✅ Wrap-up copied!'));
+    } else { fallbackCopy(msg, '✅ Wrap-up copied!'); }
 }
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 //   FILTER & SEARCH
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 document.getElementById('searchInput').addEventListener('input', renderProjects);
 document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', e => {
@@ -1721,9 +1727,10 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
         renderProjects();
     });
 });
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+
+// ══════════════════════════════════════════════
 //   IDEA MODAL
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 function openModal() {
     document.getElementById('modalOverlay').classList.add('open');
     document.getElementById('modalSuccess').style.display = 'none';
@@ -1763,13 +1770,13 @@ document.getElementById('modalSubmit').addEventListener('click', async () => {
     submitBtn.disabled = false; submitBtn.textContent = 'Save Idea';
 });
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 //   THEME
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     const btn = document.getElementById('themeToggleBtn');
-    if (btn) btn.textContent = theme === 'light' ? 'Ã°ÂÂÂ' : 'Ã¢ÂÂÃ¯Â¸Â';
+    if (btn) btn.textContent = theme === 'light' ? '🌙' : '☀️';
 }
 
 function toggleTheme() {
@@ -1785,7 +1792,7 @@ function toggleTheme() {
     applyTheme(saved);
 })();
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 // ----------------------------------------
 //   DASHBOARD & VIEW TOGGLE
 // ----------------------------------------
@@ -1803,11 +1810,11 @@ function toggleViewMode() {
     const btn = document.getElementById('viewToggleBtn');
     if (!grid) return;
     const isList = grid.classList.toggle('list-view');
-    if (btn) btn.textContent = isList ? 'ð Cards' : 'ð List';
+    if (btn) btn.textContent = isList ? '🃏 Cards' : '🃏 List';
 }
 
 //   KEYBOARD SHORTCUTS
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 document.addEventListener('keydown', e => {
     // Don't trigger when typing in an input
     if (['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
@@ -1827,9 +1834,9 @@ document.addEventListener('keydown', e => {
     }
 });
 
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 //   INIT
-// Ã¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂÃ¢ÂÂ
+// ══════════════════════════════════════════════
 initAuth();
 </script>
 </body>
