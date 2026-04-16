@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>⚡ Asgard Network — Paddy's AI Empire</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;800;900&family=Inter:wght@400;500;600;700&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root{
+  --bg:#050a15;--surface:#0a1020;--surface2:#0f1a30;--border:#1a2d4a;
+  --gold:#f59e0b;--gold2:#fcd34d;--gold3:#fbbf24;
+  --purple:#7c3aed;--purple2:#a855f7;
+  --blue:#3b82f6;--blue2:#60a5fa;
+  --red:#ef4444;
+  --text:#e2e8f0;--muted:#64748b;--muted2:#94a3b8;
+  --success:#10b981;--danger:#ef4444;--warn:#f59e0b;
+}
+
+body{
+  background:var(--bg);color:var(--text);
+  font-family:'Inter',sans-serif;
+  min-height:100vh;overflow-x:hidden;
+}
+
+/* ── LIGHTNING BACKGROUND ── */
+body::before{
+  content:'';position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:
+    radial-gradient(ellipse 60% 40% at 20% 10%, rgba(99,102,241,0.08) 0%, transparent 70%),
+    radial-gradient(ellipse 50% 30% at 80% 90%, rgba(245,158,11,0.06) 0%, transparent 70%),
+    radial-gradient(ellipse 40% 60% at 50% 50%, rgba(59,130,246,0.03) 0%, transparent 70%);
+}
+
+/* ── HERO ── */
+.hero{
+  position:relative;z-index:1;text-align:center;
+  padding:4rem 1.5rem 3rem;
+  background:linear-gradient(180deg,rgba(10,16,32,0) 0%,rgba(10,16,32,0.8) 100%);
+}
+
+.hero-rune{
+  font-size:4rem;filter:drop-shadow(0 0 30px rgba(245,158,11,0.5));
+  margin-bottom:1rem;display:block;
+  animation:pulse 3s ease-in-out infinite;
+}
+@keyframes pulse{0%,100%{filter:drop-shadow(0 0 20px rgba(245,158,11,0.4))}50%{filter:drop-shadow(0 0 50px rgba(245,158,11,0.8))}}
+
+.hero h1{
+  font-family:'Cinzel',serif;
+  font-size:clamp(2.5rem,7vw,5rem);font-weight:900;
+  letter-spacing:0.06em;
+  background:linear-gradient(135deg,#fcd34d 0%,#f59e0b 30%,#e8e8ff 60%,#a855f7 100%);
+  -webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;
+  line-height:1.1;margin-bottom:0.5rem;
+  text-shadow:none;
+}
+
+.hero-subtitle{
+  font-family:'Cinzel',serif;font-size:1.1rem;font-weight:600;
+  color:var(--muted2);letter-spacing:0.2em;text-transform:uppercase;
+  margin-bottom:1.5rem;
+}
+
+.hero-desc{
+  max-width:600px;margin:0 auto 2rem;
+  font-size:1rem;color:var(--muted2);line-height:1.7;
+}
+
+.hero-btns{display:flex;gap:1rem;justify-content:center;flex-wrap:wrap}
+.hero-btn{
+  padding:0.7rem 1.8rem;border-radius:10px;font-size:0.9rem;font-weight:700;
+  cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:0.5rem;
+  transition:all 0.2s;letter-spacing:0.02em;
+}
+.hero-btn.primary{
+  background:linear-gradient(135deg,var(--gold),#d97706);color:#000;border:none;
+  box-shadow:0 4px 20px rgba(245,158,11,0.3);
+}
+.hero-btn.primary:hover{box-shadow:0 6px 30px rgba(245,158,11,0.5);transform:translateY(-2px)}
+.hero-btn.secondary{
+  background:transparent;border:1px solid var(--border);color:var(--muted2);
+}
+.hero-btn.secondary:hover{border-color:var(--gold);color:var(--gold)}
+
+/* ── SECTION ── */
+.section{position:relative;z-index:1;padding:1.5rem 1.5rem 2rem;max-width:1100px;margin:0 auto}
+.section-title{
+  font-family:'Cinzel',serif;font-size:1.5rem;font-weight:800;
+  color:var(--gold);letter-spacing:0.08em;
+  display:flex;align-items:center;gap:0.75rem;
+  margin-bottom:1.5rem;padding-bottom:0.75rem;
+  border-bottom:1px solid rgba(245,158,11,0.2);
+}
+.section-title::after{content:'';flex:1;height:1px;background:linear-gradient(90deg,rgba(245,158,11,0.3),transparent)}
+
+/* ── TILE GRID ── */
+.grid{display:grid;gap:1.25rem}
+.grid-2{grid-template-columns:1fr 1fr}
+.grid-3{grid-template-columns:repeat(3,1fr)}
+.grid-4{grid-template-columns:repeat(4,1fr)}
+@media(max-width:900px){.grid-3,.grid-4{grid-template-columns:repeat(2,1fr)}}
+@media(max-width:600px){.grid-2,.grid-3,.grid-4{grid-template-columns:1fr}}
+
+/* ── TILE ── */
+.tile{
+  background:var(--surface);border:1px solid var(--border);
+  border-radius:16px;padding:1.5rem;
+  display:flex;flex-direction:column;gap:0.75rem;
+  transition:all 0.25s;position:relative;overflow:hidden;
+  text-decoration:none;color:var(--text);cursor:pointer;
+}
+.tile::before{
+  content:'';position:absolute;inset:0;border-radius:16px;
+  background:linear-gradient(135deg,var(--tile-accent,rgba(99,102,241,0.05)),transparent);
+  opacity:0;transition:opacity 0.25s;
+}
+.tile:hover{border-color:var(--tile-color,var(--purple2));transform:translateY(-3px);box-shadow:0 8px 40px var(--tile-glow,rgba(99,102,241,0.2))}
+.tile:hover::before{opacity:1}
+
+.tile-icon{font-size:2.5rem;filter:drop-shadow(0 0 10px var(--tile-glow,rgba(99,102,241,0.4)))}
+.tile-header{display:flex;align-items:center;gap:0.75rem}
+.tile-name{font-family:'Cinzel',serif;font-size:1.1rem;font-weight:800;color:var(--tile-color,var(--text))}
+.tile-badge{
+  display:inline-flex;align-items:center;gap:0.3rem;
+  padding:0.2rem 0.6rem;border-radius:20px;font-size:0.72rem;font-weight:700;
+  background:rgba(16,185,129,0.12);border:1px solid rgba(16,185,129,0.3);color:var(--success);
+  flex-shrink:0;
+}
+.tile-badge.checking{background:rgba(245,158,11,0.1);border-color:rgba(245,158,11,0.3);color:var(--warn)}
+.status-dot-sm{width:6px;height:6px;border-radius:50%;background:currentColor}
+
+.tile-role{font-size:0.8rem;font-weight:700;text-transform:uppercase;letter-spacing:0.1em;color:var(--muted2)}
+.tile-desc{font-size:0.88rem;color:var(--muted2);line-height:1.6;flex:1}
+.tile-powers{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.25rem}
+.power{
+  background:rgba(255,255,255,0.04);border:1px solid var(--border);
+  color:var(--muted2);padding:0.2rem 0.55rem;border-radius:6px;
+  font-size:0.75rem;font-weight:500;
+}
+
+.tile-url{
+  display:flex;align-items:center;gap:0.4rem;
+  font-size:0.75rem;color:var(--muted);font-family:monospace;
+  border-top:1px solid var(--border);padding-top:0.65rem;margin-top:0.25rem;
+  text-decoration:none;
+}
+.tile-url:hover{color:var(--tile-color,var(--accent2))}
+
+/* HERO TILE (Thor) */
+.tile.hero-tile{
+  background:linear-gradient(135deg,#0f1a30,#1a1030);
+  border-color:rgba(245,158,11,0.4);
+  padding:2rem;
+}
+.tile.hero-tile:hover{box-shadow:0 12px 60px rgba(245,158,11,0.25)}
+
+/* Level ribbon */
+.level-ribbon{
+  position:absolute;top:12px;right:12px;
+  font-family:'Cinzel',serif;font-size:0.65rem;font-weight:700;
+  letter-spacing:0.12em;text-transform:uppercase;
+  padding:0.2rem 0.65rem;border-radius:10px;
+}
+.level-god{background:rgba(245,158,11,0.15);border:1px solid rgba(245,158,11,0.5);color:var(--gold2)}
+.level-2{background:rgba(124,58,237,0.15);border:1px solid rgba(124,58,237,0.4);color:var(--purple2)}
+.level-3{background:rgba(59,130,246,0.12);border:1px solid rgba(59,130,246,0.3);color:var(--blue2)}
+.level-ext{background:rgba(16,185,129,0.1);border:1px solid rgba(16,185,129,0.3);color:var(--success)}
+
+/* ── NETWORK DIAGRAM ── */
+.network{
+  position:relative;z-index:1;max-width:800px;margin:0 auto 0;
+  padding:0 1.5rem;text-align:center;
+}
+.network-svg-wrap{overflow-x:auto;padding:0.5rem 0}
+
+/* ── FALKOR BANNER ── */
+.falkor-banner{
+  background:linear-gradient(135deg,#0f1020,#1a0c35);
+  border:1px solid rgba(168,85,247,0.35);border-radius:16px;
+  padding:1.75rem;display:flex;align-items:center;gap:1.5rem;
+  text-decoration:none;color:var(--text);transition:all 0.25s;
+}
+.falkor-banner:hover{border-color:var(--purple2);box-shadow:0 8px 40px rgba(168,85,247,0.2);transform:translateY(-2px)}
+.falkor-banner-icon{font-size:3.5rem;filter:drop-shadow(0 0 20px rgba(168,85,247,0.5));flex-shrink:0}
+.falkor-banner-text h3{font-family:'Cinzel',serif;font-size:1.4rem;font-weight:900;color:var(--purple2);margin-bottom:0.3rem}
+.falkor-banner-text p{font-size:0.9rem;color:var(--muted2);line-height:1.6}
+.falkor-banner-text .powers{display:flex;flex-wrap:wrap;gap:0.4rem;margin-top:0.65rem}
+
+/* ── FOOTER ── */
+footer{
+  position:relative;z-index:1;text-align:center;
+  padding:2rem 1rem;border-top:1px solid var(--border);
+  color:var(--muted);font-size:0.82rem;line-height:1.8;
+  margin-top:2rem;
+}
+
+/* ── ANIM ── */
+@keyframes lightning{
+  0%,95%,100%{opacity:0}
+  96%,99%{opacity:0.4}
+  97%,98%{opacity:0.06}
+}
+.lightning-bg{
+  position:fixed;inset:0;z-index:0;pointer-events:none;
+  background:radial-gradient(ellipse 30% 60% at 70% 30%, rgba(245,158,11,0.15) 0%, transparent 70%);
+  animation:lightning 8s infinite;
+}
+</style>
+</head>
+<body>
+
+<div class="lightning-bg"></div>
+
+<!-- ══ HERO ══ -->
+<div class="hero">
+  <span class="hero-rune">⚡</span>
+  <h1>ASGARD NETWORK</h1>
+  <p class="hero-subtitle">Paddy's Autonomous AI Empire</p>
+  <p class="hero-desc">Ten AI workers. One command centre. Controlled from anywhere — by Paddy, or by Falkor in the browser. All reporting to Thor.</p>
+  <div class="hero-btns">
+    <a class="hero-btn primary" href="/project-hub/">🏛️ Open Asgard Hub</a>
+    <a class="hero-btn secondary" href="https://teddy.pgallivan.workers.dev/status" target="_blank">⚡ Network Status</a>
+  </div>
+</div>
+
+<!-- ══ COMMAND TIER ══ -->
+<div class="section">
+  <div class="section-title">⚡ Command Tier — The All-Father</div>
+  <div class="grid grid-2">
+
+    <!-- THOR -->
+    <a class="tile hero-tile" href="https://thor.pgallivan.workers.dev" target="_blank"
+       style="--tile-color:#fcd34d;--tile-glow:rgba(245,158,11,0.3);--tile-accent:rgba(245,158,11,0.08)">
+      <span class="level-ribbon level-god">⚡ All-Father</span>
+      <div class="tile-header">
+        <span class="tile-icon">⚡</span>
+        <div>
+          <div class="tile-name" style="font-size:1.4rem">THOR</div>
+          <div class="tile-role">Strategic AI Hub · Hub Boss</div>
+        </div>
+        <span class="tile-badge" id="thorBadge">● Live</span>
+      </div>
+      <div class="tile-desc">
+        The main brain. Thor handles everything that's too big, too cross-project, or too strategic for the Thunders.
+        He knows every project, every deadline, every moving part of Paddy's life. When Teddy doesn't know what to do — Thor decides.
+      </div>
+      <div class="tile-powers">
+        <span class="power">🧠 Cross-project decisions</span>
+        <span class="power">📊 Full Asgard access</span>
+        <span class="power">🔮 Strategic planning</span>
+        <span class="power">⚡ Thunders orchestration</span>
+        <span class="power">🚀 Worker deployment</span>
+      </div>
+      <a class="tile-url" href="https://thor.pgallivan.workers.dev" target="_blank">thor.pgallivan.workers.dev</a>
+    </a>
+
+    <!-- TEDDY -->
+    <a class="tile" href="https://teddy.pgallivan.workers.dev" target="_blank"
+       style="--tile-color:#60a5fa;--tile-glow:rgba(59,130,246,0.25);--tile-accent:rgba(59,130,246,0.06)">
+      <span class="level-ribbon level-2">⚙️ Dispatch</span>
+      <div class="tile-header">
+        <span class="tile-icon">🐾</span>
+        <div>
+          <div class="tile-name">TEDDY</div>
+          <div class="tile-role">Thunder-Dispatch · Middle Manager</div>
+        </div>
+        <span class="tile-badge" id="teddyBadge">● Live</span>
+      </div>
+      <div class="tile-desc">
+        Named after Paddy's King Charles Cavalier. Teddy is the gatekeeper — he handles the routine stuff
+        himself so Thor only gets the big calls. Ask Teddy anything; he routes to the right Thunder or escalates to Thor.
+      </div>
+      <div class="tile-powers">
+        <span class="power">🔀 Smart routing</span>
+        <span class="power">🛡️ Thor shield</span>
+        <span class="power">⚡ Thunder dispatch</span>
+        <span class="power">💬 Full chat UI</span>
+      </div>
+      <a class="tile-url" href="https://teddy.pgallivan.workers.dev" target="_blank">teddy.pgallivan.workers.dev</a>
+    </a>
+
+  </div>
+</div>
+
+<!-- ══ LADY THOR ══ -->
+<div class="section" style="padding-top:0">
+  <div class="section-title">👑 Lady Thor — Second in Command</div>
+  <a class="tile" href="https://lady-thor.pgallivan.workers.dev" target="_blank"
+     style="--tile-color:#a855f7;--tile-glow:rgba(168,85,247,0.25);--tile-accent:rgba(168,85,247,0.06);flex-direction:row;align-items:flex-start;gap:1.25rem">
+    <span class="level-ribbon level-2">🔑 Manager</span>
+    <div style="font-size:3rem;flex-shrink:0;filter:drop-shadow(0 0 15px rgba(168,85,247,0.5))">👸⚡</div>
+    <div style="flex:1">
+      <div class="tile-name" style="margin-bottom:0.3rem">LADY THOR (Jacky)</div>
+      <div class="tile-role" style="margin-bottom:0.6rem">Manager · Jaclyn Rooney · jaclyn.rooney@stileeducation.com</div>
+      <div class="tile-desc" style="margin-bottom:0.75rem">
+        Jacky is the second in command. She can view and edit all projects, update progress and status, and dispatch changes through Teddy + the Thunders.
+        Her own portal gives her full Manager control without any technical complexity.
+        Works fine on Stile's corporate Chrome — it's Paddy's domain, not Anthropic's.
+      </div>
+      <div class="tile-powers">
+        <span class="power">✅ View all projects</span>
+        <span class="power">✏️ Edit project details</span>
+        <span class="power">📊 Update progress</span>
+        <span class="power">⚡ Changes via Teddy</span>
+        <span class="power">🔒 No team admin</span>
+      </div>
+    </div>
+    <a class="tile-url" href="https://lady-thor.pgallivan.workers.dev" target="_blank" style="white-space:nowrap">lady-thor.pgallivan.workers.dev</a>
+  </a>
+</div>
+
+<!-- ══ THE THUNDERS ══ -->
+<div class="section" style="padding-top:0">
+  <div class="section-title">🌩️ The Thunders — Specialist Workers</div>
+  <div class="grid grid-3">
+
+    <!-- KBT -->
+    <a class="tile" href="https://thunder-kbt.pgallivan.workers.dev" target="_blank"
+       style="--tile-color:#f59e0b;--tile-glow:rgba(245,158,11,0.25);--tile-accent:rgba(245,158,11,0.06)">
+      <span class="level-ribbon level-3">🎯 KBT</span>
+      <div class="tile-header">
+        <span class="tile-icon">🎤</span>
+        <div><div class="tile-name">Thunder-KBT</div><div class="tile-role">Trivia Specialist</div></div>
+        <span class="tile-badge" id="kbtBadge">● Live</span>
+      </div>
+      <div class="tile-desc">Kow Brainer Trivia's dedicated AI. Knows the business inside-out — venues, scoring, question rounds, payments, promo. Proactively flags issues.</div>
+      <div class="tile-powers">
+        <span class="power">🎯 Question writing</span>
+        <span class="power">📍 Venue management</span>
+        <span class="power">💰 Payments tracking</span>
+        <span class="power">📣 Promotion</span>
+      </div>
+      <a class="tile-url" href="https://thunder-kbt.pgallivan.workers.dev" target="_blank">thunder-kbt.pgallivan.workers.dev</a>
+    </a>
+
+    <!-- SCHOOL -->
+    <a class="tile" href="https://thunder-school.pgallivan.workers.dev" target="_blank"
+       style="--tile-color:#10b981;--tile-glow:rgba(16,185,129,0.25);--tile-accent:rgba(16,185,129,0.06)">
+      <span class="level-ribbon level-3">🏫 School</span>
+      <div class="tile-header">
+        <span class="tile-icon">🏃</span>
+        <div><div class="tile-name">Thunder-School</div><div class="tile-role">PE &amp; Admin Specialist</div></div>
+        <span class="tile-badge" id="schoolBadge">● Live</span>
+      </div>
+      <div class="tile-desc">Williamstown Primary School's PE department AI. Lesson plans, carnivals, excursions, equipment, permission slips, parent comms.</div>
+      <div class="tile-powers">
+        <span class="power">📋 Lesson plans</span>
+        <span class="power">🏊 Carnivals</span>
+        <span class="power">📝 Permission slips</span>
+        <span class="power">👨‍👩‍👧 Parent comms</span>
+      </div>
+      <a class="tile-url" href="https://thunder-school.pgallivan.workers.dev" target="_blank">thunder-school.pgallivan.workers.dev</a>
+    </a>
+
+    <!-- FAMILY -->
+    <a class="tile" href="https://thunder-family.pgallivan.workers.dev" target="_blank"
+       style="--tile-color:#f43f5e;--tile-glow:rgba(244,63,94,0.25);--tile-accent:rgba(244,63,94,0.06)">
+      <span class="level-ribbon level-3">🏈 Family</span>
+      <div class="tile-header">
+        <span class="tile-icon">🏆</span>
+        <div><div class="tile-name">Thunder-Family</div><div class="tile-role">Comps Specialist</div></div>
+        <span class="tile-badge" id="famBadge">● Live</span>
+      </div>
+      <div class="tile-desc">Gallivan family comps HQ. Footy tips, racing tips, ladders, results, chasing up missing tips. Big family, big comp, Bulldogs forever.</div>
+      <div class="tile-powers">
+        <span class="power">🏈 AFL tipping</span>
+        <span class="power">🐎 Racing tips</span>
+        <span class="power">🏅 Ladders</span>
+        <span class="power">📲 Family comms</span>
+      </div>
+      <a class="tile-url" href="https://thunder-family.pgallivan.workers.dev" target="_blank">thunder-family.pgallivan.workers.dev</a>
+    </a>
+
+    <!-- DEV -->
+    <a class="tile" href="https://thunder-dev.pgallivan.workers.dev" target="_blank"
+       style="--tile-color:#8b5cf6;--tile-glow:rgba(139,92,246,0.25);--tile-accent:rgba(139,92,246,0.06)">
+      <span class="level-ribbon level-3">💻 Dev</span>
+      <div class="tile-header">
+        <span class="tile-icon">🛠️</span>
+        <div><div class="tile-name">Thunder-Dev</div><div class="tile-role">Tech &amp; Dev Specialist</div></div>
+        <span class="tile-badge" id="devBadge">● Live</span>
+      </div>
+      <div class="tile-desc">The tech guy. Knows all 13 workers in the network, can ping them all and report status. Handles deployments, debugging, and developer tasks.</div>
+      <div class="tile-powers">
+        <span class="power">🔍 Worker health</span>
+        <span class="power">🚀 Deployments</span>
+        <span class="power">🐛 Debugging</span>
+        <span class="power">📊 Network report</span>
+      </div>
+      <a class="tile-url" href="https://thunder-dev.pgallivan.workers.dev" target="_blank">thunder-dev.pgallivan.workers.dev</a>
+    </a>
+
+    <!-- WATCH -->
+    <a class="tile" href="https://thunder-watch.pgallivan.workers.dev" target="_blank"
+       style="--tile-color:#06b6d4;--tile-glow:rgba(6,182,212,0.25);--tile-accent:rgba(6,182,212,0.06)">
+      <span class="level-ribbon level-3">👁️ Watch</span>
+      <div class="tile-header">
+        <span class="tile-icon">👁️</span>
+        <div><div class="tile-name">Thunder-Watch</div><div class="tile-role">Monitor Specialist</div></div>
+        <span class="tile-badge" id="watchBadge">● Live</span>
+      </div>
+      <div class="tile-desc">The watchdog. Monitors all live project URLs, checks if sites are up, reports on response times. First to know if something breaks.</div>
+      <div class="tile-powers">
+        <span class="power">🌐 Site monitoring</span>
+        <span class="power">⏱️ Response times</span>
+        <span class="power">🚨 Uptime alerts</span>
+        <span class="power">📈 Health reports</span>
+      </div>
+      <a class="tile-url" href="https://thunder-watch.pgallivan.workers.dev" target="_blank">thunder-watch.pgallivan.workers.dev</a>
+    </a>
+
+    <!-- INBOX -->
+    <a class="tile" href="https://thunder-inbox.pgallivan.workers.dev" target="_blank"
+       style="--tile-color:#ec4899;--tile-glow:rgba(236,72,153,0.25);--tile-accent:rgba(236,72,153,0.06)">
+      <span class="level-ribbon level-3">📬 Inbox</span>
+      <div class="tile-header">
+        <span class="tile-icon">📬</span>
+        <div><div class="tile-name">Thunder-Inbox</div><div class="tile-role">Message Specialist</div></div>
+        <span class="tile-badge" id="inboxBadge">● Live</span>
+      </div>
+      <div class="tile-desc">Receives and stores messages from the network. Flags urgent ones instantly. Paddy checks what needs attention — the Inbox sorts the noise.</div>
+      <div class="tile-powers">
+        <span class="power">📥 Message queue</span>
+        <span class="power">🚨 Urgent flagging</span>
+        <span class="power">🗂️ KV storage</span>
+        <span class="power">🧹 Message clearing</span>
+      </div>
+      <a class="tile-url" href="https://thunder-inbox.pgallivan.workers.dev" target="_blank">thunder-inbox.pgallivan.workers.dev</a>
+    </a>
+
+    <!-- REVENUE -->
+    <a class="tile" href="https://thunder-revenue.pgallivan.workers.dev" target="_blank"
+       style="--tile-color:#22c55e;--tile-glow:rgba(34,197,94,0.25);--tile-accent:rgba(34,197,94,0.06)">
+      <span class="level-ribbon level-3">💰 Revenue</span>
+      <div class="tile-header">
+        <span class="tile-icon">💰</span>
+        <div><div class="tile-name">Thunder-Revenue</div><div class="tile-role">Revenue Specialist</div></div>
+        <span class="tile-badge" id="revBadge">● Live</span>
+      </div>
+      <div class="tile-desc">Tracks all money coming in — KBT nights, tipping comp fees, anything Paddy earns. Logs entries, generates reports, spots trends.</div>
+      <div class="tile-powers">
+        <span class="power">💵 Revenue logging</span>
+        <span class="power">📊 Reports</span>
+        <span class="power">📈 Trend analysis</span>
+        <span class="power">💳 KBT income</span>
+      </div>
+      <a class="tile-url" href="https://thunder-revenue.pgallivan.workers.dev" target="_blank">thunder-revenue.pgallivan.workers.dev</a>
+    </a>
+
+  </div>
+</div>
+
+<!-- ══ FALKOR ══ -->
+<div class="section" style="padding-top:0">
+  <div class="section-title">🐉 Falkor — In the Browser</div>
+  <a class="falkor-banner" href="#install">
+    <div class="falkor-banner-icon">🐉</div>
+    <div class="falkor-banner-text">
+      <h3>FALKOR BROWSER EXTENSION v3</h3>
+      <p>Falkor lives in Chrome and controls your entire browser — autonomously. He reads pages, fills forms, creates accounts, pushes to GitHub, deploys workers, and calls Teddy/Thor when he needs backup. No more being asked to "do it yourself."</p>
+      <div class="powers">
+        <span class="power">🖱️ Click &amp; fill any form</span>
+        <span class="power">🆕 Create accounts</span>
+        <span class="power">🐙 GitHub push</span>
+        <span class="power">☁️ Deploy workers</span>
+        <span class="power">📋 Knows your projects</span>
+        <span class="power">⚡ Calls Thor/Teddy</span>
+        <span class="power">🔄 Auto-mode</span>
+        <span class="power">🌐 All websites</span>
+      </div>
+    </div>
+  </a>
+</div>
+
+<!-- ══ HOW TO USE ══ -->
+<div class="section" style="padding-top:0" id="install">
+  <div class="section-title">📖 How to Use the Network</div>
+  <div class="grid grid-2">
+    <div class="tile" style="--tile-color:var(--gold2)">
+      <div class="tile-icon">💬</div>
+      <div class="tile-name">Talking to Thunders</div>
+      <div class="tile-desc">
+        Open any Thunder's URL and use the <strong>/ask</strong> endpoint — or visit the URL directly for a chat UI.
+        Tell it what you need. It handles it or escalates.<br><br>
+        <strong>Example:</strong><br>
+        POST <code>teddy.pgallivan.workers.dev/ask</code><br>
+        <code>{"message": "Check KBT events this week"}</code><br><br>
+        Teddy routes it to Thunder-KBT automatically.
+      </div>
+    </div>
+    <div class="tile" style="--tile-color:var(--blue2)">
+      <div class="tile-icon">🚀</div>
+      <div class="tile-name">Sending a Thunder Out</div>
+      <div class="tile-desc">
+        "Sending a Thunder out" means asking it to actively do something — check URLs, ping workers, generate reports.<br><br>
+        <strong>Thunder-Watch:</strong> <code>/check</code> pings all your live sites<br>
+        <strong>Thunder-Dev:</strong> <code>/check</code> pings all 13 workers<br>
+        <strong>Thunder-Dev:</strong> <code>/report</code> full network health<br>
+        <strong>Thunder-Inbox:</strong> <code>/urgent</code> shows what needs attention<br>
+        <strong>Thunder-Revenue:</strong> <code>/report</code> monthly summary
+      </div>
+    </div>
+    <div class="tile" style="--tile-color:var(--purple2)">
+      <div class="tile-icon">🏛️</div>
+      <div class="tile-name">Using Asgard (Project Hub)</div>
+      <div class="tile-desc">
+        The Asgard Project Hub is your command centre. Log in with your God API key.<br><br>
+        1. Go to <code>paddygallivan.github.io/project-hub</code><br>
+        2. Set your PIN (stored in your browser)<br>
+        3. Click 🔑 and enter your API key<br>
+        4. 👥 Team panel appears for God-level users<br><br>
+        Jacky uses <code>lady-thor.pgallivan.workers.dev</code> — no PIN, just her Manager portal.
+      </div>
+    </div>
+    <div class="tile" style="--tile-color:var(--success)">
+      <div class="tile-icon">🐉</div>
+      <div class="tile-name">Using Falkor Extension</div>
+      <div class="tile-desc">
+        1. Load the <code>falkor-extension</code> folder from your Drive in Chrome<br>
+        &nbsp;&nbsp;(chrome://extensions → Load unpacked)<br>
+        2. Click ⚙ and add your GitHub + CF tokens<br>
+        3. Press <kbd>Cmd+Shift+F</kbd> on any page<br>
+        4. Tell Falkor what to do — he does it<br><br>
+        He knows your projects, can push to GitHub, and calls Teddy/Thor when needed.
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div>⚡ ASGARD NETWORK — Paddy Gallivan's Autonomous AI Empire ⚡</div>
+  <div style="margin-top:0.5rem">Thor · Teddy · Lady Thor · Thunder×7 · Falkor · Asgard Hub</div>
+  <div style="margin-top:0.5rem">All workers live at <code>*.pgallivan.workers.dev</code></div>
+</footer>
+
+<script>
+// Live status checks for tiles
+const checks = [
+  { id:'thorBadge',   url:'https://thor.pgallivan.workers.dev/health' },
+  { id:'teddyBadge',  url:'https://teddy.pgallivan.workers.dev/status' },
+  { id:'kbtBadge',    url:'https://thunder-kbt.pgallivan.workers.dev/status' },
+  { id:'schoolBadge', url:'https://thunder-school.pgallivan.workers.dev/status' },
+  { id:'famBadge',    url:'https://thunder-family.pgallivan.workers.dev/status' },
+  { id:'devBadge',    url:'https://thunder-dev.pgallivan.workers.dev/status' },
+  { id:'watchBadge',  url:'https://thunder-watch.pgallivan.workers.dev/status' },
+  { id:'inboxBadge',  url:'https://thunder-inbox.pgallivan.workers.dev/status' },
+  { id:'revBadge',    url:'https://thunder-revenue.pgallivan.workers.dev/status' }
+];
+
+async function checkAll() {
+  for (const { id, url } of checks) {
+    const el = document.getElementById(id);
+    if (!el) continue;
+    el.textContent = '◌ Checking…';
+    el.className = 'tile-badge checking';
+    try {
+      const r = await fetch(url, { signal: AbortSignal.timeout(5000) });
+      if (r.ok) {
+        el.innerHTML = '<span class="status-dot-sm">●</span> Live';
+        el.className = 'tile-badge';
+      } else {
+        el.innerHTML = '<span class="status-dot-sm" style="color:#ef4444">●</span> ' + r.status;
+        el.className = 'tile-badge checking';
+      }
+    } catch {
+      el.innerHTML = '<span class="status-dot-sm" style="color:#ef4444">●</span> Offline';
+      el.className = 'tile-badge checking';
+    }
+  }
+}
+
+// Stagger checks to avoid hammering
+setTimeout(checkAll, 500);
+</script>
+</body>
+</html>
