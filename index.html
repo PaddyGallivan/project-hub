@@ -1699,11 +1699,8 @@ function copyResume(id) {
         `5. Never ask questions you can answer from the above data or the Drive notes.`
     ].filter(Boolean).join('\n');
 
-    navigator.clipboard.writeText(lines).then(() => {
-        showToast(`📋 Copied "${p.project_name}" — paste into Claude`);
-    }).catch(() => {
-        showToast(`❌ Copy failed — try again`);
-    });
+    setAIContext(id);
+    showToast(`🧠 "${p.project_name}" loaded — ask Claude anything`);
 }
 
 function copyWrapUp(id) {
@@ -1841,6 +1838,211 @@ document.addEventListener('keydown', e => {
 //   INIT
 // ══════════════════════════════════════════════
 initAuth();
+</script>
+
+<!-- ═══════════════════════════════════════════ -->
+<!--   INLINE AI PANEL                          -->
+<!-- ═══════════════════════════════════════════ -->
+<style>
+#ai-fab {
+    position: fixed; bottom: 1.5rem; right: 1.5rem; z-index: 1000;
+    width: 52px; height: 52px; border-radius: 50%;
+    background: var(--accent); color: #fff; border: none;
+    font-size: 1.4rem; cursor: pointer; box-shadow: 0 4px 16px rgba(59,130,246,0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex; align-items: center; justify-content: center;
+}
+#ai-fab:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(59,130,246,0.5); }
+
+#ai-panel {
+    position: fixed; bottom: 5.5rem; right: 1.5rem; z-index: 999;
+    width: min(420px, calc(100vw - 2rem));
+    background: var(--card); border: 1px solid var(--border);
+    border-radius: 12px; box-shadow: 0 8px 32px rgba(0,0,0,0.4);
+    display: none; flex-direction: column; overflow: hidden;
+    max-height: min(560px, calc(100vh - 8rem));
+}
+#ai-panel.open { display: flex; }
+
+#ai-panel-header {
+    padding: 0.75rem 1rem; border-bottom: 1px solid var(--border);
+    display: flex; align-items: center; justify-content: space-between;
+    background: var(--bg);
+}
+#ai-panel-header span { font-weight: 600; font-size: 0.9rem; color: var(--text); }
+#ai-panel-header small { color: var(--muted); font-size: 0.72rem; margin-left: 0.5rem; }
+#ai-panel-close { background: none; border: none; color: var(--muted); cursor: pointer; font-size: 1.1rem; padding: 0 0.25rem; }
+#ai-panel-close:hover { color: var(--text); }
+
+#ai-messages {
+    flex: 1; overflow-y: auto; padding: 0.75rem 1rem;
+    display: flex; flex-direction: column; gap: 0.6rem;
+    scroll-behavior: smooth;
+}
+.ai-msg { padding: 0.6rem 0.8rem; border-radius: 8px; font-size: 0.84rem; line-height: 1.5; max-width: 90%; }
+.ai-msg.user { background: var(--accent); color: #fff; align-self: flex-end; }
+.ai-msg.assistant { background: var(--bg); border: 1px solid var(--border); color: var(--text); align-self: flex-start; white-space: pre-wrap; }
+.ai-msg.thinking { color: var(--muted); font-style: italic; border: 1px dashed var(--border); }
+
+#ai-input-row {
+    padding: 0.6rem 0.75rem; border-top: 1px solid var(--border);
+    display: flex; gap: 0.5rem; background: var(--bg);
+}
+#ai-input {
+    flex: 1; background: var(--card); border: 1px solid var(--border);
+    color: var(--text); border-radius: 6px; padding: 0.45rem 0.7rem;
+    font-size: 0.84rem; resize: none; outline: none; font-family: inherit;
+    max-height: 100px; overflow-y: auto;
+}
+#ai-input:focus { border-color: var(--accent); }
+#ai-send {
+    background: var(--accent); color: #fff; border: none;
+    border-radius: 6px; padding: 0 0.9rem; cursor: pointer;
+    font-size: 1rem; transition: opacity 0.15s;
+}
+#ai-send:hover { opacity: 0.85; }
+#ai-send:disabled { opacity: 0.4; cursor: not-allowed; }
+
+#ai-context-badge {
+    padding: 0.3rem 0.75rem; font-size: 0.72rem; color: var(--muted);
+    background: var(--bg); border-bottom: 1px solid var(--border);
+    display: none; align-items: center; gap: 0.4rem;
+}
+#ai-context-badge.active { display: flex; }
+#ai-context-clear { margin-left: auto; cursor: pointer; color: var(--accent); background: none; border: none; font-size: 0.72rem; }
+</style>
+
+<button id="ai-fab" onclick="toggleAIPanel()" title="Ask Claude">🧠</button>
+
+<div id="ai-panel">
+    <div id="ai-panel-header">
+        <div><span>Ask Claude</span><small id="ai-panel-subtitle">Project Hub AI</small></div>
+        <button id="ai-panel-close" onclick="toggleAIPanel()">✕</button>
+    </div>
+    <div id="ai-context-badge">
+        <span>📌 Context: <strong id="ai-ctx-name"></strong></span>
+        <button id="ai-context-clear" onclick="clearAIContext()">✕ clear</button>
+    </div>
+    <div id="ai-messages">
+        <div class="ai-msg assistant">Hey Paddy 👋 Ask me anything about your projects — or click a project card to load it as context first.</div>
+    </div>
+    <div id="ai-input-row">
+        <textarea id="ai-input" rows="1" placeholder="Ask anything…" onkeydown="aiInputKey(event)"></textarea>
+        <button id="ai-send" onclick="sendAIMessage()">↑</button>
+    </div>
+</div>
+
+<script>
+// ── AI Panel ──────────────────────────────────
+let aiContext = null;
+let aiHistory = [];
+
+function toggleAIPanel() {
+    const panel = document.getElementById('ai-panel');
+    panel.classList.toggle('open');
+    if (panel.classList.contains('open')) {
+        setTimeout(() => document.getElementById('ai-input').focus(), 100);
+    }
+}
+
+function setAIContext(projectId) {
+    const p = allProjects.find(x => x.id === projectId);
+    if (!p) return;
+    aiContext = p;
+    aiHistory = [];
+    document.getElementById('ai-ctx-name').textContent = p.project_name;
+    document.getElementById('ai-context-badge').classList.add('active');
+    document.getElementById('ai-panel-subtitle').textContent = p.project_name;
+
+    // Add context message
+    const msgs = document.getElementById('ai-messages');
+    msgs.innerHTML = `<div class="ai-msg assistant">Loaded <strong>${p.project_name}</strong> — ${p.status || 'unknown'} · ${p.progress_pct || 0}% done${p.next_action ? '. Next: ' + p.next_action : ''}. What do you want to work on?</div>`;
+
+    // Open panel
+    document.getElementById('ai-panel').classList.add('open');
+    setTimeout(() => document.getElementById('ai-input').focus(), 100);
+}
+
+function clearAIContext() {
+    aiContext = null;
+    aiHistory = [];
+    document.getElementById('ai-context-badge').classList.remove('active');
+    document.getElementById('ai-panel-subtitle').textContent = 'Project Hub AI';
+    document.getElementById('ai-messages').innerHTML = '<div class="ai-msg assistant">Context cleared. Ask me anything.</div>';
+}
+
+function aiInputKey(e) {
+    if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); sendAIMessage(); }
+}
+
+async function sendAIMessage() {
+    const input = document.getElementById('ai-input');
+    const text = input.value.trim();
+    if (!text) return;
+
+    input.value = '';
+    input.style.height = 'auto';
+    const sendBtn = document.getElementById('ai-send');
+    sendBtn.disabled = true;
+
+    const msgs = document.getElementById('ai-messages');
+
+    // Add user message
+    const userDiv = document.createElement('div');
+    userDiv.className = 'ai-msg user';
+    userDiv.textContent = text;
+    msgs.appendChild(userDiv);
+
+    // Add thinking indicator
+    const thinkDiv = document.createElement('div');
+    thinkDiv.className = 'ai-msg thinking';
+    thinkDiv.textContent = 'Thinking…';
+    msgs.appendChild(thinkDiv);
+    msgs.scrollTop = msgs.scrollHeight;
+
+    // Build message with context
+    let fullMessage = text;
+    if (aiContext && aiHistory.length === 0) {
+        const p = aiContext;
+        fullMessage = [
+            `Project: ${p.project_name}`,
+            `Status: ${p.status || 'unknown'} · Progress: ${p.progress_pct || 0}%`,
+            p.next_action ? `Next action: ${p.next_action}` : '',
+            p.description ? `Description: ${p.description}` : '',
+            p.tech_stack ? `Stack: ${p.tech_stack}` : '',
+            p.live_url ? `Live: ${p.live_url}` : '',
+            p.notes ? `Notes: ${p.notes}` : '',
+            `\nUser question: ${text}`
+        ].filter(Boolean).join('\n');
+    } else if (aiHistory.length > 0) {
+        const historyText = aiHistory.slice(-4).map(m => `${m.role === 'user' ? 'Paddy' : 'Claude'}: ${m.content}`).join('\n');
+        fullMessage = `${historyText}\nPaddy: ${text}`;
+    }
+
+    aiHistory.push({ role: 'user', content: text });
+
+    try {
+        const resp = await fetch('https://falkor-sms.pgallivan.workers.dev/ask', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ message: fullMessage })
+        });
+        const data = await resp.json();
+        const reply = data.reply || 'Sorry, no response.';
+
+        aiHistory.push({ role: 'assistant', content: reply });
+
+        thinkDiv.className = 'ai-msg assistant';
+        thinkDiv.textContent = reply;
+    } catch (e) {
+        thinkDiv.className = 'ai-msg assistant';
+        thinkDiv.textContent = '⚠️ Could not reach AI. Check connection.';
+    }
+
+    msgs.scrollTop = msgs.scrollHeight;
+    sendBtn.disabled = false;
+    input.focus();
+}
 </script>
 </body>
 </html>
