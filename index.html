@@ -1699,38 +1699,11 @@ function copyResume(id) {
         `5. Never ask questions you can answer from the above data or the Drive notes.`
     ].filter(Boolean).join('\n');
 
-    // Try Claude desktop app first, fall back to clipboard copy
-    const encoded = encodeURIComponent(lines);
-    const desktopUrl = 'claude://new?q=' + encoded;
-    const webUrl = 'https://claude.ai/new?q=' + encoded;
-
-    // Attempt desktop app via hidden iframe (avoids browser navigation)
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
-
-    let opened = false;
-    const onBlur = () => { opened = true; };
-    window.addEventListener('blur', onBlur);
-
-    iframe.src = desktopUrl;
-
-    setTimeout(() => {
-        window.removeEventListener('blur', onBlur);
-        document.body.removeChild(iframe);
-        if (!opened) {
-            // Desktop app not installed — copy to clipboard
-            navigator.clipboard.writeText(lines).then(() => {
-                showToast(`📋 Copied "${p.project_name}" brief — paste into Claude`);
-            }).catch(() => {
-                // Last resort: open browser
-                window.open(webUrl, '_blank');
-                showToast(`✅ Opening "${p.project_name}" in Claude…`);
-            });
-        } else {
-            showToast(`✅ Opening "${p.project_name}" in Claude desktop…`);
-        }
-    }, 600);
+    navigator.clipboard.writeText(lines).then(() => {
+        showToast(`📋 Copied "${p.project_name}" — paste into Claude`);
+    }).catch(() => {
+        showToast(`❌ Copy failed — try again`);
+    });
 }
 
 function copyWrapUp(id) {
