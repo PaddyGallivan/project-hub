@@ -1601,6 +1601,14 @@ function fallbackCopy(text, successMsg) {
     document.body.removeChild(ta);
 }
 
+function showToast(msg) {
+    const t = document.getElementById('toast');
+    t.textContent = msg;
+    t.classList.add('show');
+    clearTimeout(window._toastTimer);
+    window._toastTimer = setTimeout(() => t.classList.remove('show'), 3500);
+}
+
 function copyResume(id) {
     const p = allProjects.find(x => x.id === id);
     if (!p) return;
