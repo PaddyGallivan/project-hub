@@ -562,6 +562,8 @@
             <button class="btn" onclick="exportCSV()">⬇ CSV</button>
             <button class="btn" onclick="location.reload()">↻ Refresh</button>
             <button class="btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle light/dark mode">🌙</button>
+            <button class="btn" onclick="openKeySettings()" title="Set API Key">🔑 Key</button>
+            <button class="btn" id="teamBtn" onclick="openTeamPanel()" title="Access Management" style="display:none">👥 Team</button>
             <button class="btn" onclick="lockHub()" title="Lock">🔒</button>
             <button class="btn" id="dashboardToggleBtn" onclick="toggleDashboard()" title="Toggle dashboard sections">📊 Dashboard</button>
         </div>
@@ -747,8 +749,10 @@
 let CFG = {
     hubName: 'Project Hub',
     email: '',
-    apiUrl: 'https://project-hub-api.pgallivan.workers.dev'
+    apiUrl: 'https://project-hub-api.pgallivan.workers.dev',
+    apiKey: ''
 };
+let currentUser = null;
 
 function loadConfig() {
     try {
@@ -759,6 +763,28 @@ function loadConfig() {
 
 function saveConfig() {
     localStorage.setItem('hub_config', JSON.stringify(CFG));
+}
+
+function authHeaders() {
+    const h = { 'Content-Type': 'application/json' };
+    if (CFG.apiKey) h['X-Api-Key'] = CFG.apiKey;
+    return h;
+}
+
+async function detectUser() {
+    if (!CFG.apiKey) return;
+    try {
+        const res = await fetch(`${CFG.apiUrl}/me`, {
+            headers: { 'X-Api-Key': CFG.apiKey }
+        });
+        if (res.ok) {
+            currentUser = await res.json();
+            if (currentUser.level === 0) {
+                const btn = document.getElementById('teamBtn');
+                if (btn) btn.style.display = '';
+            }
+        }
+    } catch(e) {}
 }
 
 // ══════════════════════════════════════════════
@@ -897,6 +923,7 @@ function showApp() {
     if (btn) btn.textContent = saved === 'light' ? '🌙' : '☀️';
     fetchProjects();
     checkOnboarding();
+    detectUser();
 }
 
 // ══════════════════════════════════════════════
@@ -974,7 +1001,7 @@ async function fetchProjects() {
 }
 
 // ── INLINE PROGRESS UPDATE ──
-async async function updateProgress(id, pct, sliderEl) {
+async function updateProgress(id, pct, sliderEl) {
     const pctNum = parseInt(pct);
     // Update bar visually
     const card = sliderEl.closest('.project-card');
@@ -988,7 +1015,7 @@ async async function updateProgress(id, pct, sliderEl) {
     try {
         await fetch(`${CFG.apiUrl}/projects/${id}`, {
             method: 'PATCH',
-            headers: { 'Content-Type': 'application/json' },
+            headers: authHeaders(),
             body: JSON.stringify({ progress_pct: pctNum })
         });
         // Update local data
@@ -1771,7 +1798,7 @@ document.getElementById('modalSubmit').addEventListener('click', async () => {
     try {
         const res = await fetch(`${CFG.apiUrl}/projects`, {
             method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
+            headers: authHeaders(),
             body: JSON.stringify({
                 project_name: name,
                 description: document.getElementById('ideaDesc').value.trim() || null,
@@ -1873,7 +1900,7 @@ async function autoSaveField(el) {
         try {
             await fetch(`${CFG.apiUrl}/projects/${id}`, {
                 method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
+                headers: authHeaders(),
                 body: JSON.stringify({ [field]: value })
             });
             // Update local cache
@@ -2100,6 +2127,160 @@ async function sendAIMessage() {
     sendBtn.disabled = false;
     input.focus();
 }
+
+// ── API KEY SETTINGS ────────────────────────────────────────────────
+function openKeySettings() {
+    const modal = document.getElementById('keySettingsModal');
+    document.getElementById('keyInput').value = CFG.apiKey || '';
+    modal.classList.add('open');
+}
+function closeKeySettings() {
+    document.getElementById('keySettingsModal').classList.remove('open');
+}
+function saveKeySettings() {
+    const key = document.getElementById('keyInput').value.trim();
+    CFG.apiKey = key;
+    saveConfig();
+    closeKeySettings();
+    // Re-detect user level
+    currentUser = null;
+    document.getElementById('teamBtn').style.display = 'none';
+    detectUser();
+    showToast(key ? '🔑 API key saved' : 'API key cleared');
+}
+
+// ── ACCESS MANAGEMENT (God only) ───────────────────────────────────
+async function openTeamPanel() {
+    const modal = document.getElementById('teamModal');
+    modal.classList.add('open');
+    await loadCollaborators();
+}
+function closeTeamPanel() {
+    document.getElementById('teamModal').classList.remove('open');
+    document.getElementById('teamInviteForm').style.display = 'none';
+}
+async function loadCollaborators() {
+    const list = document.getElementById('collabList');
+    list.innerHTML = '<div style="color:var(--muted);padding:1rem">Loading…</div>';
+    try {
+        const res = await fetch(`${CFG.apiUrl}/collaborators`, {
+            headers: { 'X-Api-Key': CFG.apiKey }
+        });
+        if (!res.ok) { list.innerHTML = '<div style="color:var(--warning)">Access denied or error.</div>'; return; }
+        const collabs = await res.json();
+        if (!collabs.length) { list.innerHTML = '<div style="color:var(--muted)">No collaborators yet.</div>'; return; }
+        list.innerHTML = collabs.map(c => `
+            <div style="display:flex;align-items:center;gap:0.75rem;padding:0.75rem 0;border-bottom:1px solid var(--border)">
+                <div style="flex:1">
+                    <div style="font-weight:600">${escHtml(c.name)} <span style="font-size:0.75rem;color:var(--muted);margin-left:0.3rem">${escHtml(c.level_name)}</span>${c.active ? '' : ' <span style="color:var(--warning);font-size:0.72rem">revoked</span>'}</div>
+                    <div style="font-size:0.82rem;color:var(--muted)">${escHtml(c.email)}</div>
+                    <div style="font-size:0.75rem;color:var(--muted)">Last used: ${c.last_used ? c.last_used.split('T')[0] : 'never'}</div>
+                </div>
+                ${c.level > 0 ? `
+                <select onchange="changeCollabLevel(${c.id},this.value)" style="background:var(--bg);border:1px solid var(--border);color:var(--text);border-radius:4px;padding:0.25rem;font-size:0.82rem">
+                    <option value="1" ${c.level===1?'selected':''}>Admin</option>
+                    <option value="2" ${c.level===2?'selected':''}>Manager</option>
+                    <option value="3" ${c.level===3?'selected':''}>Editor</option>
+                </select>
+                <button onclick="toggleCollab(${c.id},${c.active})" style="background:${c.active?'var(--warning)':'var(--success)'};border:none;color:#fff;border-radius:4px;padding:0.25rem 0.6rem;cursor:pointer;font-size:0.8rem">${c.active ? 'Revoke' : 'Restore'}</button>
+                ` : '<span style="font-size:0.75rem;color:var(--accent)">👑 God</span>'}
+            </div>
+        `).join('');
+    } catch(e) { list.innerHTML = '<div style="color:var(--warning)">Error loading collaborators.</div>'; }
+}
+async function changeCollabLevel(id, level) {
+    try {
+        await fetch(`${CFG.apiUrl}/collaborators/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'X-Api-Key': CFG.apiKey },
+            body: JSON.stringify({ level: parseInt(level) })
+        });
+        showToast('Level updated');
+        await loadCollaborators();
+    } catch(e) { showToast('Error updating level'); }
+}
+async function toggleCollab(id, currently_active) {
+    try {
+        await fetch(`${CFG.apiUrl}/collaborators/${id}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'X-Api-Key': CFG.apiKey },
+            body: JSON.stringify({ active: currently_active ? 0 : 1 })
+        });
+        showToast(currently_active ? 'Access revoked' : 'Access restored');
+        await loadCollaborators();
+    } catch(e) { showToast('Error updating access'); }
+}
+function showInviteForm() {
+    document.getElementById('teamInviteForm').style.display = 'block';
+    document.getElementById('inviteName').value = '';
+    document.getElementById('inviteEmail').value = '';
+    document.getElementById('inviteLevel').value = '3';
+}
+async function sendInvite() {
+    const name = document.getElementById('inviteName').value.trim();
+    const email = document.getElementById('inviteEmail').value.trim();
+    const level = parseInt(document.getElementById('inviteLevel').value);
+    if (!name || !email) { showToast('Name and email required'); return; }
+    try {
+        const res = await fetch(`${CFG.apiUrl}/collaborators`, {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json', 'X-Api-Key': CFG.apiKey },
+            body: JSON.stringify({ name, email, level })
+        });
+        if (!res.ok) { const e = await res.json(); showToast('Error: ' + (e.error||'unknown')); return; }
+        const collab = await res.json();
+        showToast(`✅ Invited ${name} — key: ${collab.api_key}`);
+        document.getElementById('teamInviteForm').style.display = 'none';
+        await loadCollaborators();
+    } catch(e) { showToast('Network error'); }
+}
+function escHtml(s) {
+    if (!s) return '';
+    return String(s).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
+}
 </script>
+
+<!-- ── KEY SETTINGS MODAL ── -->
+<div class="modal-overlay" id="keySettingsModal">
+    <div class="modal" style="max-width:440px">
+        <h3>🔑 API Key</h3>
+        <p style="color:var(--muted);font-size:0.88rem;margin-bottom:1rem">Enter your personal API key to enable write access and team management. Leave blank for read-only mode.</p>
+        <input type="password" class="modal-input" id="keyInput" placeholder="e.g. god-xxxxx or mgr-xxxxx" autocomplete="off">
+        <div class="modal-actions">
+            <button class="btn-cancel" onclick="closeKeySettings()">Cancel</button>
+            <button class="btn-primary" onclick="saveKeySettings()">Save</button>
+        </div>
+    </div>
+</div>
+
+<!-- ── TEAM / ACCESS MANAGEMENT MODAL ── -->
+<div class="modal-overlay" id="teamModal">
+    <div class="modal" style="max-width:580px">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1.25rem">
+            <h3 style="margin:0">👥 Access Management</h3>
+            <button onclick="closeTeamPanel()" style="background:none;border:none;color:var(--muted);cursor:pointer;font-size:1.1rem">✕</button>
+        </div>
+        <div id="collabList" style="max-height:360px;overflow-y:auto;margin-bottom:1rem"></div>
+        <div id="teamInviteForm" style="display:none;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:1rem;margin-bottom:1rem">
+            <div style="font-weight:600;margin-bottom:0.75rem">Invite collaborator</div>
+            <input class="modal-input" id="inviteName" placeholder="Full name" style="margin-bottom:0.5rem">
+            <input class="modal-input" id="inviteEmail" type="email" placeholder="Email" style="margin-bottom:0.5rem">
+            <select class="modal-input" id="inviteLevel" style="margin-bottom:0.75rem">
+                <option value="3">Editor — edit projects only</option>
+                <option value="2">Manager — add + edit projects</option>
+                <option value="1">Admin — full project control</option>
+            </select>
+            <div class="modal-actions" style="margin-top:0">
+                <button class="btn-cancel" onclick="document.getElementById('teamInviteForm').style.display='none'">Cancel</button>
+                <button class="btn-primary" onclick="sendInvite()">Send invite</button>
+            </div>
+        </div>
+        <div style="display:flex;gap:0.75rem;justify-content:space-between">
+            <button class="btn-primary" onclick="showInviteForm()">+ Invite</button>
+            <button class="btn-cancel" onclick="closeTeamPanel()">Close</button>
+        </div>
+    </div>
+</div>
+
 </body>
 </html>
