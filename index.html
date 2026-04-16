@@ -32,7 +32,7 @@
         * { margin:0; padding:0; box-sizing:border-box; }
         body { font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif; background-color:var(--bg); color:var(--text); line-height:1.6; transition:background-color 0.2s,color 0.2s; }
 
-        /* ── AUTH GATE ── */
+        /* ââ AUTH GATE ââ */
         #authGate {
             position:fixed; inset:0; background:var(--bg); z-index:9999;
             display:flex; align-items:center; justify-content:center;
@@ -66,7 +66,7 @@
         .auth-switch { margin-top:1rem; font-size:0.85rem; color:var(--muted); cursor:pointer; }
         .auth-switch span { color:var(--accent); text-decoration:underline; cursor:pointer; }
 
-        /* ── ONBOARDING ── */
+        /* ââ ONBOARDING ââ */
         .onboard-overlay {
             display:none; position:fixed; inset:0; background:rgba(0,0,0,0.85);
             z-index:8000; align-items:center; justify-content:center;
@@ -92,10 +92,10 @@
         .onboard-input:focus { outline:none; border-color:var(--accent); }
         .onboard-nav { display:flex; gap:1rem; justify-content:flex-end; margin-top:1rem; }
 
-        /* ── LAYOUT ── */
+        /* ââ LAYOUT ââ */
         .container { max-width:1200px; margin:0 auto; padding:2rem; }
 
-        /* ── HEADER ── */
+        /* ââ HEADER ââ */
         .header {
             display:flex; justify-content:space-between; align-items:center;
             margin-bottom:2rem; padding-bottom:1.5rem; border-bottom:1px solid var(--border);
@@ -115,7 +115,7 @@
         .btn.accent { background-color:var(--accent); border-color:var(--accent); color:#fff; }
         .btn.warning { background-color:rgba(210,153,34,0.2); border-color:var(--warning); color:var(--warning); }
 
-        /* ── TODAY'S PICK ── */
+        /* ââ TODAY'S PICK ââ */
         .pick-hero {
             background:linear-gradient(135deg, rgba(59,130,246,0.15) 0%, rgba(63,185,80,0.08) 100%);
             border:1px solid rgba(59,130,246,0.4); border-radius:12px;
@@ -147,20 +147,20 @@
         .pick-secondary-item { font-size:0.85rem; }
         .pick-secondary-item strong { color:var(--accent); }
 
-        /* ── STATS ── */
+        /* ââ STATS ââ */
         .stats { display:grid; grid-template-columns:repeat(auto-fit,minmax(130px,1fr)); gap:1rem; margin-bottom:2rem; }
         .stat-card { background:var(--card); padding:1rem; border-radius:8px; border:1px solid var(--border); }
         .stat-label { font-size:0.8rem; color:var(--muted); margin-bottom:0.25rem; }
         .stat-value { font-size:1.8rem; font-weight:700; color:var(--accent); }
 
-        /* ── SECTION TITLE ── */
+        /* ââ SECTION TITLE ââ */
         .section-title {
             font-size:1.2rem; font-weight:600; margin:2rem 0 1rem;
             padding-bottom:0.5rem; border-bottom:2px solid var(--accent);
             display:flex; align-items:center; gap:0.5rem;
         }
 
-        /* ── PRIORITIES ── */
+        /* ââ PRIORITIES ââ */
         .priorities-list { background:var(--card); border:1px solid var(--border); border-radius:8px; overflow:hidden; margin-bottom:2rem; }
         .priority-item {
             display:grid; grid-template-columns:40px 1fr auto auto auto;
@@ -179,7 +179,7 @@
         .revenue-label { font-size:0.75rem; color:var(--muted); display:block; }
         .revenue-value { font-size:1rem; font-weight:600; color:var(--success); }
 
-        /* ── REVENUE TRACKER ── */
+        /* ââ REVENUE TRACKER ââ */
         .revenue-tracker { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1.5rem; margin-bottom:2rem; }
         .revenue-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:1rem; margin-bottom:1.5rem; }
         .revenue-year { text-align:center; padding:1rem; background:rgba(59,130,246,0.1); border-radius:6px; }
@@ -193,7 +193,7 @@
         .revenue-bar.community { background:#a371f7; }
         .revenue-bar.health { background:#79c0ff; }
 
-        /* ── FOCUS SECTION ── */
+        /* ââ FOCUS SECTION ââ */
         .focus-section { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:1rem; margin-bottom:2rem; }
         .focus-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1.25rem; }
         .focus-card-title { font-size:0.8rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:var(--muted); margin-bottom:0.75rem; }
@@ -204,7 +204,7 @@
         .focus-item-meta { font-size:0.8rem; color:var(--success); white-space:nowrap; font-weight:600; }
         .focus-empty { font-size:0.85rem; color:var(--muted); font-style:italic; }
 
-        /* ── MILESTONES ── */
+        /* ââ MILESTONES ââ */
         .milestones-grid { display:flex; flex-direction:column; gap:0.6rem; margin-bottom:2rem; }
         .milestone-row {
             display:flex; align-items:center; gap:1rem; background:var(--card);
@@ -228,7 +228,7 @@
         .milestone-badge.done { background:rgba(125,133,144,0.15); color:var(--muted); }
         .no-milestones { text-align:center; padding:2rem; color:var(--muted); font-size:0.9rem; background:var(--card); border-radius:8px; border:1px solid var(--border); }
 
-        /* ── BUDGET ── */
+        /* ââ BUDGET ââ */
         .budget-summary { display:grid; grid-template-columns:repeat(auto-fit,minmax(140px,1fr)); gap:1rem; margin-bottom:1.5rem; }
         .budget-stat { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1rem; text-align:center; }
         .budget-stat-value { font-size:1.5rem; font-weight:700; color:var(--warning); }
@@ -241,7 +241,7 @@
         .budget-alert.warn { background:rgba(210,153,34,0.12); border-left:3px solid var(--warning); color:#e6c96a; }
         .budget-alert.tip { background:rgba(63,185,80,0.1); border-left:3px solid var(--success); color:#7ee787; }
 
-        /* ── FILTER & SEARCH ── */
+        /* ââ FILTER & SEARCH ââ */
         .controls { display:flex; gap:1rem; margin-bottom:2rem; flex-wrap:wrap; }
         .search-input { flex:1; min-width:200px; padding:0.75rem; background:var(--card); border:1px solid var(--border); color:var(--text); border-radius:6px; font-size:1rem; }
         .search-input::placeholder { color:var(--muted); }
@@ -250,7 +250,7 @@
         .filter-btn.active { background:var(--accent); border-color:var(--accent); }
         .filter-btn:hover { border-color:var(--accent); }
 
-        /* ── PROJECT GRID ── */
+        /* ââ PROJECT GRID ââ */
         .project-grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(300px,1fr)); gap:1.5rem; margin-bottom:2rem; }
         .project-card { background:var(--card); border:1px solid var(--border); border-radius:8px; padding:1.5rem; transition:all 0.2s; position:relative; }
         .project-card:hover { border-color:var(--accent); box-shadow:0 0 0 1px var(--accent); }
@@ -285,7 +285,7 @@
         .claude-resume-btn { background:#3b82f6; color:#fff; }
         .claude-end-btn { background:#3fb950; color:#0d1117; }
 
-        /* ── SCENARIO DRAWER ── */
+        /* ââ SCENARIO DRAWER ââ */
         .scenario-overlay {
             display:none; position:fixed; inset:0; background:rgba(0,0,0,0.5); z-index:7000;
         }
@@ -319,7 +319,7 @@
         .scenario-slider::-webkit-slider-thumb { -webkit-appearance:none; appearance:none; width:16px; height:16px; border-radius:50%; background:var(--accent); cursor:pointer; }
         .scenario-slider-labels { display:flex; justify-content:space-between; font-size:0.72rem; color:var(--muted); margin-top:0.25rem; }
 
-        /* ── DIGEST MODAL ── */
+        /* ââ DIGEST MODAL ââ */
         .modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.7); z-index:6000; align-items:center; justify-content:center; padding:1rem; }
         .modal-overlay.open { display:flex; }
         .modal { background:var(--card); border:1px solid var(--border); border-radius:12px; padding:2rem; width:100%; max-width:560px; max-height:90vh; overflow-y:auto; }
@@ -341,7 +341,7 @@
             margin-bottom:1rem;
         }
 
-        /* ── TOAST ── */
+        /* ââ TOAST ââ */
         .toast {
             position:fixed; top:50%; left:50%;
             transform:translate(-50%,-50%) scale(0.9);
@@ -353,7 +353,7 @@
         }
         .toast.show { opacity:1; transform:translate(-50%,-50%) scale(1); }
 
-        /* ── IDEA FAB ── */
+        /* ââ IDEA FAB ââ */
         .idea-fab {
             position:fixed; bottom:2rem; right:2rem; width:52px; height:52px;
             border-radius:50%; background:var(--accent); color:#fff; border:none;
@@ -363,13 +363,13 @@
         }
         .idea-fab:hover { transform:scale(1.1); box-shadow:0 6px 24px rgba(59,130,246,0.7); }
 
-        /* ── FOOTER ── */
+        /* ââ FOOTER ââ */
         .footer { text-align:center; color:var(--muted); font-size:0.82rem; padding-top:2rem; border-top:1px solid var(--border); margin-top:3rem; }
 
-        /* ── EMPTY / LOADING ── */
+        /* ââ EMPTY / LOADING ââ */
         .empty-state { text-align:center; padding:3rem; color:var(--muted); }
 
-        /* ── SORT & EXPORT CONTROLS ── */
+        /* ââ SORT & EXPORT CONTROLS ââ */
         .grid-controls {
             display:flex; gap:0.75rem; margin-bottom:1rem; flex-wrap:wrap; align-items:center;
         }
@@ -389,7 +389,7 @@
         .cat-btn.active { border-color:var(--accent); color:var(--accent); background:rgba(59,130,246,0.1); }
         .cat-btn:hover:not(.active) { border-color:var(--muted); }
 
-        /* ── INLINE PROGRESS SLIDER ── */
+        /* ââ INLINE PROGRESS SLIDER ââ */
         .progress-inline {
             display:flex; align-items:center; gap:0.5rem; margin-top:0.25rem; margin-bottom:0.5rem;
         }
@@ -410,7 +410,7 @@
         }
         .progress-save-indicator.show { opacity:1; }
 
-        /* ── PRIORITY YEAR BARS ── */
+        /* ââ PRIORITY YEAR BARS ââ */
         .priority-year-bar {
             display:flex; height:5px; border-radius:3px; overflow:hidden;
             gap:1px; margin-top:0.3rem; min-width:80px;
@@ -419,7 +419,7 @@
         .pyb-y2 { background:var(--success); }
         .pyb-y3 { background:#a371f7; }
 
-        /* ── AUTO-REFRESH INDICATOR ── */
+        /* ââ AUTO-REFRESH INDICATOR ââ */
         .refresh-age {
             font-size:0.75rem; color:var(--muted); display:flex; align-items:center; gap:0.3rem;
         }
@@ -437,10 +437,10 @@
 </head>
 <body>
 
-<!-- ────────────────────────────── AUTH GATE ── -->
+<!-- ââââââââââââââââââââââââââââââ AUTH GATE ââ -->
 <div id="authGate">
     <div class="auth-box">
-        <div class="auth-logo">🧠</div>
+        <div class="auth-logo">ð§ </div>
         <div class="auth-title" id="authTitle">Welcome back</div>
         <div class="auth-subtitle" id="authSub">Enter your PIN to unlock</div>
         <div class="pin-dots" id="pinDots">
@@ -459,16 +459,16 @@
             <button class="pin-key" onclick="pinPress(7)">7</button>
             <button class="pin-key" onclick="pinPress(8)">8</button>
             <button class="pin-key" onclick="pinPress(9)">9</button>
-            <button class="pin-key" onclick="pinClear()">⌫</button>
+            <button class="pin-key" onclick="pinClear()">â«</button>
             <button class="pin-key" onclick="pinPress(0)">0</button>
-            <button class="pin-key" onclick="pinSubmit()">✓</button>
+            <button class="pin-key" onclick="pinSubmit()">â</button>
         </div>
         <div class="auth-msg" id="authMsg"></div>
         <div class="auth-switch" id="authSwitch"></div>
     </div>
 </div>
 
-<!-- ────────────────────────────── ONBOARDING ── -->
+<!-- ââââââââââââââââââââââââââââââ ONBOARDING ââ -->
 <div class="onboard-overlay" id="onboardModal">
     <div class="onboard-box">
         <div class="onboard-progress">
@@ -478,37 +478,37 @@
         </div>
         <!-- Step 1 -->
         <div class="onboard-step active" id="ob-step-1">
-            <div class="onboard-step-header">👋 Name your hub</div>
+            <div class="onboard-step-header">ð Name your hub</div>
             <div class="onboard-step-sub">This name appears in the header and digest emails. Use your name or studio name.</div>
             <input class="onboard-input" id="ob-hub-name" placeholder="e.g. Paddy's Project Hub" maxlength="50">
             <div class="onboard-nav">
-                <button class="btn-primary" onclick="obNext(1)">Next →</button>
+                <button class="btn-primary" onclick="obNext(1)">Next â</button>
             </div>
         </div>
         <!-- Step 2 -->
         <div class="onboard-step" id="ob-step-2">
-            <div class="onboard-step-header">📧 Digest email</div>
+            <div class="onboard-step-header">ð§ Digest email</div>
             <div class="onboard-step-sub">Where should your weekly digest summaries be sent?</div>
             <input class="onboard-input" id="ob-email" type="email" placeholder="you@example.com">
             <div class="onboard-nav">
-                <button class="btn-cancel" onclick="obBack(2)">← Back</button>
-                <button class="btn-primary" onclick="obNext(2)">Next →</button>
+                <button class="btn-cancel" onclick="obBack(2)">â Back</button>
+                <button class="btn-primary" onclick="obNext(2)">Next â</button>
             </div>
         </div>
         <!-- Step 3 -->
         <div class="onboard-step" id="ob-step-3">
-            <div class="onboard-step-header">🔗 API endpoint</div>
+            <div class="onboard-step-header">ð API endpoint</div>
             <div class="onboard-step-sub">Paste your Cloudflare Worker URL. This powers all project data.</div>
             <input class="onboard-input" id="ob-api" placeholder="https://your-worker.workers.dev">
             <div class="onboard-nav">
-                <button class="btn-cancel" onclick="obBack(3)">← Back</button>
-                <button class="btn-primary" onclick="obFinish()">Launch hub →</button>
+                <button class="btn-cancel" onclick="obBack(3)">â Back</button>
+                <button class="btn-primary" onclick="obFinish()">Launch hub â</button>
             </div>
         </div>
     </div>
 </div>
 
-<!-- ────────────────────────────── MAIN APP ── -->
+<!-- ââââââââââââââââââââââââââââââ MAIN APP ââ -->
 <div id="app" class="container" style="display:none">
 
     <!-- Header -->
@@ -519,12 +519,12 @@
                 <span class="status-dot"></span>
                 <span id="dbLabel">Cloudflare D1</span>
             </div>
-            <button class="btn" onclick="openScenario()">📊 Scenario</button>
-            <button class="btn" onclick="openDigest()">📧 Digest</button>
-            <button class="btn" onclick="exportCSV()">⬇ CSV</button>
-            <button class="btn" onclick="location.reload()">↻ Refresh</button>
-            <button class="btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle light/dark mode">🌙</button>
-            <button class="btn" onclick="lockHub()" title="Lock">🔒</button>
+            <button class="btn" onclick="openScenario()">ð Scenario</button>
+            <button class="btn" onclick="openDigest()">ð§ Digest</button>
+            <button class="btn" onclick="exportCSV()">â¬ CSV</button>
+            <button class="btn" onclick="location.reload()">â» Refresh</button>
+            <button class="btn" id="themeToggleBtn" onclick="toggleTheme()" title="Toggle light/dark mode">ð</button>
+            <button class="btn" onclick="lockHub()" title="Lock">ð</button>
         </div>
     </div>
 
@@ -533,50 +533,50 @@
 
     <!-- Stats Row -->
     <div class="stats" id="statsContainer">
-        <div class="stat-card"><div class="stat-label">Live</div><div class="stat-value" id="statLive">–</div></div>
-        <div class="stat-card"><div class="stat-label">Ready</div><div class="stat-value" id="statReady">–</div></div>
-        <div class="stat-card"><div class="stat-label">In Dev</div><div class="stat-value" id="statDev">–</div></div>
-        <div class="stat-card"><div class="stat-label">Actions</div><div class="stat-value" id="statActions">–</div></div>
-        <div class="stat-card"><div class="stat-label">Avg Progress</div><div class="stat-value" id="statAvg">–</div></div>
-        <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">–</div></div>
+        <div class="stat-card"><div class="stat-label">Live</div><div class="stat-value" id="statLive">â</div></div>
+        <div class="stat-card"><div class="stat-label">Ready</div><div class="stat-value" id="statReady">â</div></div>
+        <div class="stat-card"><div class="stat-label">In Dev</div><div class="stat-value" id="statDev">â</div></div>
+        <div class="stat-card"><div class="stat-label">Actions</div><div class="stat-value" id="statActions">â</div></div>
+        <div class="stat-card"><div class="stat-label">Avg Progress</div><div class="stat-value" id="statAvg">â</div></div>
+        <div class="stat-card"><div class="stat-label">Total</div><div class="stat-value" id="statTotal">â</div></div>
     </div>
 
     <!-- Priorities -->
-    <h2 class="section-title">🏆 Overall Priorities</h2>
+    <h2 class="section-title">ð Overall Priorities</h2>
     <div class="priorities-list" id="prioritiesList">
         <div style="padding:2rem;text-align:center;color:var(--muted)">Loading...</div>
     </div>
 
     <!-- Revenue Tracker -->
-    <h2 class="section-title">📈 3-Year Revenue Projection</h2>
+    <h2 class="section-title">ð 3-Year Revenue Projection</h2>
     <div class="revenue-tracker" id="revenueTracker">
         <div style="text-align:center;color:var(--muted)">Loading...</div>
     </div>
 
     <!-- What to Focus On -->
-    <h2 class="section-title">🎯 What to Focus On</h2>
+    <h2 class="section-title">ð¯ What to Focus On</h2>
     <div class="focus-section" id="focusSection">
-        <div class="focus-card"><div class="focus-card-title">🚀 Ready to Launch</div><div id="focusReady"><span class="focus-empty">Loading...</span></div></div>
-        <div class="focus-card"><div class="focus-card-title">💰 Quickest Income</div><div id="focusIncome"><span class="focus-empty">Loading...</span></div></div>
-        <div class="focus-card"><div class="focus-card-title">🔥 Top Priority</div><div id="focusPriority"><span class="focus-empty">Loading...</span></div></div>
-        <div class="focus-card"><div class="focus-card-title">⚠ Needs Attention</div><div id="focusAttention"><span class="focus-empty">Loading...</span></div></div>
+        <div class="focus-card"><div class="focus-card-title">ð Ready to Launch</div><div id="focusReady"><span class="focus-empty">Loading...</span></div></div>
+        <div class="focus-card"><div class="focus-card-title">ð° Quickest Income</div><div id="focusIncome"><span class="focus-empty">Loading...</span></div></div>
+        <div class="focus-card"><div class="focus-card-title">ð¥ Top Priority</div><div id="focusPriority"><span class="focus-empty">Loading...</span></div></div>
+        <div class="focus-card"><div class="focus-card-title">â  Needs Attention</div><div id="focusAttention"><span class="focus-empty">Loading...</span></div></div>
     </div>
 
     <!-- Upcoming Milestones -->
-    <h2 class="section-title">📅 Upcoming Milestones</h2>
+    <h2 class="section-title">ð Upcoming Milestones</h2>
     <div id="milestonesSection" class="milestones-grid">
         <div class="no-milestones">Loading milestones...</div>
     </div>
 
     <!-- Budget -->
-    <h2 class="section-title">💳 Monthly Costs</h2>
+    <h2 class="section-title">ð³ Monthly Costs</h2>
     <div id="budgetSection">
         <div style="text-align:center;color:var(--muted);padding:1rem">Loading...</div>
     </div>
 
     <!-- Filter & Search -->
     <div class="controls">
-        <input type="text" class="search-input" id="searchInput" placeholder="Search projects… (or press /)">
+        <input type="text" class="search-input" id="searchInput" placeholder="Search projectsâ¦ (or press /)">
         <div class="filter-group">
             <button class="filter-btn active" data-filter="all">All</button>
             <button class="filter-btn" data-filter="live">Live</button>
@@ -591,16 +591,16 @@
     <div class="grid-controls">
         <span style="font-size:0.82rem;color:var(--muted)" id="projectCount"></span>
         <select class="sort-select" id="sortSelect" onchange="renderProjects()">
-            <option value="name">A → Z</option>
+            <option value="name">A â Z</option>
             <option value="default">Sort: Default</option>
-            <option value="revenue">↓ Y1 Revenue</option>
-            <option value="progress">↓ Progress</option>
-            <option value="priority">↑ Priority rank</option>
-            <option value="updated">↓ Last updated</option>
+            <option value="revenue">â Y1 Revenue</option>
+            <option value="progress">â Progress</option>
+            <option value="priority">â Priority rank</option>
+            <option value="updated">â Last updated</option>
         </select>
         <div class="refresh-age" id="refreshAge">
             <span class="refresh-dot" id="refreshDot"></span>
-            <span id="refreshAgeText">–</span>
+            <span id="refreshAgeText">â</span>
         </div>
     </div>
 
@@ -610,8 +610,8 @@
     </div>
 
     <div class="footer">
-        <p>Project Hub · Data loaded: <span id="lastUpdated">–</span> · Cloudflare D1 · Auto-refreshes every 5 min</p>
-        <p style="margin-top:0.4rem">Paddy Gallivan · ABN 78 312 753 967</p>
+        <p>Project Hub Â· Data loaded: <span id="lastUpdated">â</span> Â· Cloudflare D1 Â· Auto-refreshes every 5 min</p>
+        <p style="margin-top:0.4rem">Paddy Gallivan Â· ABN 78 312 753 967</p>
     </div>
 </div>
 
@@ -621,10 +621,10 @@
 <!-- IDEA FAB -->
 <button class="idea-fab" id="ideaFab" title="Capture a new idea">+</button>
 
-<!-- ────────────────────────────── IDEA MODAL ── -->
+<!-- ââââââââââââââââââââââââââââââ IDEA MODAL ââ -->
 <div class="modal-overlay" id="modalOverlay">
     <div class="modal">
-        <h3>💡 Capture an Idea</h3>
+        <h3>ð¡ Capture an Idea</h3>
         <div id="modalForm">
             <input type="text" class="modal-input" id="ideaName" placeholder="Idea name *" maxlength="100">
             <textarea class="modal-input" id="ideaDesc" placeholder="What is it? One or two lines..." maxlength="500"></textarea>
@@ -644,7 +644,7 @@
             </div>
         </div>
         <div class="modal-success" id="modalSuccess" style="display:none">
-            ✅ Idea saved!
+            â Idea saved!
             <div class="modal-actions" style="justify-content:center;margin-top:1rem">
                 <button class="btn-primary" onclick="closeModal();location.reload()">Refresh Now</button>
                 <button class="btn-cancel" onclick="closeModal()">Close</button>
@@ -653,53 +653,53 @@
     </div>
 </div>
 
-<!-- ────────────────────────────── DIGEST MODAL ── -->
+<!-- ââââââââââââââââââââââââââââââ DIGEST MODAL ââ -->
 <div class="modal-overlay" id="digestOverlay">
     <div class="modal" style="max-width:620px">
-        <h3>📧 Weekly Digest</h3>
+        <h3>ð§ Weekly Digest</h3>
         <div class="digest-text" id="digestText"></div>
         <div class="modal-actions">
             <button class="btn-cancel" onclick="closeDigest()">Close</button>
-            <button class="btn-primary" onclick="emailDigest()">✉ Email it</button>
-            <button class="btn-primary" onclick="copyDigest()">📋 Copy</button>
+            <button class="btn-primary" onclick="emailDigest()">â Email it</button>
+            <button class="btn-primary" onclick="copyDigest()">ð Copy</button>
         </div>
     </div>
 </div>
 
-<!-- ────────────────────────────── SCENARIO DRAWER ── -->
+<!-- ââââââââââââââââââââââââââââââ SCENARIO DRAWER ââ -->
 <div class="scenario-overlay" id="scenarioOverlay" onclick="closeScenario()"></div>
 <div class="scenario-drawer" id="scenarioDrawer">
     <div class="scenario-header">
-        <h3>📊 Scenario Modelling</h3>
-        <button class="scenario-close" onclick="closeScenario()">✕</button>
+        <h3>ð Scenario Modelling</h3>
+        <button class="scenario-close" onclick="closeScenario()">â</button>
     </div>
     <div class="scenario-mode-toggle">
-        <button class="scenario-mode-btn optimistic" onclick="setScenarioMode('optimistic')">🚀 Optimistic +30%</button>
-        <button class="scenario-mode-btn active base" onclick="setScenarioMode('base')">⚖ Base</button>
-        <button class="scenario-mode-btn conservative" onclick="setScenarioMode('conservative')">📉 Conservative −30%</button>
+        <button class="scenario-mode-btn optimistic" onclick="setScenarioMode('optimistic')">ð Optimistic +30%</button>
+        <button class="scenario-mode-btn active base" onclick="setScenarioMode('base')">â Base</button>
+        <button class="scenario-mode-btn conservative" onclick="setScenarioMode('conservative')">ð Conservative â30%</button>
     </div>
     <div class="scenario-totals">
         <div class="scenario-total-card">
             <div class="scenario-total-label">Baseline 3-Yr</div>
-            <div class="scenario-total-value" id="sc-baseline">–</div>
+            <div class="scenario-total-value" id="sc-baseline">â</div>
         </div>
         <div class="scenario-total-card">
             <div class="scenario-total-label">This Scenario</div>
-            <div class="scenario-total-value" id="sc-scenario">–</div>
+            <div class="scenario-total-value" id="sc-scenario">â</div>
             <div class="scenario-delta" id="sc-delta"></div>
         </div>
     </div>
     <div style="font-size:0.78rem;color:var(--muted);margin-bottom:1rem">
-        Adjust individual project multipliers or use mode buttons above. Changes are view-only — nothing gets saved.
+        Adjust individual project multipliers or use mode buttons above. Changes are view-only â nothing gets saved.
     </div>
     <div class="scenario-divider"></div>
     <div id="scenarioProjects"></div>
 </div>
 
 <script>
-// ══════════════════════════════════════════════
-//   CONFIG — loaded from localStorage
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
+//   CONFIG â loaded from localStorage
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 let CFG = {
     hubName: 'Project Hub',
     email: '',
@@ -717,9 +717,9 @@ function saveConfig() {
     localStorage.setItem('hub_config', JSON.stringify(CFG));
 }
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 //   AUTH
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 let pinBuffer = '';
 let authMode = 'login'; // 'login' | 'setup' | 'confirm'
 let pendingHash = '';
@@ -804,7 +804,7 @@ async function pinSubmit() {
         localStorage.setItem('hub_pin_hash', hash);
         sessionStorage.setItem('hub_auth', hash);
         document.getElementById('authMsg').className = 'auth-msg success';
-        document.getElementById('authMsg').textContent = '✓ PIN set!';
+        document.getElementById('authMsg').textContent = 'â PIN set!';
         setTimeout(showApp, 500);
         return;
     }
@@ -814,7 +814,7 @@ async function pinSubmit() {
     if (hash === stored) {
         sessionStorage.setItem('hub_auth', hash);
         document.getElementById('authMsg').className = 'auth-msg success';
-        document.getElementById('authMsg').textContent = '✓ Unlocking...';
+        document.getElementById('authMsg').textContent = 'â Unlocking...';
         setTimeout(showApp, 300);
     } else {
         pinBuffer = '';
@@ -850,14 +850,14 @@ function showApp() {
     // Sync theme button icon
     const saved = localStorage.getItem('hub_theme') || 'dark';
     const btn = document.getElementById('themeToggleBtn');
-    if (btn) btn.textContent = saved === 'light' ? '🌙' : '☀️';
+    if (btn) btn.textContent = saved === 'light' ? 'ð' : 'âï¸';
     fetchProjects();
     checkOnboarding();
 }
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 //   ONBOARDING
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 function checkOnboarding() {
     if (!localStorage.getItem('hub_onboarded')) {
         document.getElementById('ob-hub-name') && (document.getElementById('ob-hub-name').value = CFG.hubName);
@@ -896,9 +896,9 @@ function obFinish() {
     fetchProjects();
 }
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 //   DATA
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 let allProjects = [];
 let currentFilter = 'all';
 let currentCategory = 'all';
@@ -929,7 +929,7 @@ async function fetchProjects() {
     }
 }
 
-// ── INLINE PROGRESS UPDATE ──
+// ââ INLINE PROGRESS UPDATE ââ
 async function updateProgress(id, pct, sliderEl) {
     const pctNum = parseInt(pct);
     // Update bar visually
@@ -961,7 +961,7 @@ async function updateProgress(id, pct, sliderEl) {
     } catch(e) { showToast('Failed to save progress'); }
 }
 
-// ── EXPORT CSV ──
+// ââ EXPORT CSV ââ
 function exportCSV() {
     const headers = ['Name','Status','Category','Progress %','Y1 Revenue','Y2 Revenue','Y3 Revenue','Priority Rank','Next Action','Tech Stack','Monthly Cost (AUD)','Live URL','Last Updated'];
     const rows = allProjects.map(p => [
@@ -978,10 +978,10 @@ function exportCSV() {
     a.download = `projects-${new Date().toISOString().slice(0,10)}.csv`;
     a.click();
     URL.revokeObjectURL(url);
-    showToast('✅ CSV downloaded!');
+    showToast('â CSV downloaded!');
 }
 
-// ── CATEGORY FILTERS ──
+// ââ CATEGORY FILTERS ââ
 function renderCatFilters() {
     const cats = [...new Set(allProjects.map(p => p.category).filter(Boolean))].sort();
     const container = document.getElementById('catFilters');
@@ -998,7 +998,7 @@ function setCatFilter(cat) {
     renderProjects();
 }
 
-// ── SORT HELPERS ──
+// ââ SORT HELPERS ââ
 function sortProjects(projects) {
     const sort = document.getElementById('sortSelect')?.value || 'default';
     const sorted = [...projects];
@@ -1017,7 +1017,7 @@ function sortProjects(projects) {
     }
 }
 
-// ── AUTO-REFRESH ──
+// ââ AUTO-REFRESH ââ
 setInterval(fetchProjects, 5 * 60 * 1000);
 
 function updateRefreshAge() {
@@ -1031,9 +1031,9 @@ function updateRefreshAge() {
 }
 setInterval(updateRefreshAge, 15000);
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 //   SCORING ENGINE
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 function scoreProject(p) {
     let score = 0;
     const status = (p.status || '').toLowerCase();
@@ -1052,7 +1052,7 @@ function scoreProject(p) {
     const maxY1 = Math.max(...revenues, 1);
     score += ((p.revenue_y1 || 0) / maxY1) * 25;
 
-    // Progress sweet spot: 30–80% = most actionable
+    // Progress sweet spot: 30â80% = most actionable
     const prog = p.progress_pct || 0;
     if (prog >= 30 && prog < 80) score += 15;
     else if (prog >= 80 && prog < 95) score += 8;
@@ -1106,27 +1106,27 @@ function renderTopPick() {
 
     // Runner-up
     const scored = allProjects.map(p => ({ p, score: scoreProject(p) })).filter(x => x.score > 0).sort((a,b) => b.score - a.score);
-    const runners = scored.slice(1, 3).map(x => `<div class="pick-secondary-item"><strong>${x.p.project_name}</strong> — ${(x.p.status||'')} · $${(x.p.revenue_y1||0).toLocaleString()}/yr</div>`).join('');
+    const runners = scored.slice(1, 3).map(x => `<div class="pick-secondary-item"><strong>${x.p.project_name}</strong> â ${(x.p.status||'')} Â· $${(x.p.revenue_y1||0).toLocaleString()}/yr</div>`).join('');
 
     hero.style.display = 'block';
     hero.innerHTML = `
-        <div class="pick-label">⚡ Today's Top Pick · Score: ${Math.round(score)}</div>
+        <div class="pick-label">â¡ Today's Top Pick Â· Score: ${Math.round(score)}</div>
         <div class="pick-title">${p.project_name}</div>
-        <div class="pick-why">Why: ${reasons.join(' · ') || 'Highest composite score'}</div>
+        <div class="pick-why">Why: ${reasons.join(' Â· ') || 'Highest composite score'}</div>
         <div class="pick-scores">${pills}</div>
         ${p.next_action ? `<div class="next-action" style="margin-bottom:1rem"><strong>Next:</strong> ${p.next_action}</div>` : ''}
         <div class="pick-actions">
-            <button class="btn accent" onclick="copyResume(${p.id})">▶ Open in Claude</button>
-            ${p.live_url ? `<a href="${p.live_url}" target="_blank" class="btn">↗ View live</a>` : ''}
-            <a href="project.html?id=${p.id}" class="btn">📋 Details</a>
+            <button class="btn accent" onclick="copyResume(${p.id})">â¶ Open in Claude</button>
+            ${p.live_url ? `<a href="${p.live_url}" target="_blank" class="btn">â View live</a>` : ''}
+            <a href="project.html?id=${p.id}" class="btn">ð Details</a>
         </div>
         ${runners ? `<div class="pick-secondary"><div style="font-size:0.75rem;color:var(--muted);text-transform:uppercase;letter-spacing:0.05em;width:100%;margin-bottom:0.25rem">Also consider</div>${runners}</div>` : ''}
     `;
 }
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 //   MILESTONES
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 function getMilestones() {
     const milestones = [];
     allProjects.forEach(p => {
@@ -1173,7 +1173,7 @@ function renderMilestones() {
         const target = new Date(m.target);
         const diff = Math.round((target - now) / 86400000);
         let cls, badge;
-        if (m.done) { cls = 'done'; badge = '✓ Done'; }
+        if (m.done) { cls = 'done'; badge = 'â Done'; }
         else if (diff < 0) { cls = 'overdue'; badge = `${Math.abs(diff)}d overdue`; }
         else if (diff <= 7) { cls = 'soon'; badge = `${diff}d away`; }
         else { cls = 'upcoming'; badge = `in ${diff}d`; }
@@ -1187,9 +1187,9 @@ function renderMilestones() {
     }).join('');
 }
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 //   RENDER FUNCTIONS
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 function formatCurrency(v) {
     if (!v) return '$0';
     return `$${Number(v).toLocaleString()}`;
@@ -1237,7 +1237,7 @@ function renderPriorities() {
             <div class="priority-rank">${i+1}</div>
             <div style="min-width:0">
                 <a href="project.html?id=${p.id}" class="priority-name">${p.project_name}</a>
-                <div class="priority-year-bar" style="width:${barW}%" title="Y1: ${formatCurrency(y1)} · Y2: ${formatCurrency(y2)} · Y3: ${formatCurrency(y3)}">
+                <div class="priority-year-bar" style="width:${barW}%" title="Y1: ${formatCurrency(y1)} Â· Y2: ${formatCurrency(y2)} Â· Y3: ${formatCurrency(y3)}">
                     <div class="pyb-y1" style="flex:${y1w}"></div>
                     <div class="pyb-y2" style="flex:${y2w}"></div>
                     <div class="pyb-y3" style="flex:${y3w}"></div>
@@ -1330,7 +1330,7 @@ function renderBudget() {
                 </tr>
             </tbody>
         </table>
-        <div class="budget-alert tip">✅ <strong>Running on Cloudflare — $0 hosting costs.</strong></div>
+        <div class="budget-alert tip">â <strong>Running on Cloudflare â $0 hosting costs.</strong></div>
     `;
 }
 
@@ -1375,14 +1375,14 @@ function renderProjects() {
 
         const appLinksHtml = appLinks.length > 0
             ? `<div style="display:flex;flex-wrap:wrap;gap:0.4rem;margin-bottom:0.75rem">
-                ${project.live_url ? `<a href="${project.live_url}" target="_blank" style="font-size:0.78rem;padding:0.2rem 0.6rem;background:var(--accent);color:#fff;border-radius:4px;text-decoration:none;font-weight:600">Main ↗</a>` : ''}
-                ${appLinks.map(l => `<a href="${l.url}" target="_blank" style="font-size:0.78rem;padding:0.2rem 0.6rem;border:1px solid var(--accent);color:var(--accent);border-radius:4px;text-decoration:none;font-weight:500">${l.label} ↗</a>`).join('')}
+                ${project.live_url ? `<a href="${project.live_url}" target="_blank" style="font-size:0.78rem;padding:0.2rem 0.6rem;background:var(--accent);color:#fff;border-radius:4px;text-decoration:none;font-weight:600">Main â</a>` : ''}
+                ${appLinks.map(l => `<a href="${l.url}" target="_blank" style="font-size:0.78rem;padding:0.2rem 0.6rem;border:1px solid var(--accent);color:var(--accent);border-radius:4px;text-decoration:none;font-weight:500">${l.label} â</a>`).join('')}
                </div>` : '';
 
         return `<div class="project-card">
             <div class="card-header">
                 <a href="project.html?id=${project.id}" class="card-title">${project.project_name}</a>
-                ${project.live_url && !appLinks.length ? `<a href="${project.live_url}" target="_blank" class="card-link">↗</a>` : ''}
+                ${project.live_url && !appLinks.length ? `<a href="${project.live_url}" target="_blank" class="card-link">â</a>` : ''}
             </div>
             <div style="margin-bottom:0.75rem">
                 <span class="${getStatusBadgeClass(project.status)}">${project.status||'N/A'}</span>
@@ -1398,7 +1398,7 @@ function renderProjects() {
                     oninput="this.nextElementSibling.textContent=this.value+'%';this.closest('.project-card').querySelector('.progress-fill').style.width=this.value+'%'"
                     onchange="updateProgress(${project.id}, this.value, this)">
                 <span class="progress-pct-label">${project.progress_pct}%</span>
-                <span class="progress-save-indicator">✓ saved</span>
+                <span class="progress-save-indicator">â saved</span>
             </div>` : ''}
             <div class="card-tags">
                 ${project.category ? `<span class="tag">${project.category}</span>` : ''}
@@ -1410,8 +1410,8 @@ function renderProjects() {
             ${project.next_action ? `<div class="next-action"><strong>Next:</strong> ${project.next_action}</div>` : ''}
             <div class="card-meta">Updated: ${project.last_updated ? new Date(project.last_updated).toLocaleDateString() : 'N/A'}</div>
             <div class="claude-btns">
-                <button class="claude-resume-btn" onclick="copyResume(${project.id})">▶ Open in Claude</button>
-                <button class="claude-end-btn" onclick="copyWrapUp(${project.id})">✓ Wrap Up</button>
+                <button class="claude-resume-btn" onclick="copyResume(${project.id})">â¶ Open in Claude</button>
+                <button class="claude-end-btn" onclick="copyWrapUp(${project.id})">â Wrap Up</button>
             </div>
         </div>`;
     }).join('');
@@ -1431,9 +1431,9 @@ function render() {
     updateRefreshAge();
 }
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 //   SCENARIO PANEL
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 const SCENARIO_MULTIPLIERS = { optimistic: 1.3, base: 1.0, conservative: 0.7 };
 
 function openScenario() {
@@ -1492,7 +1492,7 @@ function updateScenarioUI() {
             <input type="range" class="scenario-slider" min="0" max="200" value="${pct}"
                 oninput="onSlider(${p.id}, this.value)"
                 onchange="onSlider(${p.id}, this.value)">
-            <div class="scenario-slider-labels"><span>$0</span><span>Base</span><span>×2</span></div>
+            <div class="scenario-slider-labels"><span>$0</span><span>Base</span><span>Ã2</span></div>
         </div>`;
     }).join('');
 }
@@ -1502,9 +1502,9 @@ function onSlider(id, val) {
     updateScenarioUI();
 }
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 //   DIGEST GENERATOR
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 function openDigest() {
     const text = generateDigest();
     document.getElementById('digestText').textContent = text;
@@ -1526,12 +1526,12 @@ function generateDigest() {
     const milestones = getMilestones().filter(m => !m.done).slice(0,5);
 
     let lines = [
-        `${CFG.hubName} — Weekly Digest`,
+        `${CFG.hubName} â Weekly Digest`,
         `${dateStr}`,
-        `${'─'.repeat(50)}`,
+        `${'â'.repeat(50)}`,
         '',
         `PORTFOLIO STATUS`,
-        `  Live: ${live} · Ready: ${ready} · In Dev: ${dev} · Total: ${allProjects.length}`,
+        `  Live: ${live} Â· Ready: ${ready} Â· In Dev: ${dev} Â· Total: ${allProjects.length}`,
         `  Y1 Revenue Potential: ${formatCurrency(y1Total)}`,
         `  3-Year Total: ${formatCurrency(y3Total)}`,
         '',
@@ -1539,14 +1539,14 @@ function generateDigest() {
 
     if (top) {
         lines.push('TOP PICK THIS WEEK');
-        lines.push(`  → ${top.p.project_name} (score: ${Math.round(top.score)})`);
+        lines.push(`  â ${top.p.project_name} (score: ${Math.round(top.score)})`);
         if (top.p.next_action) lines.push(`     Next: ${top.p.next_action}`);
         lines.push('');
     }
 
     if (actions.length) {
         lines.push('ACTIONS NEEDED');
-        actions.forEach(p => lines.push(`  • ${p.project_name}: ${p.next_action}`));
+        actions.forEach(p => lines.push(`  â¢ ${p.project_name}: ${p.next_action}`));
         lines.push('');
     }
 
@@ -1556,12 +1556,12 @@ function generateDigest() {
             const d = new Date(m.target);
             const diff = Math.round((d - now) / 86400000);
             const when = diff < 0 ? `${Math.abs(diff)}d overdue` : diff === 0 ? 'TODAY' : `in ${diff}d`;
-            lines.push(`  • ${m.projectName}: ${m.name} (${when})`);
+            lines.push(`  â¢ ${m.projectName}: ${m.name} (${when})`);
         });
         lines.push('');
     }
 
-    lines.push('─'.repeat(50));
+    lines.push('â'.repeat(50));
     lines.push(`Generated: ${now.toLocaleTimeString()}`);
 
     return lines.join('\n');
@@ -1569,20 +1569,20 @@ function generateDigest() {
 
 function copyDigest() {
     const text = document.getElementById('digestText').textContent;
-    navigator.clipboard.writeText(text).then(() => showToast('✅ Digest copied!')).catch(() => showToast('Couldn\'t copy — try selecting and copying manually.'));
+    navigator.clipboard.writeText(text).then(() => showToast('â Digest copied!')).catch(() => showToast('Couldn\'t copy â try selecting and copying manually.'));
 }
 
 function emailDigest() {
     const text = document.getElementById('digestText').textContent;
     const to = CFG.email || '';
-    const subject = encodeURIComponent(`${CFG.hubName} — Weekly Digest`);
+    const subject = encodeURIComponent(`${CFG.hubName} â Weekly Digest`);
     const body = encodeURIComponent(text);
     window.open(`mailto:${to}?subject=${subject}&body=${body}`);
 }
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 //   CLAUDE BUTTONS
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 function showToast(msg) {
     const t = document.getElementById('toast');
     t.textContent = msg;
@@ -1606,44 +1606,41 @@ function copyResume(id) {
     if (!p) return;
 
     const lines = [
-        `We're working on: ${p.project_name}`,
-        `Status: ${p.status || 'unknown'} · Progress: ${p.progress_pct || 0}%`,
+        `${p.project_name}`,
+        `Status: ${p.status || 'unknown'} Â· Progress: ${p.progress_pct || 0}%`,
         p.next_action   ? `Current next action: ${p.next_action}` : '',
-        p.revenue_y1    ? `Revenue targets — Y1: $${Number(p.revenue_y1).toLocaleString()} · Y2: $${Number(p.revenue_y2||0).toLocaleString()} · Y3: $${Number(p.revenue_y3||0).toLocaleString()}` : '',
+        p.revenue_y1    ? `Revenue targets â Y1: $${Number(p.revenue_y1).toLocaleString()} Â· Y2: $${Number(p.revenue_y2||0).toLocaleString()} Â· Y3: $${Number(p.revenue_y3||0).toLocaleString()}` : '',
         p.tech_stack    ? `Stack: ${p.tech_stack}` : '',
         p.live_url      ? `Live at: ${p.live_url}` : '',
         `Last updated: ${p.last_updated || 'unknown'}`,
         ``,
         `--- INSTRUCTIONS FOR CLAUDE ---`,
-        `1. Check Google Drive (pgallivan@outlook.com) at: My Drive/Claude/project-hub/${p.project_name.toLowerCase().replace(/\s+/g,'-')}.md for deeper notes on this project — read it if it exists.`,
+        `1. Check Google Drive (pgallivan@outlook.com) at: My Drive/Claude/project-hub/${p.project_name.toLowerCase().replace(/\s+/g,'-')}.md for deeper notes on this project â read it if it exists.`,
         `2. Give a one-paragraph briefing summarising the above, plus anything useful from the Drive notes.`,
         `3. Then ask what to work on, or start straight away if it's obvious.`,
         `4. When I say "wrap up": summarise what we did, confirm the new progress %, confirm next action, then PATCH https://project-hub-api.pgallivan.workers.dev/projects/${p.id} with JSON body: {"progress_pct": <new %>, "next_action": "<next action>", "last_updated": "<today YYYY-MM-DD>"}.`,
         `5. Never ask questions you can answer from the above data or the Drive notes.`
     ].filter(Boolean).join('\n');
 
-    if (navigator.clipboard && window.isSecureContext) {
-        navigator.clipboard.writeText(lines)
-            .then(() => showToast(`✅ "${p.project_name}" copied — paste into any Claude chat.`))
-            .catch(() => fallbackCopy(lines, `✅ "${p.project_name}" copied!`));
-    } else { fallbackCopy(lines, `✅ "${p.project_name}" copied!`); }
+    window.open('https://claude.ai/new?q=' + encodeURIComponent(lines), '_blank');
+    showToast(`✅ Opening "${p.project_name}" in Claude…`);
 }
 
 function copyWrapUp(id) {
     const p = allProjects.find(x => x.id === id);
     const name = p ? p.project_name : 'this project';
     const pct = p ? p.progress_pct || 0 : 0;
-    const msg = `Wrap up the ${name} session. Current progress is ${pct}%. Based on what we accomplished this session, estimate the new progress % yourself — do not ask me, just make a reasonable call. Then confirm the next action (ask me if unclear), and PATCH https://project-hub-api.pgallivan.workers.dev/projects/${p?.id || ''} with the updated progress_pct, next_action, and last_updated.`;
+    const msg = `Wrap up the ${name} session. Current progress is ${pct}%. Based on what we accomplished this session, estimate the new progress % yourself â do not ask me, just make a reasonable call. Then confirm the next action (ask me if unclear), and PATCH https://project-hub-api.pgallivan.workers.dev/projects/${p?.id || ''} with the updated progress_pct, next_action, and last_updated.`;
     if (navigator.clipboard && window.isSecureContext) {
         navigator.clipboard.writeText(msg)
-            .then(() => showToast(`✅ Wrap-up prompt copied for "${name}"!`))
-            .catch(() => fallbackCopy(msg, '✅ Wrap-up copied!'));
-    } else { fallbackCopy(msg, '✅ Wrap-up copied!'); }
+            .then(() => showToast(`â Wrap-up prompt copied for "${name}"!`))
+            .catch(() => fallbackCopy(msg, 'â Wrap-up copied!'));
+    } else { fallbackCopy(msg, 'â Wrap-up copied!'); }
 }
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 //   FILTER & SEARCH
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 document.getElementById('searchInput').addEventListener('input', renderProjects);
 document.querySelectorAll('.filter-btn').forEach(btn => {
     btn.addEventListener('click', e => {
@@ -1654,9 +1651,9 @@ document.querySelectorAll('.filter-btn').forEach(btn => {
     });
 });
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 //   IDEA MODAL
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 function openModal() {
     document.getElementById('modalOverlay').classList.add('open');
     document.getElementById('modalSuccess').style.display = 'none';
@@ -1696,13 +1693,13 @@ document.getElementById('modalSubmit').addEventListener('click', async () => {
     submitBtn.disabled = false; submitBtn.textContent = 'Save Idea';
 });
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 //   THEME
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 function applyTheme(theme) {
     document.documentElement.setAttribute('data-theme', theme);
     const btn = document.getElementById('themeToggleBtn');
-    if (btn) btn.textContent = theme === 'light' ? '🌙' : '☀️';
+    if (btn) btn.textContent = theme === 'light' ? 'ð' : 'âï¸';
 }
 
 function toggleTheme() {
@@ -1718,9 +1715,9 @@ function toggleTheme() {
     applyTheme(saved);
 })();
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 //   KEYBOARD SHORTCUTS
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 document.addEventListener('keydown', e => {
     // Don't trigger when typing in an input
     if (['INPUT','TEXTAREA','SELECT'].includes(e.target.tagName)) return;
@@ -1738,9 +1735,9 @@ document.addEventListener('keydown', e => {
     }
 });
 
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 //   INIT
-// ══════════════════════════════════════════════
+// ââââââââââââââââââââââââââââââââââââââââââââââ
 initAuth();
 </script>
 </body>
